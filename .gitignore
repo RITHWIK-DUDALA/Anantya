@@ -23,6 +23,8 @@ dist-ssr
 server/.env
 server/serviceAccountKey.json
 server/node_modules
+server/registrations.xlsx
+*.xlsx
 *.suo
 *.ntvs*
 *.njsproj
