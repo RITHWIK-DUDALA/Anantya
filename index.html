@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>Anantya 2025 — AVV Chennai Campus</title>
+    <meta name="description" content="Celebrate Anantya 2025 with Amrita Vishwa Vidyapeetham, Chennai Campus. Register for cultural events, games, devotional programs, and more." />
+    <meta name="keywords" content="Anantya 2025, AVV Chennai, Amrita Vishwa Vidyapeetham, Krishna Janmashtami, college fest, cultural event" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Anantya 2025 — AVV Chennai" />
+    <meta property="og:description" content="A day of culture, devotion & joy. Register now for Anantya 2025 at AVV Chennai Campus." />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Prevent Right Click
+      document.addEventListener('contextmenu', event => event.preventDefault());
+
+      // Prevent Keyboard shortcuts for DevTools
+      document.onkeydown = function(e) {
+        if (
+          e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+          (e.ctrlKey && (e.key === 'U' || e.key === 'u'))
+        ) {
+          e.preventDefault();
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>
