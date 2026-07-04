@@ -33,7 +33,7 @@ const CONFIG = {
 
   // ── Social Links ───────────────────────────────────────────
   socials: {
-    instagram: "https://www.instagram.com/avv_anantya?igsh=bW9kcGNqdnJkbDBv", // ← Replace
+    instagram: "https://www.instagram.com/avv_janmashtami?igsh=bW9kcGNqdnJkbDBv", // ← Replace
     whatsapp: "https://chat.whatsapp.com/grouplink", // ← Replace
   },
 
