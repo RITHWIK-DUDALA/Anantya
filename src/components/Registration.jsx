@@ -148,7 +148,7 @@ function FreeForm({ t, onSuccess, onError }) {
 }
 
 /* ── UPI Payment Step ────────────────────────────── */
-function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack }) {
+function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
   const [transactionId, setTransactionId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -411,6 +411,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   if (step === 'payment' && baseData) {
     return (
       <UpiPaymentStep
+        t={t}
         amount={total}
         baseData={baseData}
         onSuccess={(type, token) => {
