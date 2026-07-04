@@ -67,8 +67,8 @@ const CONFIG = {
       name: "Rithwik Sathya",
       phone: "9346710580",
       year: "3rd Year",
-      photo: "/photos/rith3.jpg",
-      objectPosition: "top",
+      photo: "/photos/rithwik.jpeg",
+      objectPosition: "center 20%",
       comingSoon: false,
     },
     {
