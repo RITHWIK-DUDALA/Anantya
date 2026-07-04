@@ -8,6 +8,9 @@
     "memories": "Memories"
   },
   "hero": {
+    "exploreGames": "Explore Games",
+    "registerVolunteer": "Register / Volunteer",
+    "year": "2k26",
     "badge": "Presents",
     "title": "Anantya 2025",
     "subtitle": "A Grand Celebration",
@@ -145,6 +148,21 @@
     }
   },
   "register": {
+    "step2": "STEP 2 OF 2",
+    "amountLabel": "AMOUNT",
+    "registeringFor": "Registering for:",
+    "discountApplied": "Discount applied: ₹",
+    "yourToken": "Your Registration Token",
+    "freeRegister": "Register — Free",
+    "deptAIE": "AIE",
+    "deptCSE": "CSE",
+    "deptCYS": "CYS",
+    "deptCCE": "CCE",
+    "deptMEC": "MEC",
+    "deptECE": "ECE",
+    "deptEEE": "EEE",
+    "deptAIDS": "AIDS",
+    "deptOthers": "Others",
     "title": "Register",
     "subtitle": "Join us for the celebrations",
     "tabs": {
@@ -195,6 +213,7 @@
     }
   },
   "committee": {
+    "directory": "CORE TEAM DIRECTORY (CLICK TO VIEW)",
     "title": "Meet the team",
     "subtitle": "Which made this possible",
     "comingSoon": "Coming Soon",
@@ -203,9 +222,13 @@
     "contact": "Contact"
   },
   "footer": {
+    "quickLinks": "Quick Links",
+    "followUs": "Follow Us",
+    "madeBy": "made by © 2026",
+    "rights": "All rights reserved.",
+    "venture": "A venture under RX-7 Group",
     "tagline": "A celebration of culture & devotion",
-    "credit": "Made with ❤️ by the Events Committee",
-    "rights": "© 2025 Anantya Celebrations"
+    "credit": "Made with ❤️ by the Events Committee"
   },
   "gamePage": {
     "notFound": "Game not found",
@@ -291,5 +314,8 @@
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
     }
+  },
+  "contact": {
+    "sendMessage": "Send a Message"
   }
 }

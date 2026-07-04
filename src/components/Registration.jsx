@@ -55,15 +55,15 @@ function BaseFields({ prefix, t }) {
         <label htmlFor={`${prefix}-dept`}>{t('register.form.dept')} *</label>
         <select id={`${prefix}-dept`} name="dept" required defaultValue="">
           <option value="" disabled>{t('register.form.deptPlaceholder')}</option>
-          <option value="AIE">AIE</option>
-          <option value="CSE">CSE</option>
-          <option value="CYS">CYS</option>
-          <option value="CCE">CCE</option>
-          <option value="MEC">MEC</option>
-          <option value="ECE">ECE</option>
-          <option value="EEE">EEE</option>
-          <option value="AIDS">AIDS</option>
-          <option value="Others">Others</option>
+          <option value="AIE">{t('register.deptAIE', 'AIE')}</option>
+          <option value="CSE">{t('register.deptCSE', 'CSE')}</option>
+          <option value="CYS">{t('register.deptCYS', 'CYS')}</option>
+          <option value="CCE">{t('register.deptCCE', 'CCE')}</option>
+          <option value="MEC">{t('register.deptMEC', 'MEC')}</option>
+          <option value="ECE">{t('register.deptECE', 'ECE')}</option>
+          <option value="EEE">{t('register.deptEEE', 'EEE')}</option>
+          <option value="AIDS">{t('register.deptAIDS', 'AIDS')}</option>
+          <option value="Others">{t('register.deptOthers', 'Others')}</option>
         </select>
       </div>
       <div className="form-group">
@@ -186,7 +186,7 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack }) {
           display: 'inline-block', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px',
           color: 'var(--primary)', background: 'rgba(183,139,39,0.12)', padding: '4px 14px',
           borderRadius: '20px', border: '1px solid rgba(183,139,39,0.3)', marginBottom: '10px'
-        }}>STEP 2 OF 2</span>
+        }}>{t('register.step2', 'STEP 2 OF 2')}</span>
         <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)' }}>
           Complete Your Payment
         </h3>
@@ -202,7 +202,7 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack }) {
         background: 'linear-gradient(135deg, rgba(183,139,39,0.18), rgba(183,139,39,0.06))',
         border: '1px solid rgba(183,139,39,0.35)',
       }}>
-        <span style={{ fontSize: '0.8rem', color: '#aaa', fontWeight: 600 }}>AMOUNT</span>
+        <span style={{ fontSize: '0.8rem', color: '#aaa', fontWeight: 600 }}>{t('register.amountLabel', 'AMOUNT')}</span>
         <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>₹{amount}</span>
       </div>
 
@@ -231,7 +231,7 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack }) {
               e.target.parentNode.innerHTML = `
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;color:#999;padding:16px;text-align:center">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M14 18h3M18 14v3M18 18h.01"/></svg>
-                  <span style="font-size:0.75rem;color:#aaa">Add upi-qr.png<br/>to public/ folder</span>
+                  <span style="font-size:0.75rem;color:#aaa">${t('register.uploadUpi', 'Add upi-qr.png<br/>to public/ folder')}</span>
                 </div>`;
             }}
           />
@@ -434,7 +434,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
       {/* Game selection */}
       {initialGameId ? (
         <div style={{ padding: '20px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', marginBottom: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <p className="games-title" style={{ color: '#aaaaaa', fontSize: '0.9rem', margin: '0 0 4px 0' }}>Registering for:</p>
+          <p className="games-title" style={{ color: '#aaaaaa', fontSize: '0.9rem', margin: '0 0 4px 0' }}>{t('register.registeringFor', 'Registering for:')}</p>
           <h4 className="game-label-text" style={{ fontSize: '1.4rem', color: 'var(--primary)', margin: 0 }}>
              {(() => {
                const g = gameCardsData.find(x => x.id.toString() === initialGameId);
@@ -485,7 +485,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
             </button>
           </div>
           {discountError && <p style={{ color: 'var(--rose)', fontSize: '0.9rem', marginTop: '5px' }}>{discountError}</p>}
-          {discount > 0 && <p style={{ color: 'var(--green)', fontSize: '0.9rem', marginTop: '5px' }}>Discount applied: ₹{discount}</p>}
+          {discount > 0 && <p style={{ color: 'var(--green)', fontSize: '0.9rem', marginTop: '5px' }}>{t('register.discountApplied', 'Discount applied: ₹')}{discount}</p>}
         </div>
       )}
 
@@ -513,7 +513,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
       >
         {total > 0 
           ? <><CreditCardIcon size={16} color="#fff" /> Proceed to Pay — ₹{total}</>
-          : <><CircleCheckIcon size={16} color="#fff" /> Register — Free</>}
+          : <><CircleCheckIcon size={16} color="#fff" /> {t('register.freeRegister', 'Register — Free')}</>}
       </button>
     </form>
   );
@@ -544,7 +544,7 @@ export default function Registration({ onlyGames = false, hideTabs = false, init
           <p style={{ margin: '0 0 16px 0' }}>{t(`register.success.${formType}`)}</p>
           {token && (
             <div style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <p style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#aaa' }}>Your Registration Token</p>
+              <p style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#aaa' }}>{t('register.yourToken', 'Your Registration Token')}</p>
               <h3 style={{ margin: '0 0 16px 0', color: 'var(--primary)', letterSpacing: '2px', fontSize: '1.5rem' }}>{token}</h3>
               <button 
                 onClick={() => downloadToken(token)}

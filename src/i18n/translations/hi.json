@@ -7,6 +7,9 @@
     "committee": "समिति"
   },
   "hero": {
+    "exploreGames": "खेलों का अन्वेषण करें",
+    "registerVolunteer": "पंजीकरण / स्वयंसेवक",
+    "year": "2k26",
     "badge": "प्रस्तुत करते हैं",
     "title": "जन्माष्टमी 2025",
     "subtitle": "एक भव्य उत्सव",
@@ -109,6 +112,21 @@
     }
   },
   "register": {
+    "step2": "चरण 2 / 2",
+    "amountLabel": "राशि",
+    "registeringFor": "के लिए पंजीकरण:",
+    "discountApplied": "छूट लागू: ₹",
+    "yourToken": "आपका पंजीकरण टोकन",
+    "freeRegister": "मुफ्त में पंजीकरण करें",
+    "deptAIE": "AIE",
+    "deptCSE": "CSE",
+    "deptCYS": "CYS",
+    "deptCCE": "CCE",
+    "deptMEC": "MEC",
+    "deptECE": "ECE",
+    "deptEEE": "EEE",
+    "deptAIDS": "AIDS",
+    "deptOthers": "अन्य",
     "title": "पंजीकरण",
     "subtitle": "उत्सव में हमारे साथ जुड़ें",
     "tabs": {
@@ -159,6 +177,7 @@
     }
   },
   "committee": {
+    "directory": "कोर टीम निर्देशिका (देखने के लिए क्लिक करें)",
     "title": "हमारी समिति",
     "subtitle": "यह कार्यक्रम संभव बनाने वाली टीम",
     "comingSoon": "जल्द आ रहा है",
@@ -167,9 +186,13 @@
     "contact": "संपर्क"
   },
   "footer": {
+    "quickLinks": "त्वरित लिंक",
+    "followUs": "हमें फॉलो करें",
+    "madeBy": "द्वारा निर्मित © 2026",
+    "rights": "सर्वाधिकार सुरक्षित।",
+    "venture": "RX-7 समूह के तहत एक उद्यम",
     "tagline": "संस्कृति और भक्ति का उत्सव",
-    "credit": "इवेंट्स कमेटी द्वारा ❤️ के साथ बनाया गया",
-    "rights": "© 2025 जन्माष्टमी उत्सव"
+    "credit": "इवेंट्स कमेटी द्वारा ❤️ के साथ बनाया गया"
   },
   "gamePage": {
     "notFound": "खेल नहीं मिला",
@@ -255,5 +278,8 @@
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
     }
+  },
+  "contact": {
+    "sendMessage": "संदेश भेजें"
   }
 }

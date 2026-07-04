@@ -7,6 +7,9 @@
     "committee": "కమిటీ"
   },
   "hero": {
+    "exploreGames": "క్రీడలను అన్వేషించండి",
+    "registerVolunteer": "నమోదు / స్వచ్ఛంద సేవ",
+    "year": "2k26",
     "badge": "ప్రదర్శిస్తున్నారు",
     "title": "జన్మాష్టమి 2025",
     "subtitle": "ఒక ఘనమైన వేడుక",
@@ -109,6 +112,21 @@
     }
   },
   "register": {
+    "step2": "దశ 2 / 2",
+    "amountLabel": "మొత్తం",
+    "registeringFor": "దీని కోసం నమోదు చేస్తున్నారు:",
+    "discountApplied": "డిస్కౌంట్ వర్తించబడింది: ₹",
+    "yourToken": "మీ రిజిస్ట్రేషన్ టోకెన్",
+    "freeRegister": "ఉచితంగా నమోదు చేసుకోండి",
+    "deptAIE": "AIE",
+    "deptCSE": "CSE",
+    "deptCYS": "CYS",
+    "deptCCE": "CCE",
+    "deptMEC": "MEC",
+    "deptECE": "ECE",
+    "deptEEE": "EEE",
+    "deptAIDS": "AIDS",
+    "deptOthers": "ఇతరులు",
     "title": "నమోదు",
     "subtitle": "మాతో ఉత్సవంలో పాల్గొనండి",
     "tabs": {
@@ -159,6 +177,7 @@
     }
   },
   "committee": {
+    "directory": "కోర్ టీమ్ డైరెక్టరీ (చూడటానికి క్లిక్ చేయండి)",
     "title": "మా కమిటీ",
     "subtitle": "ఇది సాకారం చేస్తున్న బృందం",
     "comingSoon": "త్వరలో వస్తోంది",
@@ -167,9 +186,13 @@
     "contact": "సంప్రదించు"
   },
   "footer": {
+    "quickLinks": "త్వరిత లింకులు",
+    "followUs": "మమ్మల్ని అనుసరించండి",
+    "madeBy": "రూపకల్పన © 2026",
+    "rights": "అన్ని హక్కులూ ప్రత్యేకించబడినవి.",
+    "venture": "RX-7 గ్రూప్ ఆధ్వర్యంలో",
     "tagline": "సంస్కృతి & భక్తి వేడుక",
-    "credit": "ఈవెంట్స్ కమిటీ ❤️తో తయారు చేయబడింది",
-    "rights": "© 2025 జన్మాష్టమి వేడుకలు"
+    "credit": "ఈవెంట్స్ కమిటీ ❤️తో తయారు చేయబడింది"
   },
   "gamePage": {
     "notFound": "ఆట కనుగొనబడలేదు",
@@ -255,5 +278,8 @@
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
     }
+  },
+  "contact": {
+    "sendMessage": "సందేశం పంపండి"
   }
 }

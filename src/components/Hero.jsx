@@ -45,11 +45,11 @@ export default function Hero() {
       {/* ░░ Framer Motion Stroke Title */}
       <div className="hero-content" id="hero-content" style={{ zIndex: 11, position: 'relative', width: '100%', maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <StrokeFill text={t('hero.mainTitle', 'JANMASHTAMI')} duration={3} />
-        <p style={{ color: '#1e3a8a', fontSize: '1.5rem', letterSpacing: '0.5em', marginTop: '-20px', zIndex: 12, fontWeight: 'bold', marginBottom: '30px' }}>2k26</p>
+        <p style={{ color: '#1e3a8a', fontSize: '1.5rem', letterSpacing: '0.5em', marginTop: '-20px', zIndex: 12, fontWeight: 'bold', marginBottom: '30px' }}>{t('hero.year', '2k26')}</p>
         
         <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
-          <Link to="/register" style={{ padding: '12px 32px', background: 'var(--primary)', color: 'white', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.5)', transition: 'transform 0.2s ease', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}>Explore Games</Link>
-          <Link to="/form" style={{ padding: '12px 32px', background: 'rgba(255, 255, 255, 0.9)', color: 'var(--primary)', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.5)', transition: 'transform 0.2s ease', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}>Register / Volunteer</Link>
+          <Link to="/register" style={{ padding: '12px 32px', background: 'var(--primary)', color: 'white', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.5)', transition: 'transform 0.2s ease', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}>{t('hero.exploreGames', 'Explore Games')}</Link>
+          <Link to="/form" style={{ padding: '12px 32px', background: 'rgba(255, 255, 255, 0.9)', color: 'var(--primary)', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.5)', transition: 'transform 0.2s ease', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}>{t('hero.registerVolunteer', 'Register / Volunteer')}</Link>
         </div>
       </div>
 

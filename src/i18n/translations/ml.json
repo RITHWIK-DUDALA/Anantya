@@ -7,6 +7,9 @@
     "committee": "കമ്മിറ്റി"
   },
   "hero": {
+    "exploreGames": "ഗെയിമുകൾ പര്യവേക്ഷണം ചെയ്യുക",
+    "registerVolunteer": "രജിസ്റ്റർ ചെയ്യുക / വോളണ്ടിയർ",
+    "year": "2k26",
     "badge": "അവതരിപ്പിക്കുന്നു",
     "title": "ജന്മാഷ്ടമി 2025",
     "subtitle": "ഒരു ഗംഭീര ആഘോഷം",
@@ -109,6 +112,21 @@
     }
   },
   "register": {
+    "step2": "ഘട്ടം 2 / 2",
+    "amountLabel": "തുക",
+    "registeringFor": "ഇതിനായി രജിസ്റ്റർ ചെയ്യുന്നു:",
+    "discountApplied": "കിഴിവ്: ₹",
+    "yourToken": "നിങ്ങളുടെ രജിസ്ട്രേഷൻ ടോക്കൺ",
+    "freeRegister": "സൗജന്യമായി രജിസ്റ്റർ ചെയ്യുക",
+    "deptAIE": "AIE",
+    "deptCSE": "CSE",
+    "deptCYS": "CYS",
+    "deptCCE": "CCE",
+    "deptMEC": "MEC",
+    "deptECE": "ECE",
+    "deptEEE": "EEE",
+    "deptAIDS": "AIDS",
+    "deptOthers": "മറ്റുള്ളവ",
     "title": "രജിസ്റ്റർ",
     "subtitle": "ആഘോഷങ്ങൾക്ക് ഞങ്ങളോടൊപ്പം ചേരൂ",
     "tabs": {
@@ -159,6 +177,7 @@
     }
   },
   "committee": {
+    "directory": "കോർ ടീം ഡയറക്ടറി (കാണാൻ ക്ലിക്ക് ചെയ്യുക)",
     "title": "ഞങ്ങളുടെ കമ്മിറ്റി",
     "subtitle": "ഇത് സാക്ഷാത്കരിക്കുന്ന ടീം",
     "comingSoon": "ഉടൻ വരുന്നു",
@@ -167,9 +186,13 @@
     "contact": "ബന്ധപ്പെടുക"
   },
   "footer": {
+    "quickLinks": "ദ്രുത ലിങ്കുകൾ",
+    "followUs": "ഞങ്ങളെ പിന്തുടരുക",
+    "madeBy": "നിർമ്മിച്ചത് © 2026",
+    "rights": "എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം.",
+    "venture": "RX-7 ഗ്രൂപ്പിന് കീഴിലുള്ള ഒരു സംരംഭം",
     "tagline": "സംസ്കാരം & ഭക്തിയുടെ ആഘോഷം",
-    "credit": "ഇവന്റ്സ് കമ്മിറ്റി ❤️-ൽ നിർമ്മിച്ചത്",
-    "rights": "© 2025 ജന്മാഷ്ടമി ആഘോഷങ്ങൾ"
+    "credit": "ഇവന്റ്സ് കമ്മിറ്റി ❤️-ൽ നിർമ്മിച്ചത്"
   },
   "gamePage": {
     "notFound": "ഗെയിം കണ്ടെത്തിയില്ല",
@@ -255,5 +278,8 @@
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
     }
+  },
+  "contact": {
+    "sendMessage": "ഒരു സന്ദേശം അയക്കുക"
   }
 }

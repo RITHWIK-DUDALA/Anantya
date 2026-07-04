@@ -5,8 +5,10 @@ import CONFIG from '../config/config';
 
 const CORE_MEMBERS = CONFIG.committee.slice(0, 8);
 
+import { useTranslation } from 'react-i18next';
 
 export default function ContactSection() {
+  const { t } = useTranslation();
   const [activeMember, setActiveMember] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -247,7 +249,7 @@ export default function ContactSection() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '40px', backdropFilter: 'blur(20px)', height: 'fit-content' }}
         >
-          <h3 style={{ fontSize: '1.5rem', marginBottom: '24px', color: '#fff', fontFamily: 'Cinzel, serif' }}>Send a Message</h3>
+          <h3 style={{ fontSize: '1.5rem', marginBottom: '24px', color: '#fff', fontFamily: 'Cinzel, serif' }}>{t('contact.sendMessage', 'Send a Message')}</h3>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }} onSubmit={handleContactSubmit}>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

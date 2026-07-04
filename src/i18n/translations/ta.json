@@ -7,6 +7,9 @@
     "committee": "குழு"
   },
   "hero": {
+    "exploreGames": "விளையாட்டுகளை ஆராயுங்கள்",
+    "registerVolunteer": "பதிவு / தன்னார்வலர்",
+    "year": "2k26",
     "badge": "வழங்குகிறது",
     "title": "ஜன்மாஷ்டமி 2025",
     "subtitle": "ஒரு பிரம்மாண்ட கொண்டாட்டம்",
@@ -109,6 +112,21 @@
     }
   },
   "register": {
+    "step2": "படி 2 / 2",
+    "amountLabel": "தொகை",
+    "registeringFor": "இதற்காக பதிவு செய்கிறீர்கள்:",
+    "discountApplied": "தள்ளுபடி: ₹",
+    "yourToken": "உங்கள் பதிவு டோக்கன்",
+    "freeRegister": "இலவசமாக பதிவு செய்யவும்",
+    "deptAIE": "AIE",
+    "deptCSE": "CSE",
+    "deptCYS": "CYS",
+    "deptCCE": "CCE",
+    "deptMEC": "MEC",
+    "deptECE": "ECE",
+    "deptEEE": "EEE",
+    "deptAIDS": "AIDS",
+    "deptOthers": "மற்றவை",
     "title": "பதிவு",
     "subtitle": "கொண்டாட்டங்களில் எங்களுடன் சேருங்கள்",
     "tabs": {
@@ -159,6 +177,7 @@
     }
   },
   "committee": {
+    "directory": "முக்கிய குழு அட்டவணை (பார்க்க கிளிக் செய்யவும்)",
     "title": "எங்கள் குழு",
     "subtitle": "இதை நிறைவேற்றும் குழு",
     "comingSoon": "விரைவில் வருகிறது",
@@ -167,9 +186,13 @@
     "contact": "தொடர்பு"
   },
   "footer": {
+    "quickLinks": "விரைவு இணைப்புகள்",
+    "followUs": "எங்களை பின்தொடரவும்",
+    "madeBy": "உருவாக்கியது © 2026",
+    "rights": "அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+    "venture": "RX-7 குழுமத்தின் ஒரு முயற்சி",
     "tagline": "கலாச்சாரம் & பக்தியின் கொண்டாட்டம்",
-    "credit": "நிகழ்வு குழுவால் ❤️உடன் உருவாக்கப்பட்டது",
-    "rights": "© 2025 ஜென்மாஷ்டமி கொண்டாட்டங்கள்"
+    "credit": "நிகழ்வு குழுவால் ❤️உடன் உருவாக்கப்பட்டது"
   },
   "gamePage": {
     "notFound": "விளையாட்டு கிடைக்கவில்லை",
@@ -255,5 +278,8 @@
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
     }
+  },
+  "contact": {
+    "sendMessage": "செய்தி அனுப்பவும்"
   }
 }

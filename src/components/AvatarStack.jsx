@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Avatar colours (same as Committee)
 const PALETTE = [
@@ -14,6 +15,7 @@ const avatarColor = (name) => {
 };
 
 const AvatarStack = ({ items, onItemClick }) => {
+  const { t } = useTranslation();
   // Sort items to create a visual hierarchy (Head in center, others alternating outwards)
   const n = items.length;
   const mappedItems = new Array(n);
@@ -84,7 +86,7 @@ const AvatarStack = ({ items, onItemClick }) => {
           );
         })}
       </div>
-      <h2 className="trusted-heading">CORE TEAM DIRECTORY (CLICK TO VIEW)</h2>
+      <h2 className="trusted-heading">{t('committee.directory', 'CORE TEAM DIRECTORY (CLICK TO VIEW)')}</h2>
     </div>
   );
 };

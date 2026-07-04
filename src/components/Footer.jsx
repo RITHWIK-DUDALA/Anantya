@@ -30,7 +30,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div className="footer-nav">
-            <h4>Quick Links</h4>
+            <h4>{t('footer.quickLinks', 'Quick Links')}</h4>
             <ul>
               {NAV_ITEMS.map(({ key, href, label }) => (
                 <li key={href}>
@@ -42,7 +42,7 @@ export default function Footer() {
 
           {/* Social */}
           <div className="footer-social">
-            <h4>Follow Us</h4>
+            <h4>{t('footer.followUs', 'Follow Us')}</h4>
             <div className="footer-social-links">
               <a
                 href={CONFIG.socials.instagram}
@@ -66,8 +66,8 @@ export default function Footer() {
 
         <div className="footer-bottom" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', opacity: 0.8 }}>
-            <span>made by © 2025 <a href="https://shrinexstudio.netlify.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>Shrinex Studios</a>. All rights reserved.</span>
-            <span>A venture under RX-7 Group</span>
+            <span>{t('footer.madeBy', 'made by © 2026')} <a href="https://shrinexstudio.netlify.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>Shrinex Studios</a>. {t('footer.rights', 'All rights reserved.')}</span>
+            <span>{t('footer.venture', 'A venture under RX-7 Group')}</span>
           </div>
           <div style={{ textAlign: 'center', opacity: 0.8 }}>
             Free use only for Anantya Event Committee 2k26.

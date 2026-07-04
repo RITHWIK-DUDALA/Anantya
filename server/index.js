@@ -37,10 +37,13 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
 
 app.use(cors({
   origin: (origin, callback) => {
-    // In production, strictly check origin. Locally allow undefined (e.g. Postman).
-    if (process.env.NODE_ENV !== 'production' && !origin) {
-      return callback(null, true);
+    if (process.env.NODE_ENV !== 'production') {
+      // In development, allow any localhost origin or undefined (Postman)
+      if (!origin || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+        return callback(null, true);
+      }
     }
+    
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
