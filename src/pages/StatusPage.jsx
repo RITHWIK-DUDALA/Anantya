@@ -12,6 +12,8 @@ export default function StatusPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [userStatus, setUserStatus] = useState(null);
+  
+  const apiUrl = import.meta.env.VITE_API_URL || '';
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,7 +25,7 @@ export default function StatusPage() {
     setError('');
 
     try {
-      const res = await fetch('/api/verify/status-login', {
+      const res = await fetch(`${apiUrl}/api/verify/status-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, token })

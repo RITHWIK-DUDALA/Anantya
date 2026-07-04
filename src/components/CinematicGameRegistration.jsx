@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LevitatingCard from './forgeui/3d-levitating-card';
 import { PaidForm } from './Registration';
-import { useTranslation } from 'react-i18next';
-import { useRazorpay } from './Registration';
 import Modal from './Modal';
 import { XIcon } from '@animateicons/react/lucide';
 import { gameCardsData } from '../data/gamesData';
@@ -11,7 +9,6 @@ import FlipText from './forgeui/flip-text';
 
 export default function CinematicGameRegistration({ isOpen, onClose, initialGameId }) {
   const { t } = useTranslation();
-  const rzpReady = useRazorpay();
   const [bgIndex, setBgIndex] = useState(0);
   const [modal, setModal] = useState(null);
 

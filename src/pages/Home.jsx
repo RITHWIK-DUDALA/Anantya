@@ -7,6 +7,7 @@ import Timeline from '../components/Timeline';
 import Committee from '../components/Committee';
 import Footer from '../components/Footer';
 import { FaqAccordion } from '../components/forgeui/faq-accordion';
+import ContactSection from '../components/ContactSection';
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
             <FaqAccordion />
           </div>
         </section>
+        <ContactSection />
       </main>
       <Footer />
     </>

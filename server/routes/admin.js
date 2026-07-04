@@ -4,29 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { db } = require('../firebase');
 
-// Middleware to protect admin routes
-const authenticateAdmin = (req, res, next) => {
-  const token = req.cookies.admin_token;
-  if (!token) {
-    return res.status(401).json({ error: 'Unauthorized: No token provided' });
-  }
-
-  try {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) {
-      throw new Error('JWT_SECRET is not configured');
-    }
-    const decoded = jwt.verify(token, secret);
-    if (decoded.role === 'admin') {
-      req.admin = decoded;
-      next();
-    } else {
-      res.status(403).json({ error: 'Forbidden: Insufficient privileges' });
-    }
-  } catch (err) {
-    res.status(401).json({ error: 'Unauthorized: Invalid token' });
-  }
-};
+const { authenticateAdmin } = require('../middleware/auth');
 
 // GET /api/admin/payments
 // Fetch all registrations
@@ -115,7 +93,7 @@ router.post('/login', async (req, res, next) => {
       res.cookie('admin_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
         maxAge: 12 * 60 * 60 * 1000 // 12 hours
       });
 

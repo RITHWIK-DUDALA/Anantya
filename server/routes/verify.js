@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { db } = require('../firebase');
+const { authenticateAdmin } = require('../middleware/auth');
 
 // GET /api/verify/registration/:regId
 router.get('/registration/:regId', async (req, res) => {
@@ -35,7 +36,7 @@ router.get('/registration/:regId', async (req, res) => {
 });
 
 // PATCH /api/verify/checkin/:regId
-router.patch('/checkin/:regId', async (req, res) => {
+router.patch('/checkin/:regId', authenticateAdmin, async (req, res) => {
   try {
     const { regId } = req.params;
 

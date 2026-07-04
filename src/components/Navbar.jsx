@@ -67,22 +67,22 @@ export default function Navbar() {
     <nav className={`navbar${isScrolled ? ' scrolled' : ''}${hidden ? ' nav-hidden' : ''}`} id="navbar">
       <div className="nav-container">
         {/* Logo */}
-        <a href="/#home" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+        <Link to="/#home" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
           <img src="/logo.png" alt="Janmashtami Logo" style={{ height: '45px', width: '45px', borderRadius: '50%', objectFit: 'cover', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
           <span>Janmashtami 2026</span>
-        </a>
+        </Link>
 
         {/* Nav links */}
         <ul className={`nav-links${mobileOpen ? ' open' : ''}`}>
           {navItems.map(({ key, href, id, label }) => (
             <li key={id}>
-              <a
-                href={href}
+              <Link
+                to={href}
                 className={activeSection === id ? 'active' : ''}
                 onClick={() => setMobileOpen(false)}
               >
                 {t(key, label)}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

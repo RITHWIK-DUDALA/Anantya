@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FlameIcon, InstagramIcon, MailIcon } from '@animateicons/react/lucide';
 import CONFIG from '../config/config';
@@ -33,7 +34,7 @@ export default function Footer() {
             <ul>
               {NAV_ITEMS.map(({ key, href, label }) => (
                 <li key={href}>
-                  <a href={href}>{t(key, label)}</a>
+                  <Link to={href}>{t(key, label)}</Link>
                 </li>
               ))}
             </ul>

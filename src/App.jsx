@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import RegisterPage from './pages/RegisterPage';
@@ -8,18 +8,49 @@ import RegistrationFormPage from './pages/RegistrationFormPage';
 import MemoriesPage from './pages/MemoriesPage';
 import AdminPaymentsPage from './pages/AdminPaymentsPage';
 import StatusPage from './pages/StatusPage';
+import MusicPlayer from './components/MusicPlayer';
 
 export default function App() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff', textAlign: 'center', padding: '20px', boxSizing: 'border-box' }}>
+        <div style={{ padding: '30px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(183,139,39,0.3)' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '10px' }}>💻</div>
+          <h2 style={{ color: 'var(--primary)', marginBottom: '15px', fontFamily: 'Cinzel, serif', fontSize: '1.8rem' }}>Desktop Only</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: '1.5' }}>
+            The Anantya 2025 experience is strictly designed for desktop devices. <br/><br/>
+            Please open this website on your computer.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/games/:id" element={<GamePage />} />
-      <Route path="/form" element={<RegistrationFormPage />} />
-      <Route path="/memories" element={<MemoriesPage />} />
-      <Route path="/verify" element={<VerifyPage />} />
-      <Route path="/admin/payments" element={<AdminPaymentsPage />} />
-      <Route path="/status" element={<StatusPage />} />
-    </Routes>
+    <>
+      <MusicPlayer />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/games/:id" element={<GamePage />} />
+        <Route path="/form" element={<RegistrationFormPage />} />
+        <Route path="/memories" element={<MemoriesPage />} />
+        <Route path="/verify" element={<VerifyPage />} />
+        <Route path="/admin/payments" element={<AdminPaymentsPage />} />
+        <Route path="/status" element={<StatusPage />} />
+      </Routes>
+    </>
   );
 }

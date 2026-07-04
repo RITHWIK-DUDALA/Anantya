@@ -44,4 +44,41 @@ async function sendConfirmationEmail(email, name, regId, games, amount, paymentI
   }
 }
 
-module.exports = { sendConfirmationEmail };
+async function sendContactEmail(name, email, message) {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `"${name}" <${process.env.EMAIL_USER}>`, // Needs to be authenticated user, but replyTo is set to the submitter
+      replyTo: email,
+      to: process.env.EMAIL_USER, // Sends to the committee's email
+      subject: `[Support Ticket] Message from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eaeaea; border-radius: 10px; padding: 20px;">
+          <h2 style="color: #B78B27; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">New Support Ticket</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+          <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <p style="margin: 0; white-space: pre-wrap;">${message}</p>
+          </div>
+          <p style="color: #888; font-size: 12px; margin-top: 20px;">* This message was sent via the Anantya 2026 Contact Form.</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Contact email from ${name} sent successfully`);
+  } catch (error) {
+    console.error(`Failed to send contact email from ${name}:`, error);
+    throw error;
+  }
+}
+
+module.exports = { sendConfirmationEmail, sendContactEmail };

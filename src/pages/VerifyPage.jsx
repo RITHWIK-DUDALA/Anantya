@@ -6,6 +6,8 @@ export default function VerifyPage() {
   const [scanResult, setScanResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  const apiUrl = import.meta.env.VITE_API_URL || '';
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner('reader', {
@@ -36,7 +38,7 @@ export default function VerifyPage() {
       const data = JSON.parse(qrDataString);
       if (!data.regId) throw new Error("Invalid QR code format");
 
-      const res = await fetch(`/api/verify/registration/${data.regId}`);
+      const res = await fetch(`${apiUrl}/api/verify/registration/${data.regId}`);
       const json = await res.json();
 
       if (!res.ok) {
@@ -55,7 +57,7 @@ export default function VerifyPage() {
   const handleCheckIn = async () => {
     if (!scanResult || !scanResult.regId) return;
     try {
-      const res = await fetch(`/api/verify/checkin/${scanResult.regId}`, { method: 'PATCH' });
+      const res = await fetch(`${apiUrl}/api/verify/checkin/${scanResult.regId}`, { method: 'PATCH' });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Check-in failed');
       

@@ -187,7 +187,7 @@
     "success": {
       "title": "Registration Successful! 🎉",
       "free": "Thank you for registering! We'll see you at the event.",
-      "paid": "Payment confirmed! Your registration is complete. See you on the big day!"
+      "paid": "Registration successful! Your payment is pending verification. Use your token and registered email ID to check your status at the Status page."
     },
     "error": {
       "title": "Something went wrong",

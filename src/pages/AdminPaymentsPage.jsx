@@ -9,18 +9,19 @@ export default function AdminPaymentsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  const apiUrl = import.meta.env.VITE_API_URL || '';
+  
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
 
-  // Check if already logged in (using localStorage for simplicity)
+  // Check if already logged in by pinging the server
   useEffect(() => {
-    const sessionToken = localStorage.getItem('admin_token');
-    if (sessionToken === 'admin_session_token_123') {
-      setIsAuthenticated(true);
-    }
+    fetch(`${apiUrl}/api/admin/payments`, { credentials: 'include' })
+      .then(r => { if (r.ok) setIsAuthenticated(true); })
+      .catch(() => {});
   }, []);
 
   const handleLogin = async (e) => {
@@ -29,16 +30,16 @@ export default function AdminPaymentsPage() {
     setAuthError('');
     
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch(`${apiUrl}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ password })
       });
       const data = await res.json();
       
       if (!res.ok) throw new Error(data.error || 'Invalid password');
       
-      localStorage.setItem('admin_token', data.token);
       setIsAuthenticated(true);
     } catch (err) {
       setAuthError(err.message);
@@ -50,7 +51,7 @@ export default function AdminPaymentsPage() {
   const fetchPayments = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/admin/payments');
+      const res = await fetch(`${apiUrl}/api/admin/payments`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch data');
       const data = await res.json();
       setPayments(data);
@@ -74,9 +75,10 @@ export default function AdminPaymentsPage() {
     if (!window.confirm(`Are you sure you want to ${actionName} this registration?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/payments/${regId}`, {
+      const res = await fetch(`${apiUrl}/api/admin/payments/${regId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ status })
       });
       if (!res.ok) throw new Error('Update failed');

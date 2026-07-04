@@ -5,35 +5,43 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
-dotenv.config();
+const path = require('path');
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Trust proxy for rate limiters behind Render/Railway
+app.set('trust proxy', 1);
 
 // Security Middlewares
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "https://checkout.razorpay.com"],
-      frameSrc: ["'self'", "https://checkout.razorpay.com"],
+      scriptSrc: ["'self'"],
+      frameSrc: ["'none'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https://images.unsplash.com"],
-      connectSrc: ["'self'", "https://api.razorpay.com"],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'"],
     },
   },
 }));
 
 // Restrict CORS
-const frontendUrl = process.env.FRONTEND_URL || 'https://anantya-2025.web.app';
+const frontendUrl = process.env.FRONTEND_URL || 'https://anantya.dpdns.org';
 const allowedOrigins = process.env.NODE_ENV === 'production' 
-  ? [frontendUrl] 
+  ? [frontendUrl, 'https://anantya-2025.web.app', 'https://anantya.dpdns.org', 'http://anantya.dpdns.org'] 
   : ['http://localhost:5173', 'http://127.0.0.1:5173'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // In production, strictly check origin. Locally allow undefined (e.g. Postman).
+    if (process.env.NODE_ENV !== 'production' && !origin) {
+      return callback(null, true);
+    }
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -54,9 +62,17 @@ const adminLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 3,
+  message: { error: 'Too many messages sent. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const registerLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Max 5 registrations per IP per 15 min
+  windowMs: 15 * 60 * 1000,
+  max: process.env.NODE_ENV === 'production' ? 10 : 100,
   message: { error: 'Too many registration attempts, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -72,10 +88,17 @@ const paymentLimiter = rateLimit({
 
 // Routes
 // Apply payment limiter specifically to order creation
-app.use('/api/register/create-order', paymentLimiter);
-app.use('/api/register', registerLimiter, require('./routes/register'));
-app.use('/api/verify', require('./routes/verify'));
-app.use('/api/admin', adminLimiter, require('./routes/admin'));
+app.use('/api/register/paid', paymentLimiter);
+const registerRoute = require('./routes/register');
+const verifyRoute = require('./routes/verify');
+const adminRoute = require('./routes/admin');
+const contactRoute = require('./routes/contact');
+
+app.use('/api/register', registerLimiter, registerRoute);
+app.use('/api/verify', verifyRoute);
+app.use('/api/admin/login', adminLimiter); // Apply strictly to login
+app.use('/api/admin', adminRoute);
+app.use('/api/contact', contactLimiter, contactRoute);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

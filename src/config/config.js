@@ -11,10 +11,6 @@ const CONFIG = {
   eventVenue: "AVV Chennai Campus",
   committeeEmail: "events@avvchennai.edu.in", // ← Replace with real email
 
-  // ── Payment (Razorpay) ─────────────────────────────────────
-  // Get your key from: https://dashboard.razorpay.com/app/keys
-  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID", // ← Replace before going live
-  razorpayBusinessName: "AVV Chennai — Anantya 2025",
 
   // ── Google Sheets Webhook ──────────────────────────────────
   // 1. Open google-apps-script/Code.gs
@@ -114,13 +110,13 @@ const CONFIG = {
       comingSoon: false,
     },
     {
-      role: "Co Head of Culturals",
-      name: "Srinithi V R",
+      role: "Culturals In-Charge",
+      name: "V R SRINITHI",
       phone: "0000000000",
       year: "3rd Year",
-      photo: "",
+      photo: "/photos/V R SRINITHI.jpeg",
+      objectPosition: "center 15%",
       comingSoon: false,
-      isCoHead: true,
     },
     {
       role: "Treasurer Coordinator",

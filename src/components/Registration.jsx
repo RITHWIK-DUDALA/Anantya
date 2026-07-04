@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SendIcon, CreditCardIcon, CircleCheckIcon, ShieldXIcon } from '@animateicons/react/lucide';
 import CONFIG from '../config/config';
@@ -9,11 +9,10 @@ import Modal from './Modal';
 async function postToSheets(data) {
   if (CONFIG.googleSheetsWebhook === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
     console.log('[DEV] Google Sheets submission (placeholder URL):', data);
-    return; // Skip in dev — replace URL in config.js to enable
+    return;
   }
   await fetch(CONFIG.googleSheetsWebhook, {
     method: 'POST',
-    // Apps Script requires text/plain to avoid CORS preflight
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(data),
   });
@@ -48,7 +47,7 @@ function BaseFields({ prefix, t }) {
           required 
           pattern="^[6-9][0-9]{9}$"
           maxLength={10}
-          title="Please enter a valid 10-digit Indian phone number (+91 is assumed)"
+          title="Please enter a valid 10-digit Indian phone number"
           placeholder={t('register.form.phonePlaceholder')} 
         />
       </div>
@@ -90,7 +89,6 @@ function FreeForm({ t, onSuccess, onError }) {
     setLoading(true);
     const fd = new FormData(e.target);
     const data = {
-      formType: 'free',
       name: fd.get('name'),
       email: fd.get('email'),
       phone: fd.get('phone'),
@@ -99,22 +97,19 @@ function FreeForm({ t, onSuccess, onError }) {
       role: fd.get('role'),
       games: '',
       amount: 0,
-      paymentId: '',
-      timestamp: new Date().toISOString(),
     };
     try {
-      const response = await fetch('/api/register/free', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/register/free`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Registration failed');
-
       e.target.reset();
       onSuccess('free', result.token);
     } catch (err) {
-      console.error(err);
       onError();
     } finally {
       setLoading(false);
@@ -122,11 +117,11 @@ function FreeForm({ t, onSuccess, onError }) {
   };
 
   const roles = [
-    { value: 'Cultural Participant',           key: 'register.form.roles.cultural' },
-    { value: 'Decoration Volunteer',           key: 'register.form.roles.decoration' },
-    { value: 'Disciplinary Volunteer',         key: 'register.form.roles.disciplinary' },
-    { value: 'Prasadam Distribution Volunteer',key: 'register.form.roles.prasadam' },
-    { value: 'Games Participant (free)',        key: 'register.form.roles.games' },
+    { value: 'Cultural Participant',            key: 'register.form.roles.cultural' },
+    { value: 'Decoration Volunteer',            key: 'register.form.roles.decoration' },
+    { value: 'Disciplinary Volunteer',          key: 'register.form.roles.disciplinary' },
+    { value: 'Prasadam Distribution Volunteer', key: 'register.form.roles.prasadam' },
+    { value: 'Games Participant (free)',         key: 'register.form.roles.games' },
   ];
 
   return (
@@ -152,6 +147,165 @@ function FreeForm({ t, onSuccess, onError }) {
   );
 }
 
+/* ── UPI Payment Step ────────────────────────────── */
+function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack }) {
+  const [transactionId, setTransactionId] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async () => {
+    if (!transactionId.trim() || transactionId.trim().length < 6) {
+      setError('Please enter a valid UPI transaction ID (minimum 6 characters)');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/register/paid`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...baseData, transactionId: transactionId.trim() })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Registration failed');
+      onSuccess('paid', result.token);
+    } catch (err) {
+      onError();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="reg-form card" style={{ textAlign: 'center', padding: '2rem 1.5rem', maxWidth: '480px', margin: '0 auto' }}>
+
+      {/* Header */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <span style={{
+          display: 'inline-block', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px',
+          color: 'var(--primary)', background: 'rgba(183,139,39,0.12)', padding: '4px 14px',
+          borderRadius: '20px', border: '1px solid rgba(183,139,39,0.3)', marginBottom: '10px'
+        }}>STEP 2 OF 2</span>
+        <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)' }}>
+          Complete Your Payment
+        </h3>
+        <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+          Scan the QR code and pay the amount below
+        </p>
+      </div>
+
+      {/* Amount pill */}
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: '10px',
+        padding: '10px 28px', borderRadius: '50px', marginBottom: '1.5rem',
+        background: 'linear-gradient(135deg, rgba(183,139,39,0.18), rgba(183,139,39,0.06))',
+        border: '1px solid rgba(183,139,39,0.35)',
+      }}>
+        <span style={{ fontSize: '0.8rem', color: '#aaa', fontWeight: 600 }}>AMOUNT</span>
+        <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>₹{amount}</span>
+      </div>
+
+      {/* QR Code */}
+      <div style={{
+        position: 'relative', width: '190px', height: '190px', margin: '0 auto 1rem',
+      }}>
+        {/* Glow ring */}
+        <div style={{
+          position: 'absolute', inset: '-6px', borderRadius: '22px',
+          background: 'linear-gradient(135deg, var(--primary), transparent)',
+          opacity: 0.3, filter: 'blur(8px)',
+        }} />
+        <div style={{
+          position: 'relative', width: '100%', height: '100%', borderRadius: '16px',
+          border: '2px solid rgba(183,139,39,0.5)', overflow: 'hidden',
+          background: '#fff', zIndex: 1,
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <img
+            src="/upi-qr.png"
+            alt="UPI QR Code"
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentNode.innerHTML = `
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;color:#999;padding:16px;text-align:center">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M14 18h3M18 14v3M18 18h.01"/></svg>
+                  <span style="font-size:0.75rem;color:#aaa">Add upi-qr.png<br/>to public/ folder</span>
+                </div>`;
+            }}
+          />
+        </div>
+      </div>
+
+      <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+        After paying, copy your UPI transaction ID and paste it below
+      </p>
+
+      {/* Transaction ID input */}
+      <div style={{ textAlign: 'left', marginBottom: '1rem' }}>
+        <label style={{
+          display: 'block', marginBottom: '8px', fontSize: '0.8rem',
+          fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase'
+        }}>
+          UPI Transaction ID *
+        </label>
+        <input
+          type="text"
+          value={transactionId}
+          onChange={(e) => { setTransactionId(e.target.value); setError(''); }}
+          placeholder="e.g. 123456789012"
+          style={{
+            width: '100%', boxSizing: 'border-box',
+            background: 'rgba(255,255,255,0.04)',
+            border: error ? '1.5px solid var(--rose)' : '1.5px solid rgba(255,255,255,0.12)',
+            borderRadius: '10px', color: 'var(--text)', fontSize: '1rem',
+            padding: '12px 14px', outline: 'none', transition: 'border 0.2s'
+          }}
+          onFocus={e => e.target.style.border = '1.5px solid rgba(183,139,39,0.6)'}
+          onBlur={e => e.target.style.border = error ? '1.5px solid var(--rose)' : '1.5px solid rgba(255,255,255,0.12)'}
+        />
+        {error && (
+          <p style={{ color: 'var(--rose)', fontSize: '0.8rem', marginTop: '6px', textAlign: 'left' }}>
+            ⚠ {error}
+          </p>
+        )}
+      </div>
+
+      {/* Buttons */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
+        <button
+          type="button"
+          onClick={onBack}
+          style={{
+            flex: '0 0 auto', padding: '12px 20px', borderRadius: '10px', cursor: 'pointer',
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+            color: 'var(--text)', fontSize: '0.9rem', fontWeight: 600, transition: 'all 0.2s',
+            fontFamily: 'inherit'
+          }}
+          onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.1)'}
+          onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.06)'}
+        >
+          ← Back
+        </button>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={loading}
+          className="submit-btn pay-btn"
+          style={{ flex: 1, opacity: loading ? 0.7 : 1 }}
+        >
+          {loading ? 'Submitting...' : '✓  Confirm Registration'}
+        </button>
+      </div>
+
+      <p style={{ fontSize: '0.72rem', color: '#555', margin: 0 }}>
+        🔒 Your payment will be verified by our team within a few hours.
+      </p>
+    </div>
+  );
+}
+
 /* ── Paid Games Form ─────────────────────────────── */
 export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   const [selected, setSelected] = useState(() => {
@@ -161,7 +315,8 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
     return {};
   });
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState('form'); // 'form' | 'payment'
+  const [baseData, setBaseData] = useState(null);
   const [secretCode, setSecretCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [discountError, setDiscountError] = useState('');
@@ -171,21 +326,9 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   const baseTotal = gameCardsData.reduce((sum, game) => (selected[game.title] ? sum + game.price : sum), 0);
   const total = Math.max(0, baseTotal - discount);
 
-  // Load Razorpay script
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   const toggle = (title) => {
     setSelected((prev) => {
       const newSelected = (prev[title] ? {} : { [title]: true });
-      // Reset discount when game changes to avoid discount bugs on price change
       setDiscount(0);
       setSecretCode('');
       setDiscountError('');
@@ -195,13 +338,12 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
 
   const handleApplyCode = () => {
     if (!secretCode) return;
-    // Verification of code
     const code = secretCode.trim().toUpperCase();
     if (code === 'KRISHNA50') {
-      setDiscount(baseTotal * 0.5); // 50% discount
+      setDiscount(baseTotal * 0.5);
       setDiscountError('');
     } else if (code === 'DEV100') {
-      setDiscount(100); // Flat Rs 100 off
+      setDiscount(100);
       setDiscountError('');
     } else {
       setDiscount(0);
@@ -209,7 +351,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleProceedToPayment = (e) => {
     e.preventDefault();
     const selectedGames = gameCardsData.filter((game) => selected[game.title]);
     if (!selectedGames.length) {
@@ -218,107 +360,75 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
 
     const fd = new FormData(formRef.current);
-    const baseData = {
+    const data = {
       name: fd.get('name'),
       email: fd.get('email'),
       phone: fd.get('phone'),
       dept: fd.get('dept'),
       year: fd.get('year'),
       role: 'Games Participant',
-      games: selectedGames.map((g) => g.title).join(', '),
-      calculatedAmount: total,
+      games: selectedGames.map((g) => g.title),
       secretCode: discount > 0 ? secretCode.trim().toUpperCase() : '',
-      discountAmount: discount
     };
 
-    // Validate required fields
-    for (const [key, val] of Object.entries(baseData)) {
-      if (key !== 'role' && key !== 'calculatedAmount' && key !== 'secretCode' && key !== 'discountAmount' && !val) { alert(`Please fill in all required fields.`); return; }
+    for (const [key, val] of Object.entries(data)) {
+      if (key !== 'role' && key !== 'secretCode' && !val) {
+        alert('Please fill in all required fields.');
+        return;
+      }
     }
 
-    // If total is 0 (or became 0 after discount), submit to the free endpoint
+    // If total is 0 after discount, use free endpoint
     if (total === 0) {
-      setLoading(true);
-      try {
-        const freeData = { ...baseData, formType: 'free', paymentId: '', timestamp: new Date().toISOString() };
-        const response = await fetch('/api/register/free', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(freeData)
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Registration failed');
-        formRef.current.reset();
-        setSelected({});
-        setSecretCode('');
-        setDiscount(0);
-        onSuccess('free', result.token);
-      } catch (err) {
-        console.error(err);
-        onError();
-      } finally {
-        setLoading(false);
-      }
+      handleFreeSubmit(data);
       return;
     }
 
-    // Paid Registration Flow via Razorpay
-    if (total > 0) {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/register/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(baseData)
-        });
-        const result = await response.json();
-        
-        if (!response.ok) throw new Error(result.error || 'Failed to create order');
+    setBaseData(data);
+    setStep('payment');
+  };
 
-        const options = {
-          key: CONFIG.razorpayKeyId || 'rzp_test_placeholder', // Should be injected via env vars in real build
-          amount: result.amount * 100,
-          currency: 'INR',
-          name: 'Anantya 2025',
-          description: `Registration for ${selectedGames.map(g => g.title).join(', ')}`,
-          order_id: result.order_id,
-          handler: function (response) {
-            // Payment success callback
-            formRef.current.reset();
-            setSelected({});
-            setSecretCode('');
-            setDiscount(0);
-            // Verification is handled by backend webhook. We just show success here.
-            onSuccess('paid', result.token);
-          },
-          prefill: {
-            name: baseData.name,
-            email: baseData.email,
-            contact: baseData.phone
-          },
-          theme: {
-            color: '#b78b27'
-          }
-        };
-
-        const rzp = new window.Razorpay(options);
-        rzp.on('payment.failed', function (response) {
-          console.error(response.error);
-          onError();
-        });
-        rzp.open();
-        
-      } catch (error) {
-        console.error(error);
-        onError();
-      } finally {
-        setLoading(false);
-      }
+  const handleFreeSubmit = async (data) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/register/free`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, amount: 0 })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Registration failed');
+      formRef.current?.reset();
+      setSelected({});
+      setSecretCode('');
+      setDiscount(0);
+      onSuccess('free', result.token);
+    } catch {
+      onError();
     }
   };
 
+  if (step === 'payment' && baseData) {
+    return (
+      <UpiPaymentStep
+        amount={total}
+        baseData={baseData}
+        onSuccess={(type, token) => {
+          formRef.current?.reset();
+          setSelected({});
+          setSecretCode('');
+          setDiscount(0);
+          setStep('form');
+          onSuccess(type, token);
+        }}
+        onError={onError}
+        onBack={() => setStep('form')}
+      />
+    );
+  }
+
   return (
-    <form id="paid-form" className="reg-form card" onSubmit={handleSubmit} ref={formRef} noValidate>
+    <form id="paid-form" className="reg-form card" onSubmit={handleProceedToPayment} ref={formRef} noValidate>
       <BaseFields prefix="paid" t={t} />
 
       {/* Game selection */}
@@ -359,7 +469,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
         </>
       )}
 
-      {/* Secret Code Section - Invisible trigger by clicking Total label */}
+      {/* Secret Code */}
       {baseTotal > 0 && (
         <div style={{ marginBottom: '16px', display: isSecretInputVisible ? 'block' : 'none' }}>
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -399,13 +509,11 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
         type="submit"
         id="paid-submit-btn"
         className="submit-btn pay-btn"
-        disabled={loading || Object.keys(selected).filter(k => selected[k]).length === 0}
+        disabled={Object.keys(selected).filter(k => selected[k]).length === 0}
       >
-        {loading
-          ? t('register.form.processing')
-          : total > 0 
-            ? <><CreditCardIcon size={16} color="#fff" /> Proceed to Pay — ₹{total}</>
-            : <><CircleCheckIcon size={16} color="#fff" /> Register — Free</>}
+        {total > 0 
+          ? <><CreditCardIcon size={16} color="#fff" /> Proceed to Pay — ₹{total}</>
+          : <><CircleCheckIcon size={16} color="#fff" /> Register — Free</>}
       </button>
     </form>
   );
