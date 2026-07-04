@@ -221,8 +221,8 @@ export function DiagonalCarousel({
                       userSelect: 'none', 
                       borderRadius: '1rem', 
                       objectFit: 'contain', 
-                      backgroundColor: '#000', 
-                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' 
+                      backgroundColor: 'transparent', 
+                      filter: 'drop-shadow(0 20px 25px rgba(0, 0, 0, 0.5))' 
                     }}
                   />
                 </button>
