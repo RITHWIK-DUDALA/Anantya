@@ -59,6 +59,8 @@ export function PerspectiveCarousel({
   const safeSlideWidth = Math.max(96, slideWidth);
   const safeInactiveScale = clamp(inactiveScale, 0.5, 1);
 
+  const wheelTimeout = React.useRef(null);
+
   const selectSlide = React.useCallback(
     (nextIndex) => {
       if (!items.length) {
@@ -101,8 +103,6 @@ export function PerspectiveCarousel({
       selectSlide(currentIndex + 1);
     }
   };
-
-  const wheelTimeout = React.useRef(null);
   const handleWheel = (event) => {
     // Check if scroll is predominantly horizontal to avoid interfering with vertical page scrolling
     if (Math.abs(event.deltaX) > Math.abs(event.deltaY) && Math.abs(event.deltaX) > 15) {
