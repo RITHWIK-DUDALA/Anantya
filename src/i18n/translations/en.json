@@ -313,6 +313,18 @@
     "16": {
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
+    },
+    "17": {
+      "title": "Among Us",
+      "description": "Find the impostor or sabotage the ship in this thrilling game of teamwork and betrayal."
+    },
+    "18": {
+      "title": "Minecraft",
+      "description": "Survive, build, and conquer in a blocky world of endless possibilities."
+    },
+    "19": {
+      "title": "Valorant",
+      "description": "Blend tactical shooting with hyper-natural abilities in this competitive 5v5 shooter."
     }
   },
   "contact": {

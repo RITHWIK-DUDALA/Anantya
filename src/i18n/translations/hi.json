@@ -277,6 +277,18 @@
     "16": {
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
+    },
+    "17": {
+      "title": "Among Us",
+      "description": "टीम वर्क और धोखे के इस रोमांचक खेल में पाखंडी का पता लगाएं या जहाज को नष्ट कर दें।"
+    },
+    "18": {
+      "title": "Minecraft",
+      "description": "अनंत संभावनाओं की ब्लॉक वाली दुनिया में जीवित रहें, निर्माण करें और जीत हासिल करें।"
+    },
+    "19": {
+      "title": "Valorant",
+      "description": "इस प्रतिस्पर्धी 5v5 शूटर में सामरिक शूटिंग और हाइपर-प्राकृतिक क्षमताओं को मिलाएं।"
     }
   },
   "contact": {

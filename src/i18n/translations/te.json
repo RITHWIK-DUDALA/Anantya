@@ -277,6 +277,18 @@
     "16": {
       "title": "Call of Duty",
       "description": "Show off your tactical skills in fast-paced multiplayer combat."
+    },
+    "17": {
+      "title": "Among Us",
+      "description": "బృందకృషి మరియు ద్రోహంతో కూడిన ఈ ఉత్కంఠభరితమైన గేమ్‌లో ఇంపోస్టర్‌ను కనుగొనండి లేదా ఓడను నాశనం చేయండి."
+    },
+    "18": {
+      "title": "Minecraft",
+      "description": "అనంతమైన అవకాశాలు ఉన్న బ్లాకీ ప్రపంచంలో జీవించండి, నిర్మించండి మరియు జయించండి."
+    },
+    "19": {
+      "title": "Valorant",
+      "description": "ఈ పోటీ 5v5 షూటర్‌లో వ్యూహాత్మక షూటింగ్ మరియు హైపర్-నేచురల్ సామర్థ్యాలను కలపండి."
     }
   },
   "contact": {
