@@ -31,6 +31,15 @@ router.post('/free', async (req, res, next) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({ error: 'Invalid phone number format' });
+    }
+
     const regId = `REG-${crypto.randomUUID()}`;
     const token = await generateUniqueToken();
 
@@ -70,6 +79,15 @@ router.post('/paid', async (req, res, next) => {
 
     if (!name || !email || !phone || !games || !transactionId) {
       return res.status(400).json({ error: 'Missing required fields (including transaction ID)' });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({ error: 'Invalid phone number format' });
     }
 
     // Sanitize and validate transaction ID

@@ -125,7 +125,7 @@ function FreeForm({ t, onSuccess, onError }) {
   ];
 
   return (
-    <form id="free-form" className="reg-form card" onSubmit={handleSubmit} noValidate>
+    <form id="free-form" className="reg-form card" onSubmit={handleSubmit}>
       <BaseFields prefix="free" t={t} />
       <div className="form-grid">
         <div className="form-group full">
@@ -428,7 +428,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   }
 
   return (
-    <form id="paid-form" className="reg-form card" onSubmit={handleProceedToPayment} ref={formRef} noValidate>
+    <form id="paid-form" className="reg-form card" onSubmit={handleProceedToPayment} ref={formRef}>
       <BaseFields prefix="paid" t={t} />
 
       {/* Game selection */}
