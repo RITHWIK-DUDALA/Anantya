@@ -161,8 +161,21 @@ export default function CinematicGameRegistration({ isOpen, onClose, initialGame
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                   style={{
                     background: 'radial-gradient(circle at 50% 50%, rgba(255, 120, 0, 0.15) 0%, transparent 70%)',
-                    zIndex: 0
+                    zIndex: 2
                   }} 
+                />
+                
+                {/* Blurred Background to fill black bars */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    inset: '-20px',
+                    backgroundImage: `url(${displayImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'blur(20px) brightness(0.5)',
+                    zIndex: 0
+                  }}
                 />
                 
                 <img 
