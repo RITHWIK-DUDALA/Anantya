@@ -67,22 +67,39 @@ export default function Navbar() {
     <nav className={`navbar${isScrolled ? ' scrolled' : ''}${hidden ? ' nav-hidden' : ''}`} id="navbar">
       <div className="nav-container">
         {/* Logo */}
-        <Link to="/#home" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+        <a href="/#home" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }} onClick={(e) => {
+          if (location.pathname === '/') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.history.pushState(null, '', '/#home');
+          }
+        }}>
           <img src="/logo.png" alt="Janmashtami Logo" style={{ height: '45px', width: '45px', borderRadius: '50%', objectFit: 'cover', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
           <span>Janmashtami 2026</span>
-        </Link>
+        </a>
 
         {/* Nav links */}
         <ul className={`nav-links${mobileOpen ? ' open' : ''}`}>
           {navItems.map(({ key, href, id, label }) => (
             <li key={id}>
-              <Link
-                to={href}
+              <a
+                href={href}
                 className={activeSection === id ? 'active' : ''}
-                onClick={() => setMobileOpen(false)}
+                onClick={(e) => {
+                  setMobileOpen(false);
+                  if (href.startsWith('/#') && location.pathname === '/') {
+                    e.preventDefault();
+                    const targetId = href.split('#')[1];
+                    const targetEl = document.getElementById(targetId);
+                    if (targetEl) {
+                      targetEl.scrollIntoView({ behavior: 'smooth' });
+                      window.history.pushState(null, '', href);
+                    }
+                  }
+                }}
               >
                 {t(key, label)}
-              </Link>
+              </a>
             </li>
           ))}
         </ul>

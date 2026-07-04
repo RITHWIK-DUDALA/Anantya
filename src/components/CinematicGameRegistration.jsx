@@ -203,7 +203,7 @@ export default function CinematicGameRegistration({ isOpen, onClose, initialGame
               </div>
               
               <div className="cinematic-form-wrapper" style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: '10px' }}>
-                <PaidForm t={t} rzpReady={rzpReady} onSuccess={openSuccess} onError={openError} initialGameId={initialGameId} />
+                <PaidForm t={t} onSuccess={openSuccess} onError={openError} initialGameId={initialGameId} />
               </div>
 
             </motion.div>
