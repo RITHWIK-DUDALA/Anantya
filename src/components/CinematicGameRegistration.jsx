@@ -154,7 +154,7 @@ export default function CinematicGameRegistration({ isOpen, onClose, initialGame
             />
 
             <LevitatingCard style={{ width: '100%', position: 'relative', zIndex: 1 }}>
-              <div style={{ position: 'relative', width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.1)', background: '#0a0a0a' }}>
+              <div style={{ position: 'relative', width: '100%', height: '500px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.1)', background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 
                 {/* Inner Ambient Lighting (Hover Only) */}
                 <div 
@@ -171,7 +171,8 @@ export default function CinematicGameRegistration({ isOpen, onClose, initialGame
                   style={{
                     position: 'relative',
                     width: '100%',
-                    height: 'auto',
+                    height: '100%',
+                    objectFit: 'contain',
                     display: 'block',
                     zIndex: 1
                   }}

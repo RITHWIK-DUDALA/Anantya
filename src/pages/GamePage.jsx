@@ -87,7 +87,7 @@ export default function GamePage() {
                 }}
               />
 
-              <div style={{ position: 'relative', zIndex: 1, width: '100%', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a' }}>
+              <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '500px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a' }}>
                 
                 {/* Inner Ambient Lighting (Hover Only) */}
                 <div 
@@ -101,7 +101,7 @@ export default function GamePage() {
                 <img 
                   src={game.src} 
                   alt={t(`games.${game.id}.title`)}
-                  style={{ position: 'relative', zIndex: 1, width: '100%', height: 'auto', display: 'block', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
+                  style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', objectFit: 'contain', display: 'block', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
                 />
               </div>
             </div>

@@ -220,8 +220,8 @@ export function DiagonalCarousel({
                       width: '100%', 
                       userSelect: 'none', 
                       borderRadius: '1rem', 
-                      objectFit: item.title === 'Free Fire' ? 'contain' : 'cover', 
-                      backgroundColor: item.title === 'Free Fire' ? '#000' : 'transparent', 
+                      objectFit: 'contain', 
+                      backgroundColor: '#000', 
                       boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' 
                     }}
                   />
