@@ -177,8 +177,8 @@ export default function ContactSection() {
                     }}
                   >
                     <div style={{ 
-                      width: '100px', 
-                      height: '100px', 
+                      width: '150px', 
+                      height: '150px', 
                       borderRadius: '50%', 
                       overflow: 'hidden',
                       border: '3px solid var(--primary)',
