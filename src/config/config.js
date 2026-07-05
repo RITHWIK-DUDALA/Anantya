@@ -93,7 +93,7 @@ const CONFIG = {
     },
     {
       role: "Technical In-Charge",
-      name: "Suryesh",
+      name: "K K Suryesh",
       phone: "6302062936",
       year: "3rd Year",
       photo: "/photos/surya.jpeg",
@@ -120,10 +120,11 @@ const CONFIG = {
     },
     {
       role: "Treasurer Coordinator",
-      name: "Bhanu",
+      name: "Bhaanu tej",
       phone: "0000000000",
       year: "3rd Year",
-      photo: "",
+      photo: "/photos/Bhanu.JPG.jpeg",
+      objectPosition: "center 20%",
       comingSoon: false,
     },
 
