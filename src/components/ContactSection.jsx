@@ -78,7 +78,8 @@ export default function ContactSection() {
             background: 'rgba(255,255,255,0.03)', 
             padding: '16px 24px', 
             borderRadius: '32px', 
-            width: 'max-content', 
+            width: 'fit-content', 
+            maxWidth: '100%',
             border: '1px solid rgba(255,255,255,0.08)', 
             marginBottom: '24px',
             flexWrap: 'wrap'
