@@ -72,6 +72,24 @@ const CONFIG = {
       comingSoon: false,
     },
     {
+      role: "Cultural In-Charge",
+      name: "Nagasai Sree",
+      phone: "9100212289",
+      year: "3rd Year",
+      photo: "/photos/nagasaisree.jpeg",
+      objectPosition: "center 20%",
+      comingSoon: false,
+    },
+    {
+      role: "Culturals In-Charge",
+      name: "V R SRINITHI",
+      phone: "0000000000",
+      year: "3rd Year",
+      photo: "/photos/V R SRINITHI.jpeg",
+      objectPosition: "center 15%",
+      comingSoon: false,
+    },
+    {
       role: "Decoration In-Charge",
       name: "Bhargava Sai",
       phone: "9963374697",
@@ -101,24 +119,6 @@ const CONFIG = {
       comingSoon: false,
     },
     {
-      role: "Cultural In-Charge",
-      name: "Nagasai Sree",
-      phone: "9100212289",
-      year: "3rd Year",
-      photo: "/photos/nagasaisree.jpeg",
-      objectPosition: "center 20%",
-      comingSoon: false,
-    },
-    {
-      role: "Culturals In-Charge",
-      name: "V R SRINITHI",
-      phone: "0000000000",
-      year: "3rd Year",
-      photo: "/photos/V R SRINITHI.jpeg",
-      objectPosition: "center 15%",
-      comingSoon: false,
-    },
-    {
       role: "Treasurer Coordinator",
       name: "Bhaanu tej",
       phone: "0000000000",
@@ -129,8 +129,6 @@ const CONFIG = {
       transformOrigin: "center top",
       comingSoon: false,
     },
-
-
     {
       role: "Visual Media In-Charge",
       name: "Shreyas Reddy",
