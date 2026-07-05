@@ -186,7 +186,7 @@ export default function ContactSection() {
                       boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
                     }}>
                       {member.photo ? (
-                        <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center' }} />
+                        <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
                       ) : (
                         <div style={{ width: '100%', height: '100%', background: '#fff', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', fontWeight: 'bold' }}>{member.name.charAt(0)}</div>
                       )}
