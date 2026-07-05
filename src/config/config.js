@@ -133,11 +133,11 @@ const CONFIG = {
 
     {
       role: "Visual Media In-Charge",
-      name: "",
-      phone: "",
-      year: "",
+      name: "Shreyas Reddy",
+      phone: "0000000000",
+      year: "3rd Year",
       photo: "",
-      comingSoon: true,
+      comingSoon: false,
     },
   ],
 };

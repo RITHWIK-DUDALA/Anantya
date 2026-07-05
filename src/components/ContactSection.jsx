@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PhoneCallIcon, MailIcon } from '@animateicons/react/lucide';
 import CONFIG from '../config/config';
 
-const CORE_MEMBERS = CONFIG.committee.slice(0, 9);
+const CORE_MEMBERS = CONFIG.committee.slice(0, 10);
 
 import { useTranslation } from 'react-i18next';
 
