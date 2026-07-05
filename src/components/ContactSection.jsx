@@ -116,18 +116,22 @@ export default function ContactSection() {
                     transformStyle: 'preserve-3d',
                   }}
                 >
-                  {/* Front: Initial */}
+                  {/* Front */}
                   <div style={{
                     position: 'absolute', inset: 0, backfaceVisibility: 'hidden',
                     background: activeMember === member.name ? 'var(--primary)' : '#fff',
                     color: '#000',
-                    borderRadius: '16px',
+                    borderRadius: '16px', overflow: 'hidden',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: '1.5rem', fontWeight: 'bold',
                     border: activeMember === member.name ? '2px solid var(--primary)' : '2px solid transparent',
                     boxSizing: 'border-box'
                   }}>
-                    {member.name.charAt(0)}
+                    {member.photo ? (
+                      <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
+                    ) : (
+                      member.name.charAt(0)
+                    )}
                   </div>
 
                   {/* Back: Photo */}
