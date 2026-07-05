@@ -195,6 +195,7 @@ export default function MaskedAvatars({
                                                     height: "100%",
                                                     objectFit: "cover",
                                                     objectPosition: person.originalData?.objectPosition || "center",
+                                                    transform: person.originalData?.transform || "none",
                                                     backgroundColor: "var(--bg-alt)"
                                                 }}
                                             />

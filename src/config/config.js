@@ -124,7 +124,8 @@ const CONFIG = {
       phone: "0000000000",
       year: "3rd Year",
       photo: "/photos/Bhanu.JPG.jpeg",
-      objectPosition: "center 20%",
+      objectPosition: "center 30%",
+      transform: "scale(2.5) translateY(10%)",
       comingSoon: false,
     },
 
