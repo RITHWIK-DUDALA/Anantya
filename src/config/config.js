@@ -114,10 +114,8 @@ const CONFIG = {
       name: "K K Suryesh",
       phone: "6302062936",
       year: "3rd Year",
-      photo: "/photos/surya.jpeg",
-      objectPosition: "70% 70%",
-      transform: "scale(2.8)",
-      transformOrigin: "center center",
+      photo: "/photos/surya.png",
+      objectPosition: "center 20%",
       comingSoon: false,
     },
     {
