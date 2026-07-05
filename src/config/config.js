@@ -126,7 +126,7 @@ const CONFIG = {
       photo: "/photos/Bhanu.JPG.jpeg",
       objectPosition: "center 30%",
       transform: "scale(2.5)",
-      transformOrigin: "center 25%",
+      transformOrigin: "center top",
       comingSoon: false,
     },
 
