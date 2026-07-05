@@ -73,16 +73,16 @@ export default function ContactSection() {
           {/* Core Members Dock */}
           <div style={{ 
             display: 'flex', 
-            gap: '12px', 
+            gap: '8px', 
             alignItems: 'flex-end', 
             background: 'rgba(255,255,255,0.03)', 
-            padding: '16px 24px', 
+            padding: '16px 20px', 
             borderRadius: '32px', 
             width: 'fit-content', 
             maxWidth: '100%',
             border: '1px solid rgba(255,255,255,0.08)', 
             marginBottom: '24px',
-            flexWrap: 'wrap'
+            flexWrap: 'nowrap'
           }}>
             {CORE_MEMBERS.map((member) => (
               <motion.div 
@@ -96,12 +96,13 @@ export default function ContactSection() {
                 transition={{ duration: 0.2 }}
                 style={{
                   width: '56px',
-                  height: '56px',
+                  aspectRatio: '1 / 1',
                   borderRadius: '16px',
                   cursor: 'pointer',
                   transformOrigin: 'bottom',
                   position: 'relative',
-                  perspective: '1000px'
+                  perspective: '1000px',
+                  flexShrink: 1
                 }}
                 title={member.name}
               >
