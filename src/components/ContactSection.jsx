@@ -88,10 +88,13 @@ export default function ContactSection() {
               <motion.div 
                 key={member.name}
                 onClick={() => handleMemberClick(member.name)}
-                initial={{ scale: 1, y: 0, zIndex: 1 }}
-                whileHover={{ scale: 1.2, y: -8, zIndex: 10 }}
-                animate={{ 
-                  boxShadow: activeMember === member.name ? '0 8px 20px rgba(183,139,39,0.4)' : '0 4px 12px rgba(0,0,0,0.3)'
+                initial="initial"
+                animate={activeMember === member.name ? "active" : "initial"}
+                whileHover="hover"
+                variants={{
+                  initial: { scale: 1, zIndex: 1, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' },
+                  hover: { scale: 1.2, zIndex: 10, boxShadow: '0 8px 20px rgba(183,139,39,0.4)' },
+                  active: { scale: 1.1, zIndex: 5, boxShadow: '0 8px 20px rgba(183,139,39,0.4)' }
                 }}
                 transition={{ duration: 0.2 }}
                 style={{
@@ -107,9 +110,11 @@ export default function ContactSection() {
                 title={member.name}
               >
                 <motion.div
-                  initial={false}
-                  animate={{ rotateY: activeMember === member.name ? 180 : 0 }}
-                  whileHover={{ rotateY: 180 }}
+                  variants={{
+                    initial: { rotateY: 0 },
+                    hover: { rotateY: 180 },
+                    active: { rotateY: 180 }
+                  }}
                   transition={{ duration: 0.5, type: 'spring', stiffness: 260, damping: 20 }}
                   style={{
                     width: '100%',
