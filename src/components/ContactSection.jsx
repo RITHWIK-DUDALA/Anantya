@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PhoneCallIcon, MailIcon } from '@animateicons/react/lucide';
 import CONFIG from '../config/config';
 
-const CORE_MEMBERS = CONFIG.committee.slice(0, 8);
+const CORE_MEMBERS = CONFIG.committee.slice(0, 9);
 
 import { useTranslation } from 'react-i18next';
 
@@ -134,21 +134,16 @@ export default function ContactSection() {
                     )}
                   </div>
 
-                  {/* Back: Photo */}
+                  {/* Back: Initial */}
                   <div style={{
                     position: 'absolute', inset: 0, backfaceVisibility: 'hidden', transform: 'rotateY(180deg)',
                     background: activeMember === member.name ? 'var(--primary)' : '#fff', 
                     borderRadius: '16px', overflow: 'hidden',
                     border: activeMember === member.name ? '2px solid var(--primary)' : '2px solid transparent',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontSize: '1.5rem', fontWeight: 'bold'
                   }}>
-                    {member.photo ? (
-                      <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontSize: '1.5rem', fontWeight: 'bold' }}>
-                        {member.name.charAt(0)}
-                      </div>
-                    )}
+                    {member.name.charAt(0)}
                   </div>
                 </motion.div>
               </motion.div>
