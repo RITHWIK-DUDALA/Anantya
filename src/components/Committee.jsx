@@ -108,7 +108,7 @@ function ProfileModal({ member, onClose, t }) {
         
         <div className="avatar-wrap">
           {member.photo
-            ? <img src={member.photo} alt={member.name} className="avatar-img" style={{ objectPosition: member.objectPosition || 'center', transform: member.transform || 'none' }} />
+            ? <img src={member.photo} alt={member.name} className="avatar-img" style={{ objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
             : <div className="avatar-initials" style={{ background: avatarColor(member.role) }}>{initials}</div>
           }
         </div>

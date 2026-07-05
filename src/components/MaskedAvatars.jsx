@@ -196,6 +196,7 @@ export default function MaskedAvatars({
                                                     objectFit: "cover",
                                                     objectPosition: person.originalData?.objectPosition || "center",
                                                     transform: person.originalData?.transform || "none",
+                                                    transformOrigin: person.originalData?.transformOrigin || "center",
                                                     backgroundColor: "var(--bg-alt)"
                                                 }}
                                             />

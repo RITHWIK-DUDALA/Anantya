@@ -125,7 +125,8 @@ const CONFIG = {
       year: "3rd Year",
       photo: "/photos/Bhanu.JPG.jpeg",
       objectPosition: "center 30%",
-      transform: "scale(2.5) translateY(10%)",
+      transform: "scale(2.5)",
+      transformOrigin: "center 25%",
       comingSoon: false,
     },
 
