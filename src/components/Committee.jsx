@@ -161,25 +161,12 @@ export default function Committee({ variant = 'avatars' }) {
   const sortedRoles = ['event head', 'event vice head', 'games', 'decoration', 'technical'];
   const others = CONFIG.committee.filter(m => !sortedRoles.some(r => m.role.toLowerCase().includes(r)));
 
-  // Ordered mapping for MaskedAvatars
-  const getRank = (role) => {
-    const r = role.toLowerCase();
-    if (r.includes('event head')) return 1;
-    if (r.includes('vice head')) return 2;
-    if (r.includes('cultural')) return 3;
-    if (r.includes('games')) return 4;
-    if (r.includes('decoration')) return 5;
-    if (r.includes('technical')) return 6;
-    return 7;
-  };
-
   const activeMembers = CONFIG.committee.filter((m) => !m.comingSoon);
-  const sortedMembers = [...activeMembers].sort((a, b) => getRank(a.role) - getRank(b.role));
 
-  const coreMembers = sortedMembers.map((m) => ({
+  const coreMembers = activeMembers.map((m) => ({
     avatar: m.photo || "",
     name: m.name,
-    originalData: m // keep original data for the modal
+    originalData: m
   }));
 
   if (variant === 'grid') {
