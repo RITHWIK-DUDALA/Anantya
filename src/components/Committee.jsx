@@ -66,7 +66,7 @@ function MemberCard({ member, t }) {
       
       <div style={{ width: '100px', height: '100px', borderRadius: '50%', overflow: 'hidden', marginBottom: '1.2rem', border: '3px solid var(--primary-light)', background: 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>
         {member.photo && !member.comingSoon
-          ? <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center' }} />
+          ? <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
           : <div style={{ width: '100%', height: '100%', background: avatarColor(member.role), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{initials || '?'}</div>
         }
       </div>
@@ -106,10 +106,10 @@ function ProfileModal({ member, onClose, t }) {
         </button>
         {member.isCoHead && <span className="co-head-badge" style={{ top: '15px', left: '15px' }}>{t('committee.coHeads')}</span>}
         
-        <div className="avatar-wrap">
+        <div className="avatar-wrap" style={{ borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--primary-light)', background: 'var(--bg-alt)' }}>
           {member.photo
-            ? <img src={member.photo} alt={member.name} className="avatar-img" style={{ objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
-            : <div className="avatar-initials" style={{ background: avatarColor(member.role) }}>{initials}</div>
+            ? <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
+            : <div className="avatar-initials" style={{ width: '100%', height: '100%', background: avatarColor(member.role) }}>{initials}</div>
           }
         </div>
         <p className="committee-role" style={{ whiteSpace: 'pre-line' }}>{member.role}</p>
