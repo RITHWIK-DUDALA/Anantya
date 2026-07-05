@@ -45,15 +45,6 @@ const CONFIG = {
   // ⚠️  Roll numbers are NOT shown publicly — internal data only
   committee: [
     {
-      role: "Games &\nDisciplinary In-Charge",
-      name: "Rithwik Sathya",
-      phone: "9346710580",
-      year: "3rd Year",
-      photo: "/photos/rith3.jpg",
-      objectPosition: "center top",
-      comingSoon: false,
-    },
-    {
       role: "Event Head &\nStudent Stalls In-Charge",
       name: "Punith Vuppala",
       phone: "7989863060",
@@ -87,6 +78,15 @@ const CONFIG = {
       year: "3rd Year",
       photo: "/photos/V R SRINITHI.jpeg",
       objectPosition: "center 15%",
+      comingSoon: false,
+    },
+    {
+      role: "Games &\nDisciplinary In-Charge",
+      name: "Rithwik Sathya",
+      phone: "9346710580",
+      year: "3rd Year",
+      photo: "/photos/rith3.jpg",
+      objectPosition: "center top",
       comingSoon: false,
     },
     {
