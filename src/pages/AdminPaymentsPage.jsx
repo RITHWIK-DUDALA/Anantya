@@ -216,6 +216,14 @@ export default function AdminPaymentsPage() {
                            <ShieldXIcon size={14} /> Revoke
                          </button>
                         )}
+                        {reg.status === 'rejected' && (
+                           <button 
+                           onClick={() => updateStatus(reg.id, 'verified')}
+                           style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                         >
+                           <CircleCheckIcon size={14} /> Re-instate
+                         </button>
+                        )}
                       </td>
                     </tr>
                   ))}
