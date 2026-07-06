@@ -130,9 +130,9 @@ const CONFIG = {
       comingSoon: false,
     },
     {
-      role: "Visual Media In-Charge",
+      role: "Visual Media In-Charge\n- Trinetra Multimedia",
       name: "Shreyas Reddy",
-      phone: "0000000000",
+      phone: "9182263080",
       year: "3rd Year",
       photo: "/photos/Shreyas reddy.jpeg",
       objectPosition: "center 20%",
