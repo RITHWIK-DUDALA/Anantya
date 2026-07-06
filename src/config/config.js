@@ -111,7 +111,7 @@ const CONFIG = {
     },
     {
       role: "Technical In-Charge",
-      name: "K K Suryesh",
+      name: "Suryesh K K",
       phone: "6302062936",
       year: "3rd Year",
       photo: "/photos/surya.png",
