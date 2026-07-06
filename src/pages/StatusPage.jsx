@@ -132,15 +132,25 @@ export default function StatusPage() {
                 <p style={{ margin: '0', fontSize: '1.05rem' }}><strong style={{ color: '#ccc', width: '120px', display: 'inline-block' }}>Reg ID:</strong> <span style={{ fontFamily: 'monospace', color: 'var(--primary)', letterSpacing: '1px' }}>{userStatus.regId}</span></p>
               </div>
 
-              <button 
-                onClick={handleLogout} 
-                className="submit-btn" 
-                style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', transition: 'all 0.3s ease' }}
-                onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
-                onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-              >
-                Log Out
-              </button>
+              <div style={{ display: 'flex', gap: '15px' }}>
+                <button 
+                  onClick={() => handleLogin({ preventDefault: () => {} })} 
+                  className="submit-btn" 
+                  disabled={loading}
+                  style={{ flex: 1, background: 'var(--primary)', color: '#000', border: 'none', transition: 'all 0.3s ease', opacity: loading ? 0.7 : 1 }}
+                >
+                  {loading ? 'Refreshing...' : 'Refresh Status'}
+                </button>
+                <button 
+                  onClick={handleLogout} 
+                  className="submit-btn" 
+                  style={{ flex: 1, background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', transition: 'all 0.3s ease' }}
+                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                  onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                >
+                  Log Out
+                </button>
+              </div>
             </div>
           ) : (
             <div style={{ width: '100%', maxWidth: '440px', textAlign: 'center' }}>
