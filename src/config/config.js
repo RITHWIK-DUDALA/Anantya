@@ -74,7 +74,7 @@ const CONFIG = {
     {
       role: "Culturals In-Charge",
       name: "V R SRINITHI",
-      phone: "0000000000",
+      phone: "8489957162",
       year: "3rd Year",
       photo: "/photos/V R SRINITHI.jpeg",
       objectPosition: "center 15%",
@@ -121,7 +121,7 @@ const CONFIG = {
     {
       role: "Treasurer Coordinator",
       name: "Bhaanu tej",
-      phone: "0000000000",
+      phone: "8790258289",
       year: "3rd Year",
       photo: "/photos/Bhanu.JPG.jpeg",
       objectPosition: "center 30%",
