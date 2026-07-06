@@ -37,7 +37,7 @@ router.get('/payments', authenticateAdmin, async (req, res, next) => {
 router.patch('/payments/:regId', authenticateAdmin, async (req, res, next) => {
   try {
     const { regId } = req.params;
-    const { status } = req.body;
+    const { status, rejectionReason } = req.body;
 
     if (!['verified', 'rejected'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
@@ -50,7 +50,12 @@ router.patch('/payments/:regId', authenticateAdmin, async (req, res, next) => {
       return res.status(404).json({ error: 'Registration not found' });
     }
 
-    await docRef.update({ status });
+    const updateData = { status };
+    if (status === 'rejected' && rejectionReason) {
+      updateData.rejectionReason = rejectionReason;
+    }
+
+    await docRef.update(updateData);
 
     if (status === 'verified') {
       const { appendRegistrationToExcel } = require('../utils/excel');

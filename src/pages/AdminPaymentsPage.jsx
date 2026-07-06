@@ -69,17 +69,22 @@ export default function AdminPaymentsPage() {
   }, [isAuthenticated]);
 
   const updateStatus = async (regId, status) => {
-    const isRevoke = status === 'rejected';
-    const actionName = isRevoke ? 'revoke' : 'verify';
-    
-    if (!window.confirm(`Are you sure you want to ${actionName} this registration?`)) return;
+    let payload = { status };
+    if (status === 'rejected') {
+      const reason = window.prompt("Enter reason for rejection (this will be shown to the user):");
+      if (reason === null) return; // cancelled
+      payload.rejectionReason = reason;
+    } else {
+      const actionName = status === 'verified' ? 'verify' : status;
+      if (!window.confirm(`Are you sure you want to ${actionName} this registration?`)) return;
+    }
 
     try {
       const res = await fetch(`${apiUrl}/api/admin/payments/${regId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ status })
+        body: JSON.stringify(payload)
       });
       if (!res.ok) throw new Error('Update failed');
       
@@ -158,7 +163,7 @@ export default function AdminPaymentsPage() {
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Participant</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Amount</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Token</th>
-                    <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>UTR Number</th>
+                    <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Txn ID / UTR</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Status</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600, textAlign: 'right' }}>Actions</th>
                   </tr>
@@ -178,7 +183,7 @@ export default function AdminPaymentsPage() {
                         </span>
                       </td>
                       <td style={{ padding: '20px', color: '#aaa', fontFamily: 'monospace' }}>
-                        {reg.utrNumber || 'N/A'}
+                        {reg.transactionId || reg.utrNumber || 'N/A'}
                       </td>
                       <td style={{ padding: '20px' }}>
                         {reg.status === 'verified' && <span style={{ color: 'var(--green)', display: 'flex', alignItems: 'center', gap: '6px' }}><CircleCheckIcon size={16} /> Verified</span>}

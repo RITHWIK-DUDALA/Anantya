@@ -110,7 +110,12 @@ export default function StatusPage() {
                   <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
                     <ShieldXIcon size={72} color="var(--rose)" />
                     <h3 style={{ color: 'var(--rose)', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(244, 63, 94, 0.3)' }}>Payment Rejected</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>We could not verify your transaction. Please contact the organizers for assistance.</p>
+                    <p style={{ color: '#aaa', margin: '0 0 10px 0', fontSize: '1.1rem', lineHeight: 1.5 }}>We could not verify your transaction. Please contact the organizers for assistance.</p>
+                    {userStatus.rejectionReason && (
+                      <div style={{ background: 'rgba(244, 63, 94, 0.1)', border: '1px solid rgba(244, 63, 94, 0.2)', padding: '15px', borderRadius: '8px', color: '#ff8f9f', marginTop: '15px', fontSize: '0.95rem' }}>
+                        <strong>Reason:</strong> {userStatus.rejectionReason}
+                      </div>
+                    )}
                   </div>
                 )}
 
