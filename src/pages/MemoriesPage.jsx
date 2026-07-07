@@ -46,6 +46,202 @@ const memoriesData = [
     src: '/photos/WhatsApp Image 2026-06-25 at 10.12.49 AM.jpeg',
     title: 'Organizing Team',
     description: 'The heroes behind the scenes.'
+  },
+  {
+    id: 10,
+    type: 'photo',
+    src: '/assets/amrita ragam bajana session.jpg',
+    title: 'Amrita Ragam Bajana Session',
+    description: ''
+  },
+  {
+    id: 11,
+    type: 'photo',
+    src: '/assets/band 2.jpg',
+    title: 'Band 2',
+    description: ''
+  },
+  {
+    id: 12,
+    type: 'photo',
+    src: '/assets/band main image.jpg',
+    title: 'Band Main Image',
+    description: ''
+  },
+  {
+    id: 13,
+    type: 'photo',
+    src: '/assets/cultural main.jpg',
+    title: 'Cultural Main',
+    description: ''
+  },
+  {
+    id: 14,
+    type: 'photo',
+    src: '/assets/girls uradi 1.JPG',
+    title: 'Girls Uradi 1',
+    description: ''
+  },
+  {
+    id: 15,
+    type: 'photo',
+    src: '/assets/memo10.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 16,
+    type: 'photo',
+    src: '/assets/memo12.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 17,
+    type: 'photo',
+    src: '/assets/memo13.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 18,
+    type: 'photo',
+    src: '/assets/memo14.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 19,
+    type: 'photo',
+    src: '/assets/memo15.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 20,
+    type: 'photo',
+    src: '/assets/memo16.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 21,
+    type: 'photo',
+    src: '/assets/memo17.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 22,
+    type: 'photo',
+    src: '/assets/memo20.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 23,
+    type: 'photo',
+    src: '/assets/memo21.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 24,
+    type: 'photo',
+    src: '/assets/memo22.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 25,
+    type: 'photo',
+    src: '/assets/memo4.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 26,
+    type: 'photo',
+    src: '/assets/memo5.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 27,
+    type: 'photo',
+    src: '/assets/memo6.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 28,
+    type: 'photo',
+    src: '/assets/memo7.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 29,
+    type: 'photo',
+    src: '/assets/memo8.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 30,
+    type: 'photo',
+    src: '/assets/memo9.jpg',
+    title: 'Janmashtami Memory',
+    description: ''
+  },
+  {
+    id: 31,
+    type: 'photo',
+    src: '/assets/nagasai cultural 1.jpg',
+    title: 'Nagasai Cultural 1',
+    description: ''
+  },
+  {
+    id: 32,
+    type: 'photo',
+    src: '/assets/potpdp.jpg',
+    title: 'Potpdp',
+    description: ''
+  },
+  {
+    id: 33,
+    type: 'photo',
+    src: '/assets/principle and other staff.jpg',
+    title: 'Principle And Other Staff',
+    description: ''
+  },
+  {
+    id: 34,
+    type: 'photo',
+    src: '/assets/prop1.jpg',
+    title: 'Prop1',
+    description: ''
+  },
+  {
+    id: 35,
+    type: 'photo',
+    src: '/assets/uradi b1.JPG',
+    title: 'Uradi B1',
+    description: ''
+  },
+  {
+    id: 36,
+    type: 'photo',
+    src: '/assets/uradigirls2.JPG',
+    title: 'Uradigirls2',
+    description: ''
+  },
+  {
+    id: 37,
+    type: 'photo',
+    src: '/assets/urady1.jpg',
+    title: 'Urady1',
+    description: ''
   }
 ];
 
