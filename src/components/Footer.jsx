@@ -72,6 +72,10 @@ export default function Footer() {
           <div style={{ textAlign: 'center', opacity: 0.8 }}>
             Free use only for Anantya Event Committee 2k26.
           </div>
+          <div style={{ textAlign: 'center', opacity: 0.9, marginTop: '15px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+            <span style={{ color: 'var(--primary)' }}>Developed & Maintained by Rithwik</span> <br/>
+            Contact: <a href="tel:9346710580" style={{ color: 'inherit', textDecoration: 'underline' }}>+91 93467 10580</a>
+          </div>
         </div>
       </div>
     </footer>
