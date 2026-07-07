@@ -26,6 +26,64 @@ const scatterData = [
       "/photos/WhatsApp Image 2026-06-25 at 10.12.59 AM.jpeg", 
       "/photos/WhatsApp Image 2026-06-25 at 10.14.26 AM.jpeg"
     ],
+  },
+  {
+    heading: "Janmashtami Vibes 1",
+    images: [
+      "/assets/amrita ragam bajana session.jpg",
+      "/assets/band 2.jpg",
+      "/assets/band main image.jpg",
+      "/assets/cultural main.jpg",
+      "/assets/girls uradi 1.JPG"
+    ],
+  },
+  {
+    heading: "Janmashtami Vibes 2",
+    images: [
+      "/assets/memo10.jpg",
+      "/assets/memo12.jpg",
+      "/assets/memo13.jpg",
+      "/assets/memo14.jpg",
+      "/assets/memo15.jpg"
+    ],
+  },
+  {
+    heading: "Janmashtami Vibes 3",
+    images: [
+      "/assets/memo16.jpg",
+      "/assets/memo17.jpg",
+      "/assets/memo20.jpg",
+      "/assets/memo21.jpg",
+      "/assets/memo22.jpg"
+    ],
+  },
+  {
+    heading: "Janmashtami Vibes 4",
+    images: [
+      "/assets/memo4.jpg",
+      "/assets/memo5.jpg",
+      "/assets/memo6.jpg",
+      "/assets/memo7.jpg",
+      "/assets/memo8.jpg"
+    ],
+  },
+  {
+    heading: "Janmashtami Vibes 5",
+    images: [
+      "/assets/memo9.jpg",
+      "/assets/nagasai cultural 1.jpg",
+      "/assets/potpdp.jpg",
+      "/assets/principle and other staff.jpg",
+      "/assets/prop1.jpg"
+    ],
+  },
+  {
+    heading: "Janmashtami Vibes 6",
+    images: [
+      "/assets/uradi b1.JPG",
+      "/assets/uradigirls2.JPG",
+      "/assets/urady1.jpg"
+    ],
   }
 ];
 
