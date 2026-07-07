@@ -89,7 +89,8 @@ const scatterData = [
 
 export default function About() {
   const { t } = useTranslation();
-  const allImages = scatterData.flatMap(section => section.images);
+  // Limit the number of images for the hover trail to 8 to prevent extreme lag
+  const allImages = scatterData.flatMap(section => section.images).slice(0, 8);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
