@@ -30,7 +30,7 @@ export default function App() {
           <div style={{ fontSize: '3rem', marginBottom: '10px' }}>💻</div>
           <h2 style={{ color: 'var(--primary)', marginBottom: '15px', fontFamily: 'Cinzel, serif', fontSize: '1.8rem' }}>Desktop Only</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: '1.5' }}>
-            The Anantya 2025 experience is strictly designed for desktop devices. <br/><br/>
+            The Anantya 2026 experience is strictly designed for desktop devices. <br/><br/>
             Please open this website on your computer.
           </p>
         </div>

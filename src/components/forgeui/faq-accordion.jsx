@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const DEFAULT_ITEMS = [
-  { question: "What is Janmashtami 2025?", answer: "Janmashtami 2025 is the grand celebration of Lord Krishna's birth at Amrita Vishwa Vidyapeetham, Chennai Campus, featuring cultural events, games, and devotional singing." },
+  { question: "What is Janmashtami 2026?", answer: "Janmashtami 2026 is the grand celebration of Lord Krishna's birth at Amrita Vishwa Vidyapeetham, Chennai Campus, featuring cultural events, games, and devotional singing." },
   { question: "Who can participate?", answer: "All students, faculty, and staff of AVV Chennai Campus are welcome to participate in the events." },
   { question: "Is there a registration fee?", answer: "Some events like Uriyadi are completely free to watch! Other events may have a small registration fee which is clearly mentioned on the registration page." },
   { question: "How do I become a volunteer?", answer: "You can register as a volunteer for Decoration, Disciplinary, or Prasadam distribution through the 'Volunteer' tab on the registration page." },

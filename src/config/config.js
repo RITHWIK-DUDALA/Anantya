@@ -1,11 +1,11 @@
 // =============================================================
-// ANANTYA 2025 — AVV CHENNAI
+// ANANTYA 2026 — AVV CHENNAI
 // ⚙️  CONFIG FILE — Update ALL values here before going live
 // =============================================================
 
 const CONFIG = {
   // ── Event Details ──────────────────────────────────────────
-  eventName: "Anantya 2025",
+  eventName: "Anantya 2026",
   collegeName: "Amrita Vishwa Vidyapeetham, Chennai Campus",
   eventDate: "2026-08-31T16:30:00", // ← Confirm and change this date/time
   eventVenue: "AVV Chennai Campus",
