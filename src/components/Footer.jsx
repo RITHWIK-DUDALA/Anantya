@@ -119,7 +119,7 @@ export default function Footer() {
               width: '110px', height: '110px', borderRadius: '50%', overflow: 'hidden',
               border: '3px solid rgba(255, 255, 255, 0.5)', flexShrink: 0
             }}>
-              <img src="/photos/rith2.jpg" alt="Rithwik Sathya" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/photos/rith2.jpg" alt="Rithwik Sathya" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
