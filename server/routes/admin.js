@@ -111,4 +111,10 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+// GET /api/admin/check-auth
+// Verify if current admin session is valid
+router.get('/check-auth', authenticateAdmin, (req, res) => {
+  res.json({ success: true, message: 'Authenticated' });
+});
+
 module.exports = router;

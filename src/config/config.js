@@ -21,7 +21,6 @@ const CONFIG = {
   // ── Paid Game Prices (₹) ──────────────────────────────────
   gamePrices: {
     "Dahi Handi (Team)": 100,
-    "Rangoli (per team)": 0,
     "Fancy Dress": 0,
     "Antakshari": 100,
     "Flute Playing Competition": 0,
@@ -82,7 +81,7 @@ const CONFIG = {
     },
     {
       role: "Games &\nDisciplinary In-Charge",
-      name: "Rithwik Sathya",
+      name: "RITHWIK SATYA D",
       phone: "9346710580",
       year: "3rd Year",
       photo: "/photos/rith2.jpg",
@@ -119,13 +118,13 @@ const CONFIG = {
       comingSoon: false,
     },
     {
-      role: "Treasurer Coordinator",
+      role: "Treasurer",
       name: "Bhaanu tej",
       phone: "8790258289",
       year: "3rd Year",
       photo: "/photos/Bhanu.JPG.jpeg",
-      objectPosition: "center 30%",
-      transform: "scale(2.5) translateX(8%)",
+      objectPosition: "center 25%",
+      transform: "scale(3.8) translate(12%, -1%)",
       transformOrigin: "center top",
       comingSoon: false,
     },

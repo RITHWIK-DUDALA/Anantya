@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 export default function StrokeFill({ 
   text = "JANMASHTAMI", 
   duration = 3, 
-  strokeColor = "#FFFFFF", 
+  strokeColor = "#FF8C00", 
   fillColor = "#FFFFFF",
   fontSize = "240"
 }) {
@@ -18,11 +18,11 @@ export default function StrokeFill({
           dominantBaseline="middle"
           fontSize={fontSize}
           fontWeight="900"
-          strokeWidth="3"
+          strokeWidth="4"
           letterSpacing="24"
           stroke={strokeColor}
           fill="transparent"
-          style={{ fontFamily: "'Cinzel', var(--font-display), serif", fontWeight: 700 }}
+          style={{ fontFamily: "'Cinzel', var(--font-display), serif", fontWeight: 700, filter: 'drop-shadow(0 0 20px #FF8C00)' }}
           initial={{ strokeDasharray: 1500, strokeDashoffset: 1500 }}
           animate={{ strokeDashoffset: 0, fill: fillColor }}
           transition={{

@@ -109,4 +109,102 @@ router.post('/status-login', async (req, res) => {
   }
 });
 
+// POST /api/verify/venue-token-checkin
+router.post('/venue-token-checkin', authenticateAdmin, async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    if (!token) {
+      return res.status(400).json({ error: 'Token is required' });
+    }
+
+    const snapshot = await db.collection('registrations')
+      .where('token', '==', String(token).trim())
+      .limit(1)
+      .get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ error: 'Invalid Session ID (Token not found)' });
+    }
+
+    const doc = snapshot.docs[0];
+    const data = doc.data();
+
+    // Check status - strictly require 'verified' or 'free'
+    if (data.status !== 'verified' && data.status !== 'free') {
+      let errorMsg = 'Verification pending';
+      if (data.status === 'rejected') errorMsg = 'Payment Rejected';
+      if (data.status === 'pending') errorMsg = 'Payment Not Completed';
+
+      return res.status(400).json({ 
+        error: errorMsg,
+        user: { name: data.name, role: data.role, status: data.status, games: data.games || [], enteredGames: data.enteredGames || [], regId: data.regId }
+      });
+    }
+
+    // Check if already checked in
+    if (data.checkedIn) {
+      return res.status(400).json({ 
+        error: 'ALREADY CHECKED IN',
+        user: { name: data.name, role: data.role, status: data.status, games: data.games || [], enteredGames: data.enteredGames || [], regId: data.regId }
+      });
+    }
+
+    // Mark as checked in
+    await doc.ref.update({ checkedIn: true });
+
+    res.json({
+      success: true,
+      message: 'Verified and Allowed Inside',
+      user: {
+        name: data.name,
+        role: data.role,
+        games: data.games || [],
+        amount: data.amount,
+        status: data.status,
+        regId: data.regId,
+        enteredGames: data.enteredGames || []
+      }
+    });
+
+  } catch (error) {
+    console.error('Error in venue checkin:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// PATCH /api/verify/game-entry
+router.patch('/game-entry', authenticateAdmin, async (req, res) => {
+  try {
+    const { token, gameName } = req.body;
+    
+    if (!token || !gameName) {
+      return res.status(400).json({ error: 'Token and gameName are required' });
+    }
+
+    const snapshot = await db.collection('registrations')
+      .where('token', '==', String(token).trim())
+      .limit(1)
+      .get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ error: 'Invalid Session ID' });
+    }
+
+    const docRef = snapshot.docs[0].ref;
+    const data = snapshot.docs[0].data();
+    const enteredGames = data.enteredGames || [];
+
+    if (!enteredGames.includes(gameName)) {
+      enteredGames.push(gameName);
+      await docRef.update({ enteredGames });
+    }
+
+    res.json({ success: true, enteredGames });
+  } catch (error) {
+    console.error('Error in game entry:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;

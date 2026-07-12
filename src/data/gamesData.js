@@ -1,7 +1,5 @@
 export const gameCardsData = [
 
-  { id: 2, title: 'Rangoli', description: 'Showcase your artistic skills with beautiful Janmashtami rangoli designs.', image: '/games/rangoli.png', src: '/games/rangoli.png', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Quad', time: '11:00 AM', price: 0 },
-
   { id: 4, title: 'Antakshari', description: 'A musical battle of songs and wits. Let the best singers win!', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400', src: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Mini Hall 1', time: '02:30 PM', price: 100 },
   { id: 6, title: 'Tambola', description: 'Join the fun with a thrilling game of Tambola! Test your luck and win exciting prizes.', image: '/games/tambola cover photo.webp', src: '/games/tambola cover photo.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Main Stage', time: '04:30 PM', price: 50 },
   { id: 7, title: 'Tug of War', description: 'Test your team\'s raw strength in this classic test of power.', image: '/games/tug of war cover photo.jpg', src: '/games/tug of war cover photo.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Sports Ground', time: '05:00 PM', price: 0 },
@@ -14,8 +12,6 @@ export const gameCardsData = [
   { id: 14, title: 'Free Fire', description: 'Battle it out in intense fast-paced matches to be the last one standing.', image: '/games/fff.jpg', src: '/games/ffin.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '10:00 AM', price: 100 },
   { id: 15, title: 'BGMI', description: 'Squad up and fight for the chicken dinner in the ultimate battle royale.', image: '/games/bgmi1.jpg', src: '/games/bgmi1.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '12:00 PM', price: 100 },
   { id: 16, title: 'Call of Duty', description: 'Show off your tactical skills in fast-paced multiplayer combat.', image: '/games/codout.jpg', src: '/games/codin.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '02:00 PM', price: 100 },
-  { id: 17, title: 'Among Us', description: 'Find the impostor or sabotage the ship in this thrilling game of teamwork and betrayal.', image: '/games/among_us.jpg', src: '/games/among_us.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '04:00 PM', price: 50 },
   { id: 18, title: 'Minecraft', description: 'Survive, build, and conquer in a blocky world of endless possibilities.', image: '/games/mincraft.jpg', src: '/games/mincraft.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '11:00 AM', price: 100 },
-  { id: 19, title: 'Valorant', description: 'Blend tactical shooting with hyper-natural abilities in this competitive 5v5 shooter.', image: '/games/valorant.jpg', src: '/games/valorant.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '01:00 PM', price: 100 },
   { id: 20, title: 'Cold Case', description: 'Put on your detective hat and solve the ultimate mysterious cold case!', image: '/games/solving a case.jpg', src: '/games/solving a case.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: '11:00 AM', price: 100 }
 ];

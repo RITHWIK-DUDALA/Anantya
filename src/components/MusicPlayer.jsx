@@ -9,31 +9,6 @@ export default function MusicPlayer() {
     if (!audio) return;
     
     audio.volume = 0.4;
-    
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          // Autoplay blocked by browser policy. 
-          // Wait for the user to interact with the page to start playing.
-          const playOnInteraction = () => {
-            audio.play()
-              .then(() => setIsPlaying(true))
-              .catch(console.error);
-            // Remove listeners once it's triggered
-            document.removeEventListener('click', playOnInteraction);
-            document.removeEventListener('touchstart', playOnInteraction);
-            document.removeEventListener('keydown', playOnInteraction);
-          };
-          
-          document.addEventListener('click', playOnInteraction);
-          document.addEventListener('touchstart', playOnInteraction);
-          document.addEventListener('keydown', playOnInteraction);
-          
-          setIsPlaying(false);
-        });
-    }
   }, []);
 
   const togglePlay = () => {

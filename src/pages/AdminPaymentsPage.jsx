@@ -183,7 +183,7 @@ export default function AdminPaymentsPage() {
                         </span>
                       </td>
                       <td style={{ padding: '20px', color: '#aaa', fontFamily: 'monospace' }}>
-                        {reg.transactionId || reg.utrNumber || 'N/A'}
+                        {reg.paymentId || reg.transactionId || reg.utrNumber || 'N/A'}
                       </td>
                       <td style={{ padding: '20px' }}>
                         {reg.status === 'verified' && <span style={{ color: 'var(--green)', display: 'flex', alignItems: 'center', gap: '6px' }}><CircleCheckIcon size={16} /> Verified</span>}
