@@ -14,6 +14,7 @@ export default function AdminVolunteersPage() {
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [authError, setAuthError] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
 
@@ -34,7 +35,7 @@ export default function AdminVolunteersPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ password })
+        body: JSON.stringify({ password, name })
       });
       const data = await res.json();
       
@@ -93,14 +94,22 @@ export default function AdminVolunteersPage() {
         <div className="card" style={{ padding: '40px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', width: '100%', maxWidth: '400px', zIndex: 10, textAlign: 'center' }}>
           <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>Admin Login</h2>
           <form onSubmit={handleLogin}>
-            <div className="form-group" style={{ marginBottom: '20px' }}>
+            <div className="form-group" style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <input 
+                type="text" 
+                placeholder="Enter Your Name" 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                style={{ background: 'rgba(0,0,0,0.5)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}
+              />
               <input 
                 type="password" 
                 placeholder="Enter Admin Password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                style={{ background: 'rgba(0,0,0,0.5)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}
+                style={{ background: 'rgba(0,0,0,0.5)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}
               />
             </div>
             {authError && <p style={{ color: 'var(--rose)', marginBottom: '15px' }}>{authError}</p>}

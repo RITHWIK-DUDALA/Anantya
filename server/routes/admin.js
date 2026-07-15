@@ -56,7 +56,15 @@ router.patch('/payments/:regId', authenticateAdmin, async (req, res, next) => {
       return res.status(404).json({ error: 'Registration not found' });
     }
 
-    const updateData = { status };
+    if (!req.admin?.identifier) {
+      return res.status(401).json({ error: 'Admin identity could not be verified.' });
+    }
+
+    const updateData = { 
+      status,
+      updatedAt: new Date().toISOString(),
+      updatedBy: req.admin.identifier
+    };
     if (status === 'rejected' && rejectionReason) {
       updateData.rejectionReason = rejectionReason;
     }
@@ -121,7 +129,15 @@ router.patch('/volunteers/:regId', authenticateAdmin, async (req, res, next) => 
       return res.status(404).json({ error: 'Registration not found' });
     }
 
-    await docRef.update({ status });
+    if (!req.admin?.identifier) {
+      return res.status(401).json({ error: 'Admin identity could not be verified.' });
+    }
+
+    await docRef.update({ 
+      status,
+      updatedAt: new Date().toISOString(),
+      updatedBy: req.admin.identifier
+    });
 
     res.json({ success: true, message: `Volunteer marked as ${status}` });
   } catch (error) {
@@ -133,7 +149,13 @@ router.patch('/volunteers/:regId', authenticateAdmin, async (req, res, next) => 
 // Verify admin password
 router.post('/login', async (req, res, next) => {
   try {
-    const { password } = req.body;
+    const { password, name } = req.body;
+    
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return res.status(400).json({ error: 'Admin name is required to log in.' });
+    }
+
+    const cleanName = name.trim().slice(0, 50);
     
     const hash = process.env.ADMIN_PASSWORD_HASH;
     if (!hash) {
@@ -150,7 +172,7 @@ router.post('/login', async (req, res, next) => {
       }
 
       const token = jwt.sign(
-        { role: 'admin' }, 
+        { role: 'admin', identifier: cleanName }, 
         secret, 
         { expiresIn: '12h' }
       );

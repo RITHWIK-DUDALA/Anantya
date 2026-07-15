@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import RegisterPage from './pages/RegisterPage';
@@ -6,11 +6,12 @@ import GamePage from './pages/GamePage';
 import VerifyPage from './pages/VerifyPage';
 import RegistrationFormPage from './pages/RegistrationFormPage';
 import MemoriesPage from './pages/MemoriesPage';
-import AdminPaymentsPage from './pages/AdminPaymentsPage';
-import AdminVolunteersPage from './pages/AdminVolunteersPage';
 import StatusPage from './pages/StatusPage';
 import VenueVerifyPage from './pages/VenueVerifyPage';
 import MusicPlayer from './components/MusicPlayer';
+
+const AdminPaymentsPage = lazy(() => import('./pages/AdminPaymentsPage'));
+const AdminVolunteersPage = lazy(() => import('./pages/AdminVolunteersPage'));
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
@@ -50,8 +51,16 @@ export default function App() {
         <Route path="/form" element={<RegistrationFormPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
         <Route path="/verify" element={<VerifyPage />} />
-        <Route path="/admin/payments" element={<AdminPaymentsPage />} />
-        <Route path="/admin/volunteers" element={<AdminVolunteersPage />} />
+        <Route path="/admin/payments" element={
+          <Suspense fallback={<div style={{color: 'white', textAlign: 'center', marginTop: '100px'}}>Loading dashboard...</div>}>
+            <AdminPaymentsPage />
+          </Suspense>
+        } />
+        <Route path="/admin/volunteers" element={
+          <Suspense fallback={<div style={{color: 'white', textAlign: 'center', marginTop: '100px'}}>Loading dashboard...</div>}>
+            <AdminVolunteersPage />
+          </Suspense>
+        } />
         <Route path="/status" element={<StatusPage />} />
         <Route path="/venue" element={<VenueVerifyPage />} />
       </Routes>

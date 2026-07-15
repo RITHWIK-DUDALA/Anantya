@@ -6,6 +6,12 @@ const { db } = require('../firebase');
 const { sendConfirmationEmail } = require('../utils/email');
 const { appendRegistrationToExcel } = require('../utils/excel');
 const { calculateOrderAmount } = require('../utils/pricing');
+const sanitizeHtml = require('sanitize-html');
+
+const sanitizeField = (val, maxLen = 150) => {
+  if (typeof val !== 'string') return '';
+  return sanitizeHtml(val, { allowedTags: [], allowedAttributes: {} }).trim().slice(0, maxLen);
+};
 
 // Helper: Secure unique token generator
 async function generateUniqueToken() {
@@ -49,9 +55,17 @@ router.post('/free', async (req, res, next) => {
     const volunteerRoles = ['Decoration Volunteer', 'Disciplinary Volunteer', 'Prasadam Distribution Volunteer'];
     const isVolunteer = volunteerRoles.includes(role);
 
+    const safeEmail = sanitizeField(email, 150);
+    const safeName = sanitizeField(name, 100);
+    const safeDept = sanitizeField(dept, 50);
+    const safeYear = sanitizeField(year, 20);
+    const safeRole = sanitizeField(role, 50);
+    const rawGamesArray = Array.isArray(games) ? games : (games ? games.split(',').map(g => g.trim()) : []);
+    const safeGames = rawGamesArray.map(g => sanitizeField(g, 100));
+
     const registrationData = {
-      name, email, phone, dept, year, role,
-      games: Array.isArray(games) ? games : (games ? games.split(',').map(g => g.trim()) : []),
+      name: safeName, email: safeEmail, phone, dept: safeDept, year: safeYear, role: safeRole,
+      games: safeGames,
       amount: 0,
       status: isVolunteer ? "volunteer_pending" : "free",
       paymentId: null,
@@ -113,10 +127,17 @@ router.post('/paid', async (req, res, next) => {
     const qrData = JSON.stringify({ regId });
     const qrImageUrl = await QRCode.toDataURL(qrData);
 
+    const safeEmail = sanitizeField(email, 150);
+    const safeName = sanitizeField(name, 100);
+    const safeDept = sanitizeField(dept, 50);
+    const safeYear = sanitizeField(year, 20);
+    const safeRole = sanitizeField(role || 'Games Participant', 50);
+    const safeGames = gameTitles.map(g => sanitizeField(g, 100));
+
     const registrationData = {
-      name, email, phone, dept, year,
-      role: role || 'Games Participant',
-      games: gameTitles,
+      name: safeName, email: safeEmail, phone, dept: safeDept, year: safeYear,
+      role: safeRole,
+      games: safeGames,
       amount: finalTotal,
       status: "pending_verification",
       paymentId: cleanTxnId,      // UPI transaction ID for admin to verify
@@ -128,7 +149,20 @@ router.post('/paid', async (req, res, next) => {
       discountAmount: discountAmount || 0
     };
 
-    await db.collection('registrations').doc(regId).set(registrationData);
+    let isDuplicate = false;
+    await db.runTransaction(async (t) => {
+      const querySnapshot = await t.get(db.collection('registrations').where('paymentId', '==', cleanTxnId));
+      if (!querySnapshot.empty) {
+        isDuplicate = true;
+        return;
+      }
+      const newDocRef = db.collection('registrations').doc(regId);
+      t.set(newDocRef, registrationData);
+    });
+
+    if (isDuplicate) {
+      return res.status(409).json({ error: 'This transaction ID has already been used.' });
+    }
 
     await sendConfirmationEmail(email, name, regId, gameTitles.join(', '), finalTotal, cleanTxnId, qrImageUrl, false);
     appendRegistrationToExcel(registrationData);
