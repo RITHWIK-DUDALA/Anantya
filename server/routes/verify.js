@@ -142,16 +142,29 @@ router.post('/venue-token-checkin', authenticateAdmin, async (req, res) => {
       });
     }
 
-    // Check if already checked in
-    if (data.checkedIn) {
-      return res.status(400).json({ 
-        error: 'ALREADY CHECKED IN',
-        user: { name: data.name, role: data.role, status: data.status, games: data.games || [], enteredGames: data.enteredGames || [], regId: data.regId }
-      });
-    }
+    // Run a Firestore Transaction to prevent TOCTOU race conditions
+    const docRef = snapshot.docs[0].ref;
+    
+    try {
+      await db.runTransaction(async (t) => {
+        const tDoc = await t.get(docRef);
+        const tData = tDoc.data();
 
-    // Mark as checked in
-    await doc.ref.update({ checkedIn: true });
+        if (tData.checkedIn) {
+          throw new Error('ALREADY_CHECKED_IN');
+        }
+
+        t.update(docRef, { checkedIn: true });
+      });
+    } catch (err) {
+      if (err.message === 'ALREADY_CHECKED_IN') {
+        return res.status(400).json({ 
+          error: 'ALREADY CHECKED IN',
+          user: { name: data.name, role: data.role, status: data.status, games: data.games || [], enteredGames: data.enteredGames || [], regId: data.regId }
+        });
+      }
+      throw err;
+    }
 
     res.json({
       success: true,
@@ -194,6 +207,11 @@ router.patch('/game-entry', authenticateAdmin, async (req, res) => {
     const docRef = snapshot.docs[0].ref;
     const data = snapshot.docs[0].data();
     const enteredGames = data.enteredGames || [];
+    const registeredGames = data.games || [];
+
+    if (!registeredGames.includes(gameName)) {
+      return res.status(400).json({ error: 'Participant did not register for this game' });
+    }
 
     if (!enteredGames.includes(gameName)) {
       enteredGames.push(gameName);

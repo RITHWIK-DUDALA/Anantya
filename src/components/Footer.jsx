@@ -114,10 +114,10 @@ export default function Footer() {
           }} onClick={e => e.stopPropagation()}>
             
             {/* Anime Stickers & Decorations */}
-            <img src="/photos/sticker1.png" alt="Sticker 1" style={{ position: 'absolute', top: '10px', left: '20px', width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(-15deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
-            <img src="/photos/sticker2.png" alt="Sticker 2" style={{ position: 'absolute', bottom: '15px', right: '25px', width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(20deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
-            <img src="/photos/sticker3.png" alt="Sticker 3" style={{ position: 'absolute', top: '35px', right: '65px', width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(10deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
-            <img src="/photos/sticker1.png" alt="Sticker 4" style={{ position: 'absolute', bottom: '20px', left: '110px', width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(-20deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
+            <img src="/photos/sticker1.png" alt="" aria-hidden="true" style={{ position: 'absolute', top: '10px', left: '20px', width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(-15deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
+            <img src="/photos/sticker2.png" alt="" aria-hidden="true" style={{ position: 'absolute', bottom: '15px', right: '25px', width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(20deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
+            <img src="/photos/sticker3.png" alt="" aria-hidden="true" style={{ position: 'absolute', top: '35px', right: '65px', width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(10deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
+            <img src="/photos/sticker1.png" alt="" aria-hidden="true" style={{ position: 'absolute', bottom: '20px', left: '110px', width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover', opacity: 0.9, transform: 'rotate(-20deg)', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
             <div style={{ position: 'absolute', top: '15%', left: '40%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(233, 69, 96, 0.15) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }}></div>
 
             <button onClick={() => setShowDevProfile(false)} style={{
@@ -135,9 +135,9 @@ export default function Footer() {
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', zIndex: 5 }}>
-              <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#fff', fontWeight: '700', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Rithwik Sathya</h3>
+              <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#fff', fontWeight: '700', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Rithwik Satya D</h3>
               <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', lineHeight: '1.4' }}>
-                Developer & Maintainer<br/>Head of Shrinex Studios
+                {t('footer.devRoleLine1', 'Developer & Maintainer')}<br/>{t('footer.devRoleLine2', 'Head of Shrinex Studios')}
               </p>
               
               <a href="tel:+919346710580" style={{

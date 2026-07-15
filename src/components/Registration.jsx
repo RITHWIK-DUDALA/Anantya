@@ -19,7 +19,7 @@ async function postToSheets(data) {
 }
 
 /* ── Common form fields (used in both tabs) ──────── */
-function BaseFields({ prefix, t }) {
+function BaseFields({ prefix, t, showStaffFaculty = false }) {
   return (
     <div className="form-grid">
       <div className="form-group">
@@ -74,6 +74,12 @@ function BaseFields({ prefix, t }) {
           <option value="2nd Year">{t('register.form.year2')}</option>
           <option value="3rd Year">{t('register.form.year3')}</option>
           <option value="4th Year">{t('register.form.year4')}</option>
+          {showStaffFaculty && (
+            <>
+              <option value="Staff">{t('register.form.staff', 'Staff')}</option>
+              <option value="Faculty">{t('register.form.faculty', 'Faculty')}</option>
+            </>
+          )}
         </select>
       </div>
     </div>
@@ -208,7 +214,7 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
 
       {/* QR Code */}
       <div style={{
-        position: 'relative', width: '190px', height: '190px', margin: '0 auto 1rem',
+        position: 'relative', width: '100%', maxWidth: '280px', margin: '0 auto 1rem',
       }}>
         {/* Glow ring */}
         <div style={{
@@ -217,25 +223,52 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
           opacity: 0.3, filter: 'blur(8px)',
         }} />
         <div style={{
-          position: 'relative', width: '100%', height: '100%', borderRadius: '16px',
+          position: 'relative', width: '100%', borderRadius: '16px',
           border: '2px solid rgba(183,139,39,0.5)', overflow: 'hidden',
           background: '#fff', zIndex: 1,
           display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}>
           <img
-            src="/upi-qr.png"
+            src="/assets/games payment qr with upi id.jpeg"
             alt="UPI QR Code"
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
             onError={(e) => {
               e.target.style.display = 'none';
               e.target.parentNode.innerHTML = `
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;color:#999;padding:16px;text-align:center">
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:6px;color:#999;padding:16px;text-align:center">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M14 18h3M18 14v3M18 18h.01"/></svg>
                   <span style="font-size:0.75rem;color:#aaa">${t('register.uploadUpi', 'Add upi-qr.png<br/>to public/ folder')}</span>
                 </div>`;
             }}
           />
         </div>
+      </div>
+
+      {/* UPI ID */}
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: '8px',
+        padding: '8px 18px', borderRadius: '10px', marginBottom: '1rem',
+        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+      }}>
+        <span style={{ fontSize: '0.82rem', color: '#aaa', fontWeight: 600 }}>UPI ID:</span>
+        <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#5b9bf5', letterSpacing: '0.5px' }}>8790258289@axl</span>
+        <button
+          type="button"
+          onClick={() => { navigator.clipboard.writeText('8790258289@axl'); }}
+          title="Copy UPI ID"
+          style={{
+            background: 'none', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer',
+            padding: '4px', borderRadius: '6px', display: 'flex', alignItems: 'center',
+            transition: 'border-color 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = '#5b9bf5'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b9bf5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
       </div>
 
       <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
@@ -258,12 +291,12 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
           style={{
             width: '100%', boxSizing: 'border-box',
             background: 'rgba(255,255,255,0.04)',
-            border: error ? '1.5px solid var(--rose)' : '1.5px solid rgba(255,255,255,0.12)',
-            borderRadius: '10px', color: 'var(--text)', fontSize: '1rem',
+            border: error ? '1.5px solid var(--rose)' : '1.5px solid rgba(244,162,97,0.3)',
+            borderRadius: '10px', color: '#f4a261', fontSize: '1rem',
             padding: '12px 14px', outline: 'none', transition: 'border 0.2s'
           }}
-          onFocus={e => e.target.style.border = '1.5px solid rgba(183,139,39,0.6)'}
-          onBlur={e => e.target.style.border = error ? '1.5px solid var(--rose)' : '1.5px solid rgba(255,255,255,0.12)'}
+          onFocus={e => e.target.style.border = '1.5px solid #f4a261'}
+          onBlur={e => e.target.style.border = error ? '1.5px solid var(--rose)' : '1.5px solid rgba(244,162,97,0.3)'}
         />
         {error && (
           <p style={{ color: 'var(--rose)', fontSize: '0.8rem', marginTop: '6px', textAlign: 'left' }}>
@@ -279,12 +312,12 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
           onClick={onBack}
           style={{
             flex: '0 0 auto', padding: '12px 20px', borderRadius: '10px', cursor: 'pointer',
-            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-            color: 'var(--text)', fontSize: '0.9rem', fontWeight: 600, transition: 'all 0.2s',
+            background: 'rgba(244,162,97,0.08)', border: '1px solid rgba(244,162,97,0.4)',
+            color: '#f4a261', fontSize: '0.9rem', fontWeight: 600, transition: 'all 0.2s',
             fontFamily: 'inherit'
           }}
-          onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.1)'}
-          onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.06)'}
+          onMouseEnter={e => e.target.style.background = 'rgba(244,162,97,0.18)'}
+          onMouseLeave={e => e.target.style.background = 'rgba(244,162,97,0.08)'}
         >
           ← Back
         </button>
@@ -322,6 +355,11 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   const [discountError, setDiscountError] = useState('');
   const [isSecretInputVisible, setIsSecretInputVisible] = useState(false);
   const formRef = useRef(null);
+
+  // Check if any selected game allows staff/faculty
+  const hasSpecialEventSelected = gameCardsData.some(
+    (game) => selected[game.title] && game.allowStaffFaculty
+  );
 
   const baseTotal = gameCardsData.reduce((sum, game) => (selected[game.title] ? sum + game.price : sum), 0);
   const total = Math.max(0, baseTotal - discount);
@@ -430,18 +468,33 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
 
   return (
     <form id="paid-form" className="reg-form card" onSubmit={handleProceedToPayment} ref={formRef}>
-      <BaseFields prefix="paid" t={t} />
+      <BaseFields prefix="paid" t={t} showStaffFaculty={hasSpecialEventSelected} />
 
       {/* Game selection */}
       {initialGameId ? (
         <div style={{ padding: '20px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', marginBottom: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
           <p className="games-title" style={{ color: '#aaaaaa', fontSize: '0.9rem', margin: '0 0 4px 0' }}>{t('register.registeringFor', 'Registering for:')}</p>
-          <h4 className="game-label-text" style={{ fontSize: '1.4rem', color: 'var(--primary)', margin: 0 }}>
-             {(() => {
-               const g = gameCardsData.find(x => x.id.toString() === initialGameId);
-               return g ? t(`games.${g.id}.title`) : '';
-             })()}
-          </h4>
+          {(() => {
+            const g = gameCardsData.find(x => x.id.toString() === initialGameId);
+            if (!g) return null;
+            return (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                  <h4 className="game-label-text" style={{ fontSize: '1.4rem', color: 'var(--primary)', margin: 0 }}>
+                    {t(`games.${g.id}.title`)}
+                  </h4>
+                  {g.isSpecialEvent && (
+                    <span className="special-event-badge">⭐ {t('gamePage.specialEvent', 'Special Event')}</span>
+                  )}
+                </div>
+                {g.allowStaffFaculty && (
+                  <p style={{ color: '#999', fontSize: '0.8rem', margin: '6px 0 0 0' }}>
+                    👥 {t('gamePage.staffFacultyAllowed', 'Staff & Faculty can also participate')}
+                  </p>
+                )}
+              </>
+            );
+          })()}
         </div>
       ) : (
         <>
@@ -449,7 +502,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
           <p className="games-subtitle">{t('register.form.gamesSubtitle')}</p>
           <div className="games-grid">
             {gameCardsData.map((game) => (
-              <label key={game.title} className={`game-label ${selected[game.title] ? 'selected' : ''}`}>
+              <label key={game.title} className={`game-label ${selected[game.title] ? 'selected' : ''} ${game.isSpecialEvent ? 'special-event' : ''}`}>
                 <input
                   type="checkbox"
                   checked={!!selected[game.title]}
@@ -457,7 +510,17 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
                 />
                 <span className="checkbox-custom" />
                 <div className="game-card-content">
-                  <h4 className="game-label-text">{t(`games.${game.id}.title`)}</h4>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <h4 className="game-label-text" style={{ margin: 0 }}>{t(`games.${game.id}.title`)}</h4>
+                    {game.isSpecialEvent && (
+                      <span className="special-event-badge">⭐ {t('gamePage.specialEvent', 'Special Event')}</span>
+                    )}
+                  </div>
+                  {game.allowStaffFaculty && (
+                    <p className="game-info" style={{ fontSize: '0.75rem' }}>
+                      👥 {t('gamePage.staffFacultyAllowed', 'Staff & Faculty can also participate')}
+                    </p>
+                  )}
                   <p className="game-info"><span>{t('gamePage.venue')}:</span> {game.venue}</p>
                   <p className="game-info"><span>{t('gamePage.time')}:</span> {game.time}</p>
                   <p className="game-info"><span>{t('gamePage.organizer')}:</span> {game.venueOrganizer}</p>

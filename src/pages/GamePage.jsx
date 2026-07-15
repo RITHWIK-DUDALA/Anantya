@@ -72,58 +72,93 @@ export default function GamePage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px', alignItems: 'start' }}>
             
-            {/* Left Column: Image */}
-            <div className="group" style={{ position: 'relative' }}>
-              
-              {/* Outer Glow Backlight (Hover Only) */}
-              <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{
-                  background: 'rgba(255, 120, 0, 0.4)',
-                  filter: 'blur(40px)',
-                  zIndex: 0,
-                  borderRadius: '24px',
-                  transform: 'scale(0.95)'
-                }}
-              />
-
-              <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '500px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a' }}>
+            {/* Left Column: Image & Coordinators */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+              <div className="group" style={{ position: 'relative' }}>
                 
-                {/* Inner Ambient Lighting (Hover Only) */}
+                {/* Outer Glow Backlight (Hover Only) */}
                 <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{
-                    background: 'radial-gradient(circle at 50% 50%, rgba(255, 120, 0, 0.15) 0%, transparent 70%)',
-                    zIndex: 2
-                  }} 
-                />
-
-                {/* Blurred Background to fill black bars */}
-                <div 
-                  style={{
-                    position: 'absolute',
-                    inset: '-20px',
-                    backgroundImage: `url(${game.src})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    filter: 'blur(20px) brightness(0.5)',
-                    zIndex: 0
+                    background: 'rgba(255, 120, 0, 0.4)',
+                    filter: 'blur(40px)',
+                    zIndex: 0,
+                    borderRadius: '24px',
+                    transform: 'scale(0.95)'
                   }}
                 />
 
-                <img 
-                  src={game.src} 
-                  alt={t(`games.${game.id}.title`)}
-                  style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', objectFit: 'contain', display: 'block', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
-                />
+                <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '500px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a' }}>
+                  
+                  {/* Inner Ambient Lighting (Hover Only) */}
+                  <div 
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: 'radial-gradient(circle at 50% 50%, rgba(255, 120, 0, 0.15) 0%, transparent 70%)',
+                      zIndex: 2
+                    }} 
+                  />
+
+                  {/* Blurred Background to fill black bars */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      inset: '-20px',
+                      backgroundImage: `url(${game.src})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      filter: 'blur(20px) brightness(0.5)',
+                      zIndex: 0
+                    }}
+                  />
+
+                  <img 
+                    src={game.src} 
+                    alt={t(`games.${game.id}.title`)}
+                    style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', objectFit: 'contain', display: 'block', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
+                  />
+                </div>
               </div>
+
+              {/* Coordinators Section */}
+              {game.coordinators && game.coordinators.length > 0 && (
+                <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '25px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <h3 style={{ fontSize: '1.2rem', marginBottom: '25px', color: '#eee', textAlign: 'center', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' }}>Event Coordinators</h3>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+                    {game.coordinators.map((coord, idx) => (
+                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textAlign: 'center', width: '130px' }}>
+                        <div style={{ width: '90px', height: '90px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--primary)', padding: '3px', background: '#0a0a0a' }}>
+                          <img src={coord.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(coord.name) + '&background=random'} alt={coord.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        </div>
+                        <div>
+                          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1rem', color: '#fff' }}>{coord.name}</p>
+                          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--primary)', marginTop: '4px', fontWeight: '500' }}>{coord.role}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right Column: Details */}
             <div>
-              <AsciiGlitchRipple as="h1" delay={200} dur={600} style={{ fontSize: '3.5rem', fontWeight: 'bold', marginBottom: '20px', background: 'linear-gradient(to right, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              <AsciiGlitchRipple as="h1" delay={200} dur={600} style={{ fontSize: '3.5rem', fontWeight: 'bold', marginBottom: '10px', background: 'linear-gradient(to right, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 {t(`games.${game.id}.title`)}
               </AsciiGlitchRipple>
+
+              {game.isSpecialEvent && (
+                <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <span className="special-event-detail-badge">
+                    ⭐ {t('gamePage.specialEvent', 'Special Event')}
+                  </span>
+                  {game.allowStaffFaculty && (
+                    <p style={{ color: '#999', fontSize: '0.85rem', margin: 0 }}>
+                      👥 {t('gamePage.staffFacultyAllowed', 'Staff & Faculty can also participate')}
+                    </p>
+                  )}
+                </div>
+              )}
 
               <AsciiGlitchRipple as="p" delay={500} dur={600} style={{ fontSize: '1.2rem', color: '#ccc', lineHeight: '1.8', marginBottom: '40px' }}>
                 {t(`games.${game.id}.description`)}

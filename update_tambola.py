@@ -17,6 +17,9 @@ with open(games_file, 'w', encoding='utf-8') as f:
 langs = glob.glob(r'c:\Users\LENOVO\OneDrive\Desktop\janmastami\src\i18n\translations\*.json')
 
 for lang_file in langs:
+    if not lang_file.endswith('en.json'):
+        continue
+        
     with open(lang_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     

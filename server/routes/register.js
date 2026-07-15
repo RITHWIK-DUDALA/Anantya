@@ -46,11 +46,14 @@ router.post('/free', async (req, res, next) => {
     const qrData = JSON.stringify({ regId });
     const qrImageUrl = await QRCode.toDataURL(qrData);
 
+    const volunteerRoles = ['Decoration Volunteer', 'Disciplinary Volunteer', 'Prasadam Distribution Volunteer'];
+    const isVolunteer = volunteerRoles.includes(role);
+
     const registrationData = {
       name, email, phone, dept, year, role,
       games: Array.isArray(games) ? games : (games ? games.split(',').map(g => g.trim()) : []),
       amount: 0,
-      status: "free",
+      status: isVolunteer ? "volunteer_pending" : "free",
       paymentId: null,
       registeredAt: new Date().toISOString(),
       regId, token,

@@ -126,6 +126,67 @@ export default function StatusPage() {
                     <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>You are fully registered for the free events. See you there!</p>
                   </div>
                 )}
+
+                {userStatus.status === 'volunteer_pending' && (
+                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+                    <span style={{ fontSize: '72px', display: 'inline-block', opacity: 0.9, filter: 'drop-shadow(0 0 15px rgba(99, 102, 241, 0.3))' }}>🙋</span>
+                    <h3 style={{ color: 'var(--primary)', margin: '20px 0 10px 0', fontSize: '2rem' }}>Application Under Review</h3>
+                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>Your volunteer application is being reviewed by the organizers. Please check back soon!</p>
+                  </div>
+                )}
+
+                {userStatus.status === 'volunteer_accepted' && (
+                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+                    <CircleCheckIcon size={72} color="var(--green)" />
+                    <h3 style={{ color: 'var(--green)', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(0, 255, 136, 0.3)' }}>🎉 Congratulations!</h3>
+                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>You have been accepted as a volunteer! The organizers will contact you soon with further details.</p>
+                  </div>
+                )}
+
+                {userStatus.status === 'volunteer_reinstated' && (
+                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+                    <CircleCheckIcon size={72} color="#5b9bf5" />
+                    <h3 style={{ color: '#5b9bf5', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(91, 155, 245, 0.3)' }}>🎉 Re-instated!</h3>
+                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>Great news! You have been re-instated as a volunteer. The organizers will contact you soon.</p>
+                  </div>
+                )}
+
+                {userStatus.status === 'volunteer_rejected' && (
+                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+                    <svg width="80" height="76" viewBox="0 0 48 46" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', marginBottom: '4px' }}>
+                      <style>{`
+                        @keyframes drawOutline {
+                          0% { stroke-dashoffset: 200; opacity: 0.3; }
+                          50% { opacity: 1; }
+                          100% { stroke-dashoffset: 0; opacity: 1; }
+                        }
+                        @keyframes glowPulse {
+                          0%, 100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.2)); }
+                          50% { filter: drop-shadow(0 0 12px rgba(255,255,255,0.5)); }
+                        }
+                        .anantya-outline {
+                          stroke-dasharray: 200;
+                          stroke-dashoffset: 200;
+                          animation: drawOutline 2s ease-out forwards, glowPulse 3s ease-in-out 2s infinite;
+                        }
+                      `}</style>
+                      <path
+                        className="anantya-outline"
+                        d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z"
+                        stroke="#ffffff"
+                        strokeWidth="1.2"
+                        fill="none"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <h3 style={{ color: 'var(--secondary)', margin: '20px 0 10px 0', fontSize: '2rem' }}>Thank You for Your Interest</h3>
+                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.7 }}>
+                      We truly appreciate your willingness to volunteer for Anantya! At this time, our volunteer slots are full.
+                      <br /><br />
+                      Should any openings come up, we'll be sure to reach out to you. In the meantime, we'd love for you to come and enjoy the festivities — see you at the event!
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div style={{ textAlign: 'left', background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '12px', marginBottom: '35px', border: '1px solid rgba(255,255,255,0.03)' }}>

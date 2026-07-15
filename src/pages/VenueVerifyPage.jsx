@@ -48,7 +48,15 @@ export default function VenueVerifyPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch(`${apiUrl}/api/admin/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (err) {
+      console.error(err);
+    }
     localStorage.removeItem('admin_token');
     setIsAuthenticated(false);
   };

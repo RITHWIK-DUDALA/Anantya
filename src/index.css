@@ -1457,6 +1457,47 @@ h1,h2,h3,h4,h5,h6 {
   border-radius: var(--radius-full);
 }
 
+/* Special Event Styles */
+.game-label.special-event {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+}
+.game-label.special-event:hover,
+.game-label.special-event.selected {
+  border-color: var(--primary);
+  background: rgba(107, 155, 210, 0.1);
+  box-shadow: var(--shadow-sm);
+}
+.special-event-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #bbb;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.special-event-detail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #aaa;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
 /* Total */
 .total-row {
   display: flex;

@@ -15,12 +15,15 @@ files = [
 
 for f in files:
     path = os.path.join(directory, f)
+    out_dir = os.path.join(directory, "resized")
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, f)
     if os.path.exists(path):
         try:
             print(f"Resizing {f}...")
             with Image.open(path) as img:
                 img.thumbnail((1280, 1280), Image.Resampling.LANCZOS)
-                img.save(path, quality=80)
-            print(f"Saved {f}")
+                img.save(out_path, quality=80)
+            print(f"Saved {f} to resized/")
         except Exception as e:
             print(f"Error resizing {f}: {e}")

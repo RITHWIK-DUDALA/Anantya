@@ -10,8 +10,14 @@ files = [f for f in os.listdir(directory) if f.lower().endswith(('.jpg', '.jpeg'
 # Actually, I'll exclude krishna.jpg, krishna2.jpg, little_krishna.jpg, k22.jpg, hro1p.jpg unless they want it.
 # Let's include everything just to be safe, except the ones that were there before (the user uploaded everything now).
 
+with open(memories_file, 'r', encoding='utf-8') as mf:
+    existing_content = mf.read()
+
+# Extract existing numeric ids from memoriesData to avoid collisions
+existing_ids = [int(m) for m in re.findall(r"id:\s*'?(\d+)'?", existing_content)]
+id_counter = max(existing_ids) + 1 if existing_ids else 1
+
 output = []
-id_counter = 10
 for f in sorted(files):
     # skip some obviously not-memory files if we want, but let's just add all the new ones
     if f in ['k22.jpg', 'krishna.jpg', 'krishna2.jpg', 'little_krishna.jpg', 'hro1p.jpg']:
@@ -23,7 +29,7 @@ for f in sorted(files):
         title = f.rsplit('.', 1)[0].replace('-', ' ').replace('_', ' ').title()
     
     output.append(f"""  {{
-    id: {id_counter},
+    id: '{id_counter}',
     type: 'photo',
     src: '/assets/{f}',
     title: '{title}',

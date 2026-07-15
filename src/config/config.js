@@ -71,7 +71,7 @@ const CONFIG = {
       comingSoon: false,
     },
     {
-      role: "Culturals In-Charge",
+      role: "Cultural In-Charge",
       name: "V R SRINITHI",
       phone: "8489957162",
       year: "3rd Year",

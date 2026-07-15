@@ -184,6 +184,8 @@
       "year2": "2nd Year",
       "year3": "3rd Year",
       "year4": "4th Year",
+      "staff": "Staff",
+      "faculty": "Faculty",
       "role": "Role Applying For",
       "rolePlaceholder": "Select a role",
       "roles": {
@@ -228,7 +230,9 @@
     "rights": "All rights reserved.",
     "venture": "A venture under RX-7 Group",
     "tagline": "A celebration of culture & devotion",
-    "credit": "Made with ❤️ by the Events Committee"
+    "credit": "Made with ❤️ by the Events Committee",
+    "devRoleLine1": "Developer & Maintainer",
+    "devRoleLine2": "Head of Shrinex Studios"
   },
   "gamePage": {
     "notFound": "Game not found",
@@ -247,7 +251,9 @@
     "registrationInfo": "Registration Info",
     "signUpQuickly": "Sign up for this event quickly! Slots are filling up.",
     "registerFor": "Register for",
-    "clickToView": "Click to view details"
+    "clickToView": "Click to view details",
+    "specialEvent": "Special Event",
+    "staffFacultyAllowed": "Staff & Faculty can also participate"
   },
   "games": {
     "1": {

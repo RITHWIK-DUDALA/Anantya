@@ -7,6 +7,7 @@ import VerifyPage from './pages/VerifyPage';
 import RegistrationFormPage from './pages/RegistrationFormPage';
 import MemoriesPage from './pages/MemoriesPage';
 import AdminPaymentsPage from './pages/AdminPaymentsPage';
+import AdminVolunteersPage from './pages/AdminVolunteersPage';
 import StatusPage from './pages/StatusPage';
 import VenueVerifyPage from './pages/VenueVerifyPage';
 import MusicPlayer from './components/MusicPlayer';
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/memories" element={<MemoriesPage />} />
         <Route path="/verify" element={<VerifyPage />} />
         <Route path="/admin/payments" element={<AdminPaymentsPage />} />
+        <Route path="/admin/volunteers" element={<AdminVolunteersPage />} />
         <Route path="/status" element={<StatusPage />} />
         <Route path="/venue" element={<VenueVerifyPage />} />
       </Routes>

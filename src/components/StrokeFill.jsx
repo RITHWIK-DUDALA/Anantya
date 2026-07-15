@@ -22,7 +22,7 @@ export default function StrokeFill({
           letterSpacing="24"
           stroke={strokeColor}
           fill="transparent"
-          style={{ fontFamily: "'Cinzel', var(--font-display), serif", fontWeight: 700, filter: 'drop-shadow(0 0 20px #FF8C00)' }}
+          style={{ fontFamily: "'Cinzel', var(--font-display), serif", fontWeight: 700, filter: `drop-shadow(0 0 20px ${strokeColor})` }}
           initial={{ strokeDasharray: 1500, strokeDashoffset: 1500 }}
           animate={{ strokeDashoffset: 0, fill: fillColor }}
           transition={{
