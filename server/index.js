@@ -32,7 +32,7 @@ app.use(helmet({
 // Restrict CORS
 const frontendUrl = process.env.FRONTEND_URL || 'https://anantya.dpdns.org';
 const allowedOrigins = process.env.NODE_ENV === 'production' 
-  ? [frontendUrl, 'https://anantya-2025.web.app', 'https://anantya.dpdns.org', 'http://anantya.dpdns.org'] 
+  ? [frontendUrl, 'https://anantya-2025.web.app', 'https://anantya.dpdns.org', 'http://anantya.dpdns.org', 'https://anantya.dpxdns.org', 'http://anantya.dpxdns.org', 'https://www.anantya.dpxdns.org'] 
   : ['http://localhost:5173', 'http://127.0.0.1:5173'];
 
 app.use(cors({
