@@ -167,69 +167,44 @@ function BaseFields({ prefix, t, showStaffFaculty = false }) {
 
 /* ── Free Registration Form ──────────────────────── */
 function FreeForm({ t, onSuccess, onError }) {
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const fd = new FormData(e.target);
-    const data = {
-      name: fd.get('name'),
-      email: fd.get('email'),
-      phone: fd.get('phone'),
-      dept: fd.get('dept'),
-      year: fd.get('year'),
-      role: fd.get('role'),
-      games: '',
-      amount: 0,
-    };
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || '';
-      const response = await fetch(`${apiUrl}/api/register/free`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Registration failed');
-      e.target.reset();
-      onSuccess('free', result.token);
-    } catch (err) {
-      onError();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const roles = [
-    { value: 'Cultural Participant',            key: 'register.form.roles.cultural' },
-    { value: 'Decoration Volunteer',            key: 'register.form.roles.decoration' },
-    { value: 'Disciplinary Volunteer',          key: 'register.form.roles.disciplinary' },
-    { value: 'Prasadam Distribution Volunteer', key: 'register.form.roles.prasadam' },
-    { value: 'Games Participant (free)',         key: 'register.form.roles.games' },
-  ];
-
   return (
-    <form id="free-form" className="reg-form card" onSubmit={handleSubmit}>
-      {loading && <ProcessingPopup />}
-      <BaseFields prefix="free" t={t} />
-      <div className="form-grid">
-        <div className="form-group full">
-          <label htmlFor="free-role">{t('register.form.role')} *</label>
-          <select id="free-role" name="role" required defaultValue="">
-            <option value="" disabled>{t('register.form.rolePlaceholder')}</option>
-            {roles.map(({ value, key }) => (
-              <option key={value} value={value}>{t(key)}</option>
-            ))}
-          </select>
+    <div className="reg-form card" style={{ textAlign: 'center', padding: '3rem 1.5rem', maxWidth: '600px', margin: '0 auto' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ 
+          display: 'inline-flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          width: '64px',
+          height: '64px',
+          borderRadius: '50%',
+          background: 'rgba(183,139,39,0.1)',
+          marginBottom: '1.5rem',
+          border: '1px solid rgba(183,139,39,0.3)'
+        }}>
+          <span style={{ fontSize: '32px' }}>🎉</span>
+        </div>
+        
+        <h3 style={{ margin: '0 0 1rem', fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary)' }}>
+          No Web Registration Required!
+        </h3>
+        
+        <p style={{ fontSize: '1.1rem', color: 'var(--text)', lineHeight: '1.6', marginBottom: '2rem' }}>
+          Since this is a free event, there is no need to register online.
+        </p>
+
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
+          border: '1px solid rgba(183,139,39,0.2)',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          boxShadow: 'inset 0 0 20px rgba(183,139,39,0.02)'
+        }}>
+          <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.6' }}>
+            We warmly welcome you to join us! On-spot registrations might be taken directly at the venue. See you there!
+          </p>
         </div>
       </div>
-      <button type="submit" className="submit-btn" disabled={loading} id="free-submit-btn">
-        {loading
-          ? t('register.form.submitting')
-          : <><SendIcon size={16} color="#fff" /> {t('register.form.submit')}</>}
-      </button>
-    </form>
+    </div>
   );
 }
 
