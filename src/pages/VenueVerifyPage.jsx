@@ -8,6 +8,7 @@ export default function VenueVerifyPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorType, setErrorType] = useState(null); // 'pending', 'already', 'invalid'
+  const [countdown, setCountdown] = useState(null);
 
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,6 +24,16 @@ export default function VenueVerifyPage() {
       .then(r => { if (r.ok) setIsAuthenticated(true); })
       .catch(() => {});
   }, [apiUrl]);
+
+  useEffect(() => {
+    let timer;
+    if (countdown !== null && countdown > 0) {
+      timer = setTimeout(() => setCountdown(c => c - 1), 1000);
+    } else if (countdown === 0) {
+      handleReset();
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -95,11 +106,13 @@ export default function VenueVerifyPage() {
           new Audio('/sounds/alarm.wav').play().catch(e => console.log('Audio play failed:', e));
         }
         setResult({ error: json.error, user: json.user });
+        setCountdown(300); // 5 minutes
         throw new Error(json.error);
       }
 
       new Audio('/sounds/success.wav').play().catch(e => console.log('Audio play failed:', e));
       setResult(json);
+      setCountdown(300); // 5 minutes
     } catch (err) {
       console.error(err);
     } finally {
@@ -136,6 +149,60 @@ export default function VenueVerifyPage() {
     setToken('');
     setResult(null);
     setErrorType(null);
+    setCountdown(null);
+  };
+
+  const formatCountdown = () => {
+    if (countdown === null) return null;
+    const mins = Math.floor(countdown / 60);
+    const secs = countdown % 60;
+    const percent = (countdown / 300) * 100;
+
+    return (
+      <div style={{ 
+        marginTop: '25px', 
+        marginBottom: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '5px'
+      }}>
+        <div style={{ 
+          color: 'rgba(255,255,255,0.5)', 
+          fontSize: '0.8rem', 
+          textTransform: 'uppercase', 
+          letterSpacing: '2px' 
+        }}>
+          Auto-Reset In
+        </div>
+        <div style={{ 
+          fontFamily: 'monospace', 
+          fontSize: '1.8rem', 
+          fontWeight: 'bold', 
+          color: '#fff',
+          textShadow: '0 0 15px rgba(255,255,255,0.4)',
+          letterSpacing: '4px'
+        }}>
+          {mins}:{secs.toString().padStart(2, '0')}
+        </div>
+        <div style={{
+          width: '100%',
+          height: '3px',
+          background: 'rgba(255,255,255,0.1)',
+          borderRadius: '4px',
+          overflow: 'hidden',
+          marginTop: '8px'
+        }}>
+          <div style={{
+            height: '100%',
+            width: `${percent}%`,
+            background: 'var(--primary, #3b82f6)',
+            transition: 'width 1s linear',
+            boxShadow: '0 0 10px var(--primary, #3b82f6)'
+          }} />
+        </div>
+      </div>
+    );
   };
 
   const renderGameList = () => {
@@ -257,7 +324,8 @@ export default function VenueVerifyPage() {
                   {renderGameList()}
                 </div>
 
-                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '30px', background: 'rgba(255,255,255,0.1)', width: '100%' }}>
+                {formatCountdown()}
+                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '15px', background: 'rgba(255,255,255,0.1)', width: '100%' }}>
                   Next Person
                 </button>
               </div>
@@ -278,7 +346,8 @@ export default function VenueVerifyPage() {
                   </div>
                 )}
 
-                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '30px', background: '#ef4444', color: '#fff', width: '100%' }}>
+                {formatCountdown()}
+                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '15px', background: '#ef4444', color: '#fff', width: '100%' }}>
                   Back
                 </button>
               </div>
@@ -299,7 +368,8 @@ export default function VenueVerifyPage() {
                   </div>
                 )}
 
-                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '30px', background: 'rgba(245, 158, 11, 0.2)', color: '#fcd34d', width: '100%' }}>
+                {formatCountdown()}
+                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '15px', background: 'rgba(245, 158, 11, 0.2)', color: '#fcd34d', width: '100%' }}>
                   Try Again
                 </button>
               </div>
@@ -312,7 +382,8 @@ export default function VenueVerifyPage() {
                 <h2 style={{ color: '#ef4444', fontSize: '1.8rem', marginBottom: '20px' }}>INVALID SESSION ID</h2>
                 <p style={{ color: '#fca5a5' }}>This token does not exist in the system.</p>
                 
-                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '30px', background: 'rgba(255,255,255,0.1)', width: '100%' }}>
+                {formatCountdown()}
+                <button onClick={handleReset} className="submit-btn" style={{ marginTop: '15px', background: 'rgba(255,255,255,0.1)', width: '100%' }}>
                   Try Again
                 </button>
               </div>
