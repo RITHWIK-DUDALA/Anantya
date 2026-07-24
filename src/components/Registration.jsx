@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { SendIcon, CreditCardIcon, CircleCheckIcon, ShieldXIcon } from '@animateicons/react/lucide';
 import CONFIG from '../config/config';
@@ -6,7 +7,7 @@ import { gameCardsData } from '../data/gamesData';
 import Modal from './Modal';
 
 function ProcessingPopup() {
-  return (
+  return createPortal(
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
       background: 'rgba(0,0,0,0.85)', zIndex: 99999,
@@ -14,21 +15,49 @@ function ProcessingPopup() {
       padding: '20px', textAlign: 'center', backdropFilter: 'blur(8px)'
     }}>
       <div style={{
-        background: '#1a1a1a', border: '1px solid rgba(183,139,39,0.3)', borderRadius: '16px', 
-        padding: '30px', maxWidth: '450px', boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+        background: 'linear-gradient(145deg, #1a1a1a, #0a0a0a)',
+        border: '1px solid rgba(183,139,39,0.3)', 
+        borderRadius: '24px', 
+        padding: '40px', 
+        maxWidth: '450px', 
+        boxShadow: '0 0 50px rgba(183,139,39,0.15), inset 0 0 20px rgba(183,139,39,0.05)',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
-        <div style={{ margin: '0 auto 20px', width: '48px', height: '48px', border: '4px solid rgba(183,139,39,0.1)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-        <h3 style={{ margin: '0 0 15px', color: 'var(--primary)', fontSize: '1.4rem', fontWeight: 700 }}>Processing Registration...</h3>
-        <p style={{ color: '#ddd', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
-          It might take <strong>3 to 5 minutes</strong> for a successful registration. 
-          <br/><br/>
-          <span style={{ color: 'var(--rose)', fontWeight: 600 }}>Please do not close this tab or navigate away</span> before getting the session ID. We are not responsible for the registration if the process is interrupted.
-        </p>
+        {/* Glow effect in background */}
+        <div style={{
+          position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%',
+          background: 'conic-gradient(from 0deg, transparent, rgba(183,139,39,0.05), transparent)',
+          animation: 'spin 4s linear infinite', zIndex: 0
+        }} />
+        
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ 
+            margin: '0 auto 24px', width: '56px', height: '56px', 
+            border: '4px solid rgba(183,139,39,0.1)', 
+            borderTopColor: 'var(--primary)', 
+            borderRadius: '50%', 
+            animation: 'spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite' 
+          }} />
+          <h3 style={{ margin: '0 0 16px', color: 'var(--primary)', fontSize: '1.5rem', fontWeight: 700, letterSpacing: '0.5px' }}>
+            Processing...
+          </h3>
+          <p style={{ color: '#eee', fontSize: '1rem', lineHeight: '1.6', margin: 0 }}>
+            It might take <strong style={{color: 'var(--primary)'}}>3 to 5 minutes</strong> for a successful registration. 
+            <br/><br/>
+            <span style={{ color: '#ff4444', fontWeight: 600, background: 'rgba(255,0,0,0.1)', padding: '6px 12px', borderRadius: '8px', display: 'inline-block' }}>
+              ⚠ Do not close or refresh this tab
+            </span>
+            <br/><br/>
+            <span style={{ fontSize: '0.85rem', color: '#999' }}>We are not responsible for the registration if the process is interrupted.</span>
+          </p>
+        </div>
       </div>
       <style>{`
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       `}</style>
-    </div>
+    </div>,
+    document.body
   );
 }
 
