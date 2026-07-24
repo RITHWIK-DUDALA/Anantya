@@ -212,10 +212,26 @@ export default function GamePage() {
 
               <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '30px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '20px' }}>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>{t('gamePage.registrationInfo')}</h3>
-                <p style={{ marginBottom: '20px', color: '#aaa' }}>{t('gamePage.signUpQuickly')}</p>
-                <Link to={`/form?game=${game.id}`} style={{ display: 'inline-block', background: 'var(--primary)', color: 'white', textDecoration: 'none', padding: '12px 24px', borderRadius: '24px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}>
-                  {t('gamePage.registerFor')} {t(`games.${game.id}.title`)}
-                </Link>
+                {game.price === 0 ? (
+                  <div style={{
+                    background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
+                    border: '1px solid rgba(183,139,39,0.2)',
+                    borderRadius: '16px',
+                    padding: '1.5rem'
+                  }}>
+                    <h4 style={{ margin: '0 0 10px', color: 'var(--primary)', fontSize: '1.2rem' }}>No Web Registration Required!</h4>
+                    <p style={{ color: '#aaa', margin: 0, lineHeight: '1.6' }}>
+                      Since this is a free event, there is no need to register online. We warmly welcome you to join us! On-spot registrations might be taken directly at the venue.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p style={{ marginBottom: '20px', color: '#aaa' }}>{t('gamePage.signUpQuickly')}</p>
+                    <Link to={`/form?game=${game.id}`} style={{ display: 'inline-block', background: 'var(--primary)', color: 'white', textDecoration: 'none', padding: '12px 24px', borderRadius: '24px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}>
+                      {t('gamePage.registerFor')} {t(`games.${game.id}.title`)}
+                    </Link>
+                  </>
+                )}
               </div>
 
             </div>
