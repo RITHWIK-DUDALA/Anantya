@@ -210,8 +210,8 @@ export default function GamePage() {
                 </div>
               )}
 
-              <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '30px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '20px' }}>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>{t('gamePage.registrationInfo')}</h3>
+              <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '30px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '20px', fontFamily: '"Isabella", serif' }}>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', fontFamily: '"Isabella", serif' }}>{t('gamePage.registrationInfo')}</h3>
                 {game.price === 0 ? (
                   <div style={{
                     background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
