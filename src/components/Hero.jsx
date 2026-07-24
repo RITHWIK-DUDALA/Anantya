@@ -44,7 +44,7 @@ export default function Hero() {
       
       {/* ░░ Framer Motion Stroke Title */}
       <div className="hero-content" id="hero-content" style={{ zIndex: 11, position: 'relative', width: '100%', maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <StrokeFill text={t('hero.mainTitle', 'JANMASHTAMI')} duration={3} />
+        <StrokeFill text="anantya" duration={3} />
         <p style={{ color: '#1e3a8a', fontSize: '1.5rem', letterSpacing: '0.5em', marginTop: '-20px', zIndex: 12, fontWeight: 'bold', marginBottom: '30px' }}>{t('hero.year', '2k26')}</p>
         
         <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>

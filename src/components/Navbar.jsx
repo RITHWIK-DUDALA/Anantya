@@ -75,7 +75,7 @@ export default function Navbar() {
           }
         }}>
           <img src="/logo.png" alt="Janmashtami Logo" style={{ height: '45px', width: '45px', borderRadius: '50%', objectFit: 'cover', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
-          <span style={{ fontFamily: '"Samarkan", sans-serif', fontSize: '1.4rem', letterSpacing: '1px' }}>Anantya 2026</span>
+          <span>Janmashtami 2026</span>
         </a>
 
         {/* Nav links */}
