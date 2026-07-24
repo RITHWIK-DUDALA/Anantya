@@ -7,6 +7,19 @@ import { gameCardsData } from '../data/gamesData';
 import Modal from './Modal';
 
 function ProcessingPopup() {
+  const [countdown, setCountdown] = useState(300);
+
+  React.useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
+  const mins = Math.floor(countdown / 60);
+  const secs = countdown % 60;
+  const percent = (countdown / 300) * 100;
+
   return createPortal(
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -42,6 +55,16 @@ function ProcessingPopup() {
           <h3 style={{ margin: '0 0 16px', color: 'var(--primary)', fontSize: '1.5rem', fontWeight: 700, letterSpacing: '0.5px' }}>
             Processing...
           </h3>
+          
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ fontFamily: 'monospace', fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 15px rgba(255,255,255,0.5)', letterSpacing: '4px' }}>
+              {mins}:{secs.toString().padStart(2, '0')}
+            </div>
+            <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden', marginTop: '10px' }}>
+              <div style={{ height: '100%', width: `${percent}%`, background: 'var(--primary, #3b82f6)', transition: 'width 1s linear', boxShadow: '0 0 10px var(--primary, #3b82f6)' }} />
+            </div>
+          </div>
+
           <p style={{ color: '#eee', fontSize: '1rem', lineHeight: '1.6', margin: 0 }}>
             It might take <strong style={{color: 'var(--primary)'}}>3 to 5 minutes</strong> for a successful registration. 
             <br/><br/>
