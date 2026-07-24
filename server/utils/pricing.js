@@ -14,7 +14,10 @@ const gamePrices = {
   'Volleyball': 100,
   'Free Fire': 100,
   'BGMI': 100,
-  'Call of Duty': 100
+  'Call of Duty': 100,
+  'Tambola': 50,
+  'Minecraft': 100,
+  'Cold Case': 100
 };
 
 /**

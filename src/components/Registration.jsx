@@ -5,6 +5,33 @@ import CONFIG from '../config/config';
 import { gameCardsData } from '../data/gamesData';
 import Modal from './Modal';
 
+function ProcessingPopup() {
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      background: 'rgba(0,0,0,0.85)', zIndex: 99999,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '20px', textAlign: 'center', backdropFilter: 'blur(8px)'
+    }}>
+      <div style={{
+        background: '#1a1a1a', border: '1px solid rgba(183,139,39,0.3)', borderRadius: '16px', 
+        padding: '30px', maxWidth: '450px', boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+      }}>
+        <div style={{ margin: '0 auto 20px', width: '48px', height: '48px', border: '4px solid rgba(183,139,39,0.1)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+        <h3 style={{ margin: '0 0 15px', color: 'var(--primary)', fontSize: '1.4rem', fontWeight: 700 }}>Processing Registration...</h3>
+        <p style={{ color: '#ddd', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
+          It might take <strong>3 to 5 minutes</strong> for a successful registration. 
+          <br/><br/>
+          <span style={{ color: 'var(--rose)', fontWeight: 600 }}>Please do not close this tab or navigate away</span> before getting the session ID. We are not responsible for the registration if the process is interrupted.
+        </p>
+      </div>
+      <style>{`
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      `}</style>
+    </div>
+  );
+}
+
 /* ── Post data to Google Sheets via Apps Script ──── */
 async function postToSheets(data) {
   if (CONFIG.googleSheetsWebhook === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
@@ -132,6 +159,7 @@ function FreeForm({ t, onSuccess, onError }) {
 
   return (
     <form id="free-form" className="reg-form card" onSubmit={handleSubmit}>
+      {loading && <ProcessingPopup />}
       <BaseFields prefix="free" t={t} />
       <div className="form-grid">
         <div className="form-group full">
@@ -185,6 +213,7 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
 
   return (
     <div className="reg-form card" style={{ textAlign: 'center', padding: '2rem 1.5rem', maxWidth: '480px', margin: '0 auto' }}>
+      {loading && <ProcessingPopup />}
 
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
@@ -354,6 +383,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   const [discount, setDiscount] = useState(0);
   const [discountError, setDiscountError] = useState('');
   const [isSecretInputVisible, setIsSecretInputVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const formRef = useRef(null);
 
   // Check if any selected game allows staff/faculty
@@ -427,6 +457,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   };
 
   const handleFreeSubmit = async (data) => {
+    setLoading(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '';
       const response = await fetch(`${apiUrl}/api/register/free`, {
@@ -443,6 +474,8 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
       onSuccess('free', result.token);
     } catch {
       onError();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -468,6 +501,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
 
   return (
     <form id="paid-form" className="reg-form card" onSubmit={handleProceedToPayment} ref={formRef}>
+      {loading && <ProcessingPopup />}
       <BaseFields prefix="paid" t={t} showStaffFaculty={hasSpecialEventSelected} />
 
       {/* Game selection */}
