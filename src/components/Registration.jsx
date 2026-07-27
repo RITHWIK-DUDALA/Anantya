@@ -185,7 +185,7 @@ function FreeForm({ t, onSuccess, onError }) {
     };
     
     for (const [key, val] of Object.entries(data)) {
-      if (key !== 'games' && !val) {
+      if (key !== 'games' && key !== 'amount' && !val) {
         alert('Please fill in all required fields.');
         return;
       }
