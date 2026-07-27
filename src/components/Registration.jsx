@@ -165,46 +165,81 @@ function BaseFields({ prefix, t, showStaffFaculty = false }) {
   );
 }
 
-/* ── Free Registration Form ──────────────────────── */
+/* ── Free / Volunteer Registration Form ────────────── */
 function FreeForm({ t, onSuccess, onError }) {
-  return (
-    <div className="reg-form card" style={{ textAlign: 'center', padding: '3rem 1.5rem', maxWidth: '600px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{ 
-          display: 'inline-flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          width: '64px',
-          height: '64px',
-          borderRadius: '50%',
-          background: 'rgba(183,139,39,0.1)',
-          marginBottom: '1.5rem',
-          border: '1px solid rgba(183,139,39,0.3)'
-        }}>
-          <span style={{ fontSize: '32px' }}>🎉</span>
-        </div>
-        
-        <h3 style={{ margin: '0 0 1rem', fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary)' }}>
-          No Web Registration Required!
-        </h3>
-        
-        <p style={{ fontSize: '1.1rem', color: 'var(--text)', lineHeight: '1.6', marginBottom: '2rem' }}>
-          Since this is a free event, there is no need to register online.
-        </p>
+  const [loading, setLoading] = useState(false);
+  const formRef = useRef(null);
+  
+  const handleProceed = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(formRef.current);
+    const data = {
+      name: fd.get('name'),
+      email: fd.get('email'),
+      phone: fd.get('phone'),
+      dept: fd.get('dept'),
+      year: fd.get('year'),
+      role: fd.get('role'),
+      games: [],
+      amount: 0
+    };
+    
+    for (const [key, val] of Object.entries(data)) {
+      if (key !== 'games' && !val) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+    }
+    
+    setLoading(true);
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/register/free`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Registration failed');
+      formRef.current?.reset();
+      onSuccess('free', result.token);
+    } catch {
+      onError();
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
-          border: '1px solid rgba(183,139,39,0.2)',
-          borderRadius: '16px',
-          padding: '1.5rem',
-          boxShadow: 'inset 0 0 20px rgba(183,139,39,0.02)'
-        }}>
-          <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.6' }}>
-            We warmly welcome you to join us! On-spot registrations might be taken directly at the venue. See you there!
-          </p>
-        </div>
+  return (
+    <form id="free-form" className="reg-form card" onSubmit={handleProceed} ref={formRef}>
+      {loading && <ProcessingPopup />}
+      
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h3 style={{ margin: '0 0 0.5rem', fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary)' }}>
+          Volunteer Registration
+        </h3>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+          Sign up to volunteer and help make Anantya a grand success!
+        </p>
       </div>
-    </div>
+
+      <BaseFields prefix="free" t={t} />
+
+      <div className="form-group" style={{ marginTop: '1rem' }}>
+        <label htmlFor="free-role">Select Volunteer Role *</label>
+        <select id="free-role" name="role" required defaultValue="">
+          <option value="" disabled>Select your role...</option>
+          <option value="Decoration Volunteer">{t('register.roles.decoration', 'Decoration Volunteer')}</option>
+          <option value="Disciplinary Volunteer">{t('register.roles.disciplinary', 'Disciplinary Volunteer')}</option>
+          <option value="Prasadam Distribution Volunteer">{t('register.roles.prasadam', 'Prasadam Distribution Volunteer')}</option>
+        </select>
+      </div>
+
+      <button type="submit" className="submit-btn" style={{ marginTop: '2rem' }}>
+        <CircleCheckIcon size={16} color="#fff" style={{ marginRight: '8px', verticalAlign: 'text-bottom' }} /> 
+        Submit Application
+      </button>
+    </form>
   );
 }
 
