@@ -1,5 +1,16 @@
 const nodemailer = require('nodemailer');
 
+// L-2: Escape HTML special characters before interpolating user-supplied values
+// into email HTML bodies. Prevents broken email layout if a user registers with
+// a name containing <, >, &, or " characters.
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 async function sendConfirmationEmail(email, name, regId, games, amount, paymentId, qrCodeDataUrl, isFree = false) {
   try {
     const transporter = nodemailer.createTransport({
@@ -19,12 +30,12 @@ async function sendConfirmationEmail(email, name, regId, games, amount, paymentI
       subject: '✅ Janmashtami 2025 — Registration Confirmed!',
       text: `Hi ${name},\n\nYou're registered for Janmashtami 2025 at AVV Chennai! 🎉\n\nRegistration ID: ${regId}\nRole/Games: ${games}\nAmount Paid: ${amountText}\nPayment ID: ${paymentText}\n\nSee you on August 16th!\n— Janmashtami Committee, AVV Chennai`,
       html: `
-        <p>Hi ${name},</p>
+        <p>Hi ${escapeHtml(name)},</p>
         <p>You're registered for Janmashtami 2025 at AVV Chennai! 🎉</p>
-        <p><strong>Registration ID:</strong> ${regId}<br/>
-        <strong>Role/Games:</strong> ${games}<br/>
-        <strong>Amount Paid:</strong> ${amountText}<br/>
-        <strong>Payment ID:</strong> ${paymentText}</p>
+        <p><strong>Registration ID:</strong> ${escapeHtml(regId)}<br/>
+        <strong>Role/Games:</strong> ${escapeHtml(games)}<br/>
+        <strong>Amount Paid:</strong> ${escapeHtml(amountText)}<br/>
+        <strong>Payment ID:</strong> ${escapeHtml(paymentText)}</p>
         <p>Please find your QR code attached. Show this QR at the event entry gate.</p>
         <p>See you on August 16th!<br/>— Janmashtami Committee, AVV Chennai</p>
       `,
@@ -58,15 +69,15 @@ async function sendContactEmail(name, email, message) {
       from: `"${name}" <${process.env.EMAIL_USER}>`, // Needs to be authenticated user, but replyTo is set to the submitter
       replyTo: email,
       to: process.env.EMAIL_USER, // Sends to the committee's email
-      subject: `[Support Ticket] Message from ${name}`,
+      subject: `[Support Ticket] Message from ${escapeHtml(name)}`,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eaeaea; border-radius: 10px; padding: 20px;">
           <h2 style="color: #B78B27; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">New Support Ticket</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+          <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+          <p><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
           <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px;">
-            <p style="margin: 0; white-space: pre-wrap;">${message}</p>
+            <p style="margin: 0; white-space: pre-wrap;">${escapeHtml(message)}</p>
           </div>
           <p style="color: #888; font-size: 12px; margin-top: 20px;">* This message was sent via the Anantya 2026 Contact Form.</p>
         </div>

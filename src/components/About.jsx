@@ -40,7 +40,7 @@ const scatterData = [
   {
     heading: "Janmashtami Vibes 2",
     images: [
-      "/assets/memo10.jpg",
+      "/assets/memo10.webp",
       "/assets/memo12.jpg",
       "/assets/memo13.jpg",
       "/assets/memo14.jpg",
@@ -123,7 +123,7 @@ export default function About() {
             <ImageScatter data={scatterData} />
           ) : (
             <>
-              <PixelatedImageTrail images={allImages} />
+              <PixelatedImageTrail images={allImages} spawnThreshold={90} />
               
               <div style={{ position: 'relative', zIndex: 10, pointerEvents: 'none', textAlign: 'center' }}>
                 <h3 style={{ fontSize: '3rem', margin: 0, color: 'var(--text)' }}>

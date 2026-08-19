@@ -4,6 +4,7 @@ import CONFIG from '../config/config';
 
 export default function CountdownTimer() {
   const { t } = useTranslation();
+  const [eventDate, setEventDate] = useState(CONFIG.eventDate);
   
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -12,8 +13,21 @@ export default function CountdownTimer() {
     seconds: 0
   });
 
+  // Fetch live event date from Firestore settings (falls back to CONFIG if unavailable)
   useEffect(() => {
-    const targetDate = new Date(CONFIG.eventDate).getTime();
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    fetch(`${apiUrl}/api/settings/event-date`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.eventDate) {
+          setEventDate(data.eventDate);
+        }
+      })
+      .catch(() => {}); // silently fallback to CONFIG.eventDate
+  }, []);
+
+  useEffect(() => {
+    const targetDate = new Date(eventDate).getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -33,7 +47,7 @@ export default function CountdownTimer() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [eventDate]);
 
   return (
     <section className="countdown-section" style={{ padding: '60px 0', background: 'var(--surface)', textAlign: 'center', borderBottom: '1px solid var(--border)' }}>

@@ -98,7 +98,15 @@ async function postToSheets(data) {
 }
 
 /* ── Common form fields (used in both tabs) ──────── */
-function BaseFields({ prefix, t, showStaffFaculty = false }) {
+function BaseFields({ prefix, t, showStaffFaculty = false, onEmailChange }) {
+  const [isAmrita, setIsAmrita] = React.useState(false);
+
+  const handleEmailBlur = (e) => {
+    const email = e.target.value.toLowerCase();
+    setIsAmrita(email.endsWith('@ch.students.amrita.edu'));
+    onEmailChange && onEmailChange(email);
+  };
+
   return (
     <div className="form-grid">
       <div className="form-group">
@@ -115,6 +123,7 @@ function BaseFields({ prefix, t, showStaffFaculty = false }) {
           placeholder={t('register.form.emailPlaceholder')}
           pattern="^.*(@gmail\.com|@ch\.students\.amrita\.edu)$"
           title="Please use a @gmail.com or @ch.students.amrita.edu email address"
+          onBlur={handleEmailBlur}
         />
       </div>
       <div className="form-group">
@@ -161,6 +170,27 @@ function BaseFields({ prefix, t, showStaffFaculty = false }) {
           )}
         </select>
       </div>
+
+      {/* Student ID — required only for Amrita Chennai campus students */}
+      <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+        <label htmlFor={`${prefix}-studentId`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          Student ID
+          {isAmrita 
+            ? <span style={{ fontSize: '0.75rem', background: 'rgba(183,139,39,0.15)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '10px', border: '1px solid rgba(183,139,39,0.3)' }}>Required for Amrita students</span>
+            : <span style={{ fontSize: '0.75rem', color: '#666' }}>(Optional)</span>
+          }
+        </label>
+        <input
+          id={`${prefix}-studentId`}
+          name="studentId"
+          type="text"
+          required={isAmrita}
+          placeholder={isAmrita ? 'e.g. CB.EN.U4CSE23001' : 'Optional — Enter if Amrita student'}
+          style={{ textTransform: 'uppercase' }}
+          onChange={e => e.target.value = e.target.value.toUpperCase()}
+          title="Enter your Amrita student ID (e.g. CB.EN.U4CSE23001)"
+        />
+      </div>
     </div>
   );
 }
@@ -180,12 +210,13 @@ function FreeForm({ t, onSuccess, onError }) {
       dept: fd.get('dept'),
       year: fd.get('year'),
       role: fd.get('role'),
+      studentId: fd.get('studentId') || '',
       games: [],
       amount: 0
     };
     
     for (const [key, val] of Object.entries(data)) {
-      if (key !== 'games' && key !== 'amount' && !val) {
+      if (key !== 'games' && key !== 'amount' && key !== 'studentId' && !val) {
         alert('Please fill in all required fields.');
         return;
       }
@@ -264,7 +295,14 @@ function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
         body: JSON.stringify({ ...baseData, transactionId: transactionId.trim() })
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Registration failed');
+      if (!response.ok) {
+        // Surface the duplicate TXN error clearly in the UI instead of generic modal
+        if (response.status === 409) {
+          setError(result.error || 'This Transaction ID has already been used.');
+          return;
+        }
+        throw new Error(result.error || 'Registration failed');
+      }
       onSuccess('paid', result.token);
     } catch (err) {
       onError();
@@ -444,6 +482,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   const [secretCode, setSecretCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [discountError, setDiscountError] = useState('');
+  const [discountLoading, setDiscountLoading] = useState(false);
   const [isSecretInputVisible, setIsSecretInputVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const formRef = useRef(null);
@@ -466,18 +505,32 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     });
   };
 
-  const handleApplyCode = () => {
-    if (!secretCode) return;
-    const code = secretCode.trim().toUpperCase();
-    if (code === 'KRISHNA50') {
-      setDiscount(baseTotal * 0.5);
-      setDiscountError('');
-    } else if (code === 'DEV100') {
-      setDiscount(100);
-      setDiscountError('');
-    } else {
-      setDiscount(0);
-      setDiscountError('Invalid secret code');
+  // H-1: Discount codes are validated server-side ONLY.
+  // The actual code strings (KRISHNA50, DEV100) and discount logic are never
+  // shipped to the browser — only the resulting discount amount is returned.
+  const handleApplyCode = async () => {
+    if (!secretCode.trim()) return;
+    setDiscountLoading(true);
+    setDiscountError('');
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const res = await fetch(`${apiUrl}/api/pricing/validate-discount`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: secretCode.trim(), baseTotal }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.valid) {
+        setDiscount(0);
+        setDiscountError(data.error || 'Invalid secret code');
+      } else {
+        setDiscount(data.discount);
+        setDiscountError('');
+      }
+    } catch {
+      setDiscountError('Could not validate code. Please try again.');
+    } finally {
+      setDiscountLoading(false);
     }
   };
 
@@ -499,10 +552,11 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
       role: 'Games Participant',
       games: selectedGames.map((g) => g.title),
       secretCode: discount > 0 ? secretCode.trim().toUpperCase() : '',
+      studentId: fd.get('studentId') || '',
     };
 
     for (const [key, val] of Object.entries(data)) {
-      if (key !== 'role' && key !== 'secretCode' && !val) {
+      if (key !== 'role' && key !== 'secretCode' && key !== 'studentId' && !val) {
         alert('Please fill in all required fields.');
         return;
       }
@@ -577,7 +631,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                   <h4 className="game-label-text" style={{ fontSize: '1.4rem', color: 'var(--primary)', margin: 0 }}>
-                    {t(`games.${g.id}.title`)}
+                    {g.isComingSoon ? "Coming Soon" : t(`games.${g.id}.title`)}
                   </h4>
                   {g.isSpecialEvent && (
                     <span className="special-event-badge">⭐ {t('gamePage.specialEvent', 'Special Event')}</span>
@@ -598,16 +652,17 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
           <p className="games-subtitle">{t('register.form.gamesSubtitle')}</p>
           <div className="games-grid">
             {gameCardsData.map((game) => (
-              <label key={game.title} className={`game-label ${selected[game.title] ? 'selected' : ''} ${game.isSpecialEvent ? 'special-event' : ''}`}>
+              <label key={game.title} className={`game-label ${selected[game.title] ? 'selected' : ''} ${game.isSpecialEvent ? 'special-event' : ''}`} style={game.isComingSoon ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>
                 <input
                   type="checkbox"
+                  disabled={game.isComingSoon}
                   checked={!!selected[game.title]}
-                  onChange={() => toggle(game.title)}
+                  onChange={() => { if (!game.isComingSoon) toggle(game.title); }}
                 />
                 <span className="checkbox-custom" />
                 <div className="game-card-content">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <h4 className="game-label-text" style={{ margin: 0 }}>{t(`games.${game.id}.title`)}</h4>
+                    <h4 className="game-label-text" style={{ margin: 0 }}>{game.isComingSoon ? "Coming Soon" : t(`games.${game.id}.title`)}</h4>
                     {game.isSpecialEvent && (
                       <span className="special-event-badge">⭐ {t('gamePage.specialEvent', 'Special Event')}</span>
                     )}
@@ -617,11 +672,11 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
                       👥 {t('gamePage.staffFacultyAllowed', 'Staff & Faculty can also participate')}
                     </p>
                   )}
-                  <p className="game-info"><span>{t('gamePage.venue')}:</span> {game.venue}</p>
-                  <p className="game-info"><span>{t('gamePage.time')}:</span> {game.time}</p>
-                  <p className="game-info"><span>{t('gamePage.organizer')}:</span> {game.venueOrganizer}</p>
-                  <p className="game-info"><span>{t('gamePage.gamesHead')}:</span> {game.gamesHead}</p>
-                  <span className="game-price">{game.price > 0 ? `₹${game.price}` : t('gamePage.free')}</span>
+                  <p className="game-info"><span>{t('gamePage.venue')}:</span> {game.isComingSoon ? "Coming Soon" : game.venue}</p>
+                  <p className="game-info"><span>{t('gamePage.time')}:</span> {game.isComingSoon ? "Coming Soon" : game.time}</p>
+                  <p className="game-info"><span>{t('gamePage.organizer')}:</span> {game.isComingSoon ? "Coming Soon" : game.venueOrganizer}</p>
+                  <p className="game-info"><span>{t('gamePage.gamesHead')}:</span> {game.isComingSoon ? "Coming Soon" : game.gamesHead}</p>
+                  <span className="game-price">{game.isComingSoon ? "Coming Soon" : (game.price > 0 ? `₹${game.price}` : t('gamePage.free'))}</span>
                 </div>
               </label>
             ))}
@@ -640,8 +695,8 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
               onChange={(e) => setSecretCode(e.target.value)} 
               style={{ flex: 1 }}
             />
-            <button type="button" onClick={handleApplyCode} className="submit-btn" style={{ padding: '10px 20px', width: 'auto' }}>
-              Apply
+            <button type="button" onClick={handleApplyCode} disabled={discountLoading} className="submit-btn" style={{ padding: '10px 20px', width: 'auto', opacity: discountLoading ? 0.6 : 1 }}>
+              {discountLoading ? '...' : 'Apply'}
             </button>
           </div>
           {discountError && <p style={{ color: 'var(--rose)', fontSize: '0.9rem', marginTop: '5px' }}>{discountError}</p>}

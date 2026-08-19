@@ -8,6 +8,7 @@ import Committee from '../components/Committee';
 import Footer from '../components/Footer';
 import { FaqAccordion } from '../components/forgeui/faq-accordion';
 import ContactSection from '../components/ContactSection';
+import Collaborators from '../components/Collaborators';
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
         <CountdownTimer />
         <About />
         <Timeline />
+        <Collaborators />
         <section id="faq" className="section" style={{ background: 'var(--bg-alt)' }}>
           <div className="container">
             <FaqAccordion />

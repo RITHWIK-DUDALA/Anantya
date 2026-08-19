@@ -6,15 +6,28 @@ import GamePage from './pages/GamePage';
 import VerifyPage from './pages/VerifyPage';
 import RegistrationFormPage from './pages/RegistrationFormPage';
 import MemoriesPage from './pages/MemoriesPage';
+import MembersPage from './pages/MembersPage';
 import StatusPage from './pages/StatusPage';
 import VenueVerifyPage from './pages/VenueVerifyPage';
 import MusicPlayer from './components/MusicPlayer';
+import SplashScreen from './components/SplashScreen';
 
 const AdminPaymentsPage = lazy(() => import('./pages/AdminPaymentsPage'));
 const AdminVolunteersPage = lazy(() => import('./pages/AdminVolunteersPage'));
+const AdminMovies = lazy(() => import('./pages/AdminMovies'));
+const AdminMovieBookings = lazy(() => import('./pages/AdminMovieBookings'));
+// const AdminEventsPage = lazy(() => import('./pages/AdminEventsPage'));
+
+import SeatSelectionPage from './pages/SeatSelectionPage';
+import SnacksSelectionPage from './pages/SnacksSelectionPage';
+import MovieCheckoutPage from './pages/MovieCheckoutPage';
+import MovieVerifyPage from './pages/MovieVerifyPage';
+import MovieStatusPage from './pages/MovieStatusPage';
+import MoviesSelectionPage from './pages/MoviesSelectionPage';
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('splashShown'));
 
   useEffect(() => {
     const checkMobile = () => {
@@ -25,6 +38,11 @@ export default function App() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const handleSplashComplete = () => {
+    sessionStorage.setItem('splashShown', 'true');
+    setShowSplash(false);
+  };
 
   if (isMobile) {
     return (
@@ -43,14 +61,24 @@ export default function App() {
 
   return (
     <>
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <MusicPlayer />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/games/:id" element={<GamePage />} />
         <Route path="/form" element={<RegistrationFormPage />} />
+        <Route path="/members" element={<MembersPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
         <Route path="/verify" element={<VerifyPage />} />
+        
+        {/* Movie Booking Routes */}
+        <Route path="/movies" element={<MoviesSelectionPage />} />
+        <Route path="/movies/:showtimeId/seats" element={<SeatSelectionPage />} />
+        <Route path="/movies/:showtimeId/snacks" element={<SnacksSelectionPage />} />
+        <Route path="/movies/:showtimeId/checkout" element={<MovieCheckoutPage />} />
+        <Route path="/movies/verify" element={<MovieVerifyPage />} />
+        <Route path="/movies/status" element={<MovieStatusPage />} />
         <Route path="/admin/payments" element={
           <Suspense fallback={<div style={{color: 'white', textAlign: 'center', marginTop: '100px'}}>Loading dashboard...</div>}>
             <AdminPaymentsPage />
@@ -61,6 +89,21 @@ export default function App() {
             <AdminVolunteersPage />
           </Suspense>
         } />
+        <Route path="/admin/movies" element={
+          <Suspense fallback={<div style={{color: 'white', textAlign: 'center', marginTop: '100px'}}>Loading dashboard...</div>}>
+            <AdminMovies />
+          </Suspense>
+        } />
+        <Route path="/admin/movie-bookings" element={
+          <Suspense fallback={<div style={{color: 'white', textAlign: 'center', marginTop: '100px'}}>Loading dashboard...</div>}>
+            <AdminMovieBookings />
+          </Suspense>
+        } />
+        {/* <Route path="/admin/events" element={
+          <Suspense fallback={<div style={{color: 'white', textAlign: 'center', marginTop: '100px'}}>Loading dashboard...</div>}>
+            <AdminEventsPage />
+          </Suspense>
+        } /> */}
         <Route path="/status" element={<StatusPage />} />
         <Route path="/venue" element={<VenueVerifyPage />} />
       </Routes>

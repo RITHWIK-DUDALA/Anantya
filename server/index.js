@@ -11,6 +11,9 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Serve uploaded posters statically
+app.use('/posters', express.static(path.join(__dirname, '..', 'public', 'posters')));
+
 // Trust proxy for rate limiters behind Render/Railway
 app.set('trust proxy', 1);
 
@@ -96,11 +99,18 @@ const registerRoute = require('./routes/register');
 const verifyRoute = require('./routes/verify');
 const adminRoute = require('./routes/admin');
 const contactRoute = require('./routes/contact');
+const moviesRoute = require('./routes/movies');
+const pricingRoute = require('./routes/pricing'); // H-1: server-side discount validation
 
 app.use('/api/register', registerLimiter, registerRoute);
 app.use('/api/verify', verifyRoute);
+app.use('/api/movies', moviesRoute);
+app.use('/api/pricing', pricingRoute); // H-1: discount code validation endpoint
 app.use('/api/admin/login', adminLimiter); // Apply strictly to login
 app.use('/api/admin', adminRoute);
+// app.use('/api/admin/events', require('./routes/events'));
+// app.use('/api/admin/settings', require('./routes/settings')); // Admin settings writes
+// app.use('/api/settings', require('./routes/settings'));       // Public settings reads
 app.use('/api/contact', contactLimiter, contactRoute);
 
 // Global Error Handler

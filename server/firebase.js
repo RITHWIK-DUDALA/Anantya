@@ -21,7 +21,11 @@ try {
   console.log('Firebase Admin initialized');
   db = getFirestore();
 } catch (error) {
-  console.error('Firebase admin initialization error:', error.message);
+  // M-5: A failed Firebase init means ALL requests will fail with 500.
+  // Fail fast and loudly instead of serving broken requests silently.
+  // On Render/Railway this triggers an alert and auto-restart.
+  console.error('FATAL: Firebase admin initialization error:', error.message);
+  process.exit(1);
 }
 
 module.exports = { app, db };

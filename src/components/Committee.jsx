@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PhoneCallIcon } from '@animateicons/react/lucide';
+import { PhoneCallIcon, MailIcon } from '@animateicons/react/lucide';
+import { motion } from 'framer-motion';
 import CONFIG from '../config/config';
 import MaskedAvatars from './MaskedAvatars';
 
@@ -51,7 +52,42 @@ function CopyNumberButton({ phone, style }) {
   );
 }
 
-function MemberCard({ member, t }) {
+function CopyEmailButton({ email, style }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button 
+      onClick={handleCopy} 
+      className="committee-email" 
+      style={{ 
+        border: 'none',
+        background: 'var(--bg-alt)',
+        padding: '6px 12px',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+        fontSize: '0.9rem',
+        color: 'var(--text)',
+        fontFamily: 'inherit',
+        ...style 
+      }}
+    >
+      <MailIcon size={13} color="var(--primary-dark)" /> 
+      {copied ? "Copied!" : "Copy Email"}
+    </button>
+  );
+}
+
+export function MemberCard({ member, t, darkTheme = false, showInstagram = false, onClick = null }) {
   const initials = member.name
     .split(/[\s&]+/)
     .map((n) => n[0] || '')
@@ -59,30 +95,68 @@ function MemberCard({ member, t }) {
     .toUpperCase()
     .slice(0, 2);
 
+  const isBirthday = !!member.birthday;
+
   return (
-    <div className="card reveal" style={{ position: 'relative', padding: '2.5rem 1.5rem 1.5rem', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {member.isCoHead && <span style={{ position: 'absolute', top: '15px', left: '15px', background: 'var(--primary)', color: 'white', fontSize: '0.75rem', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold' }}>{t('committee.coHeads', 'CO-HEAD')}</span>}
-      {member.comingSoon && <span style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--bg-alt)', color: 'var(--text-muted)', fontSize: '0.75rem', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold' }}>{t('committee.comingSoon', 'TBA')}</span>}
+    <div className={`card ${darkTheme ? '' : 'reveal'}`} onClick={onClick} style={{ position: 'relative', padding: '2.5rem 1.5rem 1.5rem', textAlign: 'center', background: darkTheme ? 'transparent' : 'var(--surface)', border: isBirthday ? 'none' : (darkTheme ? 'none' : '1px solid var(--border)'), borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: onClick ? 'pointer' : 'default', transition: 'all 0.3s', outline: isBirthday ? '2px solid transparent' : 'none', boxShadow: isBirthday ? '0 0 24px 6px rgba(255,107,107,0.35), 0 0 0 2px #ffd93d55' : undefined }}>
+      {isBirthday && (
+        <motion.div
+          animate={{ opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{
+            position: 'absolute', inset: 0, borderRadius: '16px', pointerEvents: 'none',
+            background: 'linear-gradient(135deg,rgba(255,107,107,0.08),rgba(255,217,61,0.08),rgba(77,150,255,0.08),rgba(199,125,255,0.08))',
+            zIndex: 0,
+          }}
+        />
+      )}
+      {member.isCoHead && <span style={{ position: 'absolute', top: '15px', left: '15px', background: 'var(--primary)', color: 'white', fontSize: '0.75rem', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold', zIndex: 2 }}>{t('committee.coHeads', 'CO-HEAD')}</span>}
+      {member.comingSoon && <span style={{ position: 'absolute', top: '15px', right: '15px', background: darkTheme ? '#333' : 'var(--bg-alt)', color: darkTheme ? '#aaa' : 'var(--text-muted)', fontSize: '0.75rem', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold', zIndex: 2 }}>{t('committee.comingSoon', 'TBA')}</span>}
       
-      <div style={{ width: '100px', height: '100px', borderRadius: '50%', overflow: 'hidden', marginBottom: '1.2rem', border: '3px solid var(--primary-light)', background: 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>
-        {member.photo && !member.comingSoon
-          ? <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
-          : <div style={{ width: '100%', height: '100%', background: avatarColor(member.role), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{initials || '?'}</div>
-        }
-      </div>
-      <h3 style={{ margin: '0 0 0.3rem', fontSize: '1.3rem', color: 'var(--primary-dark)' }}>{member.name || '---'}</h3>
-      <p style={{ margin: '0 0 0.8rem', fontSize: '0.95rem', color: 'var(--primary)', fontWeight: '600', whiteSpace: 'pre-line' }}>{member.role}</p>
-      
-      {(!member.comingSoon && (member.phone || member.phones)) && (
-        <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '10px' }}>
-          {member.isCoHead && member.phones ? (
-            member.phones.map((ph) => (
-              <CopyNumberButton key={ph} phone={ph} />
-            ))
-          ) : member.phone ? (
-            <CopyNumberButton phone={member.phone} />
-          ) : null}
+      <div style={{ position: 'relative', zIndex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
+        {isBirthday && (
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+            style={{
+              position: 'absolute', inset: '-6px', borderRadius: '50%',
+              background: 'conic-gradient(from 0deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff,#ff6b6b)',
+              zIndex: 0,
+            }}
+          />
+        )}
+        {isBirthday && (
+          <div style={{ position: 'absolute', inset: '3px', borderRadius: '50%', background: darkTheme ? '#111' : 'var(--surface)', zIndex: 1 }} />
+        )}
+        <div style={{ position: 'relative', zIndex: 2, width: '100px', height: '100px', borderRadius: '50%', overflow: 'hidden', border: isBirthday ? 'none' : '3px solid var(--primary-light)', background: darkTheme ? '#222' : 'var(--bg-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>
+          {member.photo && !member.comingSoon
+            ? <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center', transform: member.transform || 'none', transformOrigin: member.transformOrigin || 'center' }} />
+            : <div style={{ width: '100%', height: '100%', background: avatarColor(member.role), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{initials || '?'}</div>
+          }
         </div>
+      </div>
+
+      <h3 style={{ margin: '0 0 0.3rem', fontSize: '1.3rem', color: isBirthday ? 'transparent' : (darkTheme ? 'var(--primary-light)' : 'var(--primary-dark)'), background: isBirthday ? 'linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#c77dff)' : 'none', WebkitBackgroundClip: isBirthday ? 'text' : 'unset', backgroundClip: isBirthday ? 'text' : 'unset', fontWeight: isBirthday ? '900' : undefined, zIndex: 1, position: 'relative' }}>{member.name || '---'}</h3>
+      <p style={{ margin: '0 0 0.5rem', fontSize: '0.95rem', color: darkTheme ? '#aaa' : 'var(--primary)', fontWeight: '600', whiteSpace: 'pre-line', position: 'relative', zIndex: 1 }}>{member.role}</p>
+      {isBirthday && (
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], y: [0, -3, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            background: 'linear-gradient(135deg,#ff6b6b,#ffd93d)',
+            color: '#000',
+            fontSize: '0.7rem',
+            fontWeight: '900',
+            padding: '4px 10px',
+            borderRadius: '16px',
+            boxShadow: '0 0 12px rgba(255,107,107,0.65)',
+            marginTop: '4px',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          🎂 Happy Birthday!
+        </motion.div>
       )}
     </div>
   );

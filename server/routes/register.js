@@ -13,6 +13,15 @@ const sanitizeField = (val, maxLen = 150) => {
   return sanitizeHtml(val, { allowedTags: [], allowedAttributes: {} }).trim().slice(0, maxLen);
 };
 
+// Validate Student ID format (Amrita Chennai: e.g. CB.EN.U4CSE23001)
+// Format: 2–5 uppercase letters, dot, 2 uppercase letters, dot, alphanumeric 8–15 chars
+const isValidStudentId = (id) => {
+  if (!id || typeof id !== 'string') return false;
+  const cleaned = id.trim().toUpperCase();
+  // Accept formats like: CB.EN.U4CSE23001 or AM.EN.U4AIE22050 or simple IDs (8-20 alphanum)
+  return /^[A-Z]{2,5}\.[A-Z]{2}\.[A-Z0-9]{5,15}$/.test(cleaned) || /^[A-Z0-9]{8,20}$/.test(cleaned);
+};
+
 // Helper: Secure unique token generator
 async function generateUniqueToken() {
   let isUnique = false;
@@ -28,10 +37,13 @@ async function generateUniqueToken() {
   return token;
 }
 
+// Helper: check if email is from Amrita Chennai campus
+const isAmritaEmail = (email) => email && email.toLowerCase().endsWith('@ch.students.amrita.edu');
+
 // POST /api/register/free
 router.post('/free', async (req, res, next) => {
   try {
-    const { name, email, phone, dept, year, role, games, secretCode, discountAmount } = req.body;
+    const { name, email, phone, dept, year, role, games, secretCode, discountAmount, studentId } = req.body;
 
     if (!name || !email || !phone || !role) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -46,6 +58,24 @@ router.post('/free', async (req, res, next) => {
       return res.status(400).json({ error: 'Invalid phone number format' });
     }
 
+    // Validate Student ID for Amrita Chennai students
+    if (isAmritaEmail(email)) {
+      if (!studentId || !isValidStudentId(studentId)) {
+        return res.status(400).json({ error: 'Amrita Chennai students must provide a valid Student ID (e.g. CB.EN.U4CSE23001)' });
+      }
+    }
+
+    const safeEmail = sanitizeField(email, 150).toLowerCase().trim();
+
+    // H-2: Prevent duplicate email registrations
+    const existingSnapshot = await db.collection('registrations')
+      .where('email', '==', safeEmail)
+      .limit(1)
+      .get();
+    if (!existingSnapshot.empty) {
+      return res.status(409).json({ error: 'This email is already registered. If you have an issue, please contact the organizers.' });
+    }
+
     const regId = `REG-${crypto.randomUUID()}`;
     const token = await generateUniqueToken();
 
@@ -55,16 +85,18 @@ router.post('/free', async (req, res, next) => {
     const volunteerRoles = ['Decoration Volunteer', 'Disciplinary Volunteer', 'Prasadam Distribution Volunteer'];
     const isVolunteer = volunteerRoles.includes(role);
 
-    const safeEmail = sanitizeField(email, 150);
     const safeName = sanitizeField(name, 100);
     const safeDept = sanitizeField(dept, 50);
     const safeYear = sanitizeField(year, 20);
     const safeRole = sanitizeField(role, 50);
     const rawGamesArray = Array.isArray(games) ? games : (games ? games.split(',').map(g => g.trim()) : []);
     const safeGames = rawGamesArray.map(g => sanitizeField(g, 100));
+    const safeStudentId = studentId ? sanitizeField(studentId.trim().toUpperCase(), 30) : null;
+    // H-3: Sanitize phone number — strip everything except digits
+    const safePhone = phone.trim().replace(/[^\d]/g, '');
 
     const registrationData = {
-      name: safeName, email: safeEmail, phone, dept: safeDept, year: safeYear, role: safeRole,
+      name: safeName, email: safeEmail, phone: safePhone, dept: safeDept, year: safeYear, role: safeRole,
       games: safeGames,
       amount: 0,
       status: isVolunteer ? "volunteer_pending" : "free",
@@ -73,14 +105,16 @@ router.post('/free', async (req, res, next) => {
       regId, token,
       qrCode: qrImageUrl,
       checkedIn: false,
-      secretCode: secretCode || '',
-      discountAmount: discountAmount || 0
+      // M-2: Don't store the raw secret code — discountAmount captures the outcome
+      discountAmount: discountAmount || 0,
+      studentId: safeStudentId,
+      isAmritaStudent: isAmritaEmail(safeEmail),
     };
 
     await db.collection('registrations').doc(regId).set(registrationData);
 
     await sendConfirmationEmail(email, name, regId, role, 0, null, qrImageUrl, true);
-    appendRegistrationToExcel(registrationData);
+    // appendRegistrationToExcel(registrationData); // Removed for high concurrency stability (use Admin Export instead)
 
     res.json({ success: true, regId, token });
   } catch (error) {
@@ -92,7 +126,7 @@ router.post('/free', async (req, res, next) => {
 // UPI manual payment — user submits their UPI transaction ID, admin verifies manually
 router.post('/paid', async (req, res, next) => {
   try {
-    const { name, email, phone, dept, year, role, games, secretCode, transactionId } = req.body;
+    const { name, email, phone, dept, year, role, games, secretCode, transactionId, studentId } = req.body;
 
     if (!name || !email || !phone || !games || !transactionId) {
       return res.status(400).json({ error: 'Missing required fields (including transaction ID)' });
@@ -107,10 +141,20 @@ router.post('/paid', async (req, res, next) => {
       return res.status(400).json({ error: 'Invalid phone number format' });
     }
 
-    // Sanitize and validate transaction ID
+    // Validate Student ID for Amrita Chennai students
+    if (isAmritaEmail(email)) {
+      if (!studentId || !isValidStudentId(studentId)) {
+        return res.status(400).json({ error: 'Amrita Chennai students must provide a valid Student ID (e.g. CB.EN.U4CSE23001)' });
+      }
+    }
+
+    // C-3: Stricter transaction ID validation.
+    // Real UPI UTRs are typically 12+ characters (12-digit numeric for IMPS/UPI,
+    // or bank-prefix + digits for other rails). A 6-char minimum is too permissive
+    // and allows obviously fake strings like 'abc123'.
     const cleanTxnId = transactionId.trim();
-    if (cleanTxnId.length < 6 || !/^[a-zA-Z0-9]+$/.test(cleanTxnId)) {
-      return res.status(400).json({ error: 'Invalid transaction ID format' });
+    if (cleanTxnId.length < 12 || !/^[a-zA-Z0-9]+$/.test(cleanTxnId)) {
+      return res.status(400).json({ error: 'Invalid transaction ID. Please enter the full 12+ character UTR/reference number from your UPI app.' });
     }
 
     // Server-side amount calculation
@@ -127,15 +171,18 @@ router.post('/paid', async (req, res, next) => {
     const qrData = JSON.stringify({ regId });
     const qrImageUrl = await QRCode.toDataURL(qrData);
 
-    const safeEmail = sanitizeField(email, 150);
+    const safeEmail = sanitizeField(email, 150).toLowerCase().trim();
     const safeName = sanitizeField(name, 100);
     const safeDept = sanitizeField(dept, 50);
     const safeYear = sanitizeField(year, 20);
     const safeRole = sanitizeField(role || 'Games Participant', 50);
     const safeGames = gameTitles.map(g => sanitizeField(g, 100));
+    const safeStudentId = studentId ? sanitizeField(studentId.trim().toUpperCase(), 30) : null;
+    // H-3: Sanitize phone number
+    const safePhone = phone.trim().replace(/[^\d]/g, '');
 
     const registrationData = {
-      name: safeName, email: safeEmail, phone, dept: safeDept, year: safeYear,
+      name: safeName, email: safeEmail, phone: safePhone, dept: safeDept, year: safeYear,
       role: safeRole,
       games: safeGames,
       amount: finalTotal,
@@ -145,27 +192,53 @@ router.post('/paid', async (req, res, next) => {
       regId, token,
       qrCode: qrImageUrl,
       checkedIn: false,
-      secretCode: secretCode || '',
-      discountAmount: discountAmount || 0
+      // M-2: Don't store the raw secret code — discountAmount captures the outcome
+      discountAmount: discountAmount || 0,
+      studentId: safeStudentId,
+      isAmritaStudent: isAmritaEmail(safeEmail),
     };
 
-    let isDuplicate = false;
+    // ── Atomic duplicate-check + write ──────────────────────────────────────
+    // Firestore transaction ensures only ONE registration can use a given
+    // transaction ID OR email, even if multiple requests arrive simultaneously.
+    let duplicateReason = null;
     await db.runTransaction(async (t) => {
-      const querySnapshot = await t.get(db.collection('registrations').where('paymentId', '==', cleanTxnId));
-      if (!querySnapshot.empty) {
-        isDuplicate = true;
+      // H-2: Check for duplicate email inside the transaction to close the race condition
+      const emailQuery = await t.get(
+        db.collection('registrations').where('email', '==', safeEmail)
+      );
+      if (!emailQuery.empty) {
+        duplicateReason = 'email';
         return;
       }
+
+      // Check for duplicate transaction ID
+      const txnQuery = await t.get(
+        db.collection('registrations').where('paymentId', '==', cleanTxnId)
+      );
+      if (!txnQuery.empty) {
+        duplicateReason = 'transaction';
+        return;
+      }
+
       const newDocRef = db.collection('registrations').doc(regId);
       t.set(newDocRef, registrationData);
     });
 
-    if (isDuplicate) {
-      return res.status(409).json({ error: 'This transaction ID has already been used.' });
+    if (duplicateReason === 'email') {
+      return res.status(409).json({
+        error: 'This email is already registered. If you have an issue, please contact the organizers.'
+      });
+    }
+
+    if (duplicateReason === 'transaction') {
+      return res.status(409).json({
+        error: 'This Transaction ID has already been used for another registration. Each UPI payment can only be used once. Please check your UPI app for the correct Transaction ID.'
+      });
     }
 
     await sendConfirmationEmail(email, name, regId, gameTitles.join(', '), finalTotal, cleanTxnId, qrImageUrl, false);
-    appendRegistrationToExcel(registrationData);
+    // appendRegistrationToExcel(registrationData); // Removed for high concurrency stability (use Admin Export instead)
 
     res.json({ success: true, regId, token, amount: finalTotal });
   } catch (error) {

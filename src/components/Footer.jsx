@@ -131,7 +131,7 @@ export default function Footer() {
               border: '3px solid rgba(233, 69, 96, 0.6)', flexShrink: 0,
               boxShadow: '0 0 15px rgba(233, 69, 96, 0.4)', zIndex: 5
             }}>
-              <img src="/photos/rith2.jpg" alt="Rithwik Sathya" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
+              <img src="/photos/rith2.webp" alt="Rithwik Sathya" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', zIndex: 5 }}>

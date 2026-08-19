@@ -7,6 +7,7 @@ import DiagonalCarousel from '../components/forgeui/diagonal-carousel';
 import CONFIG from '../config/config';
 import { gameCardsData } from '../data/gamesData';
 import FlipFadeText from '../components/forgeui/flip-fade-text';
+import SpecialEventsBanner from '../components/SpecialEventsBanner';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -83,6 +84,7 @@ export default function RegisterPage() {
         </div>
       </main>
       <Footer />
+      <SpecialEventsBanner />
     </>
   );
 }

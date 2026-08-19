@@ -7,7 +7,7 @@ const CONFIG = {
   // ── Event Details ──────────────────────────────────────────
   eventName: "Anantya 2026",
   collegeName: "Amrita Vishwa Vidyapeetham, Chennai Campus",
-  eventDate: "2026-08-29T16:30:00", // ← Confirm and change this date/time
+  eventDate: "2026-08-31T16:00:00", // ← Confirm and change this date/time
   eventVenue: "AVV Chennai Campus",
   committeeEmail: "events@avvchennai.edu.in", // ← Replace with real email
 
@@ -43,12 +43,25 @@ const CONFIG = {
   // • isCoHead: true → renders dual phone links
   // ⚠️  Roll numbers are NOT shown publicly — internal data only
   committee: [
+    // ── 1. Faculty ──────────────────────────────────────────────
+    {
+      role: "Faculty Mentor",
+      name: "Prakash S",
+      email: "s_prakesh@avvchennai.edu.in",
+      year: "",
+      photo: "/photos/prakash.webp",
+      objectPosition: "center 15%",
+      transform: "scale(1.2)",
+      transformOrigin: "center 15%",
+      comingSoon: false,
+    },
+    // ── 2. Event Heads ──────────────────────────────────────────
     {
       role: "Event Head &\nStudent Stalls In-Charge",
       name: "Punith Vuppala",
       phone: "7989863060",
       year: "3rd Year",
-      photo: "/photos/punith.jpeg",
+      photo: "/photos/punith.webp",
       objectPosition: "center 20%",
       comingSoon: false,
     },
@@ -57,17 +70,22 @@ const CONFIG = {
       name: "Dimple Hassini",
       phone: "9390252586",
       year: "3rd Year",
-      photo: "/photos/Dimple Hassini.jpeg",
-      objectPosition: "center 20%",
+      photo: "/photos/Dimple Hassini.webp",
+      objectPosition: "center 50%",
+      transform: "scale(1.6)",
+      transformOrigin: "center",
       comingSoon: false,
     },
+    // ── 3. Cultural ─────────────────────────────────────────────
     {
       role: "Cultural In-Charge",
       name: "Nagasai Sree",
       phone: "9100212289",
       year: "3rd Year",
-      photo: "/photos/nagasaisree.jpeg",
-      objectPosition: "center 20%",
+      photo: "/assets/memo10.webp",
+      objectPosition: "20% 20%",
+      transform: "scale(1.5)",
+      transformOrigin: "20% 30%",
       comingSoon: false,
     },
     {
@@ -75,25 +93,29 @@ const CONFIG = {
       name: "V R SRINITHI",
       phone: "8489957162",
       year: "3rd Year",
-      photo: "/photos/V R SRINITHI.jpeg",
+      photo: "/photos/V R SRINITHI.webp",
       objectPosition: "center 15%",
       comingSoon: false,
     },
+    // ── 4. Games & Discipline ───────────────────────────────────
     {
       role: "Games &\nDisciplinary In-Charge",
       name: "RITHWIK SATYA D",
       phone: "9346710580",
       year: "3rd Year",
-      photo: "/photos/rith2.jpg",
-      objectPosition: "center 20%",
+      photo: "/photos/rithmain1.webp",
+      objectPosition: "center 10%",
+      transform: "scale(2.0)",
+      transformOrigin: "center 15%",
       comingSoon: false,
     },
+    // ── 5. Decoration ───────────────────────────────────────────
     {
       role: "Decoration In-Charge",
       name: "Bhargava Sai",
       phone: "9963374697",
       year: "3rd Year",
-      photo: "/photos/bhargav.jpeg",
+      photo: "/photos/bhargav.webp",
       objectPosition: "center 20%",
       comingSoon: false,
       isCoHead: true,
@@ -103,41 +125,92 @@ const CONFIG = {
       name: "Jyothsana",
       phone: "7670969647",
       year: "3rd Year",
-      photo: "/photos/Jyothsana.jpeg",
-      objectPosition: "center 20%",
+      photo: "/photos/Jyothsana.webp",
+      objectPosition: "center 30%",
+      transform: "scale(1.6)",
+      transformOrigin: "center",
       comingSoon: false,
       isCoHead: true,
     },
+    // ── 6. Technical ────────────────────────────────────────────
     {
       role: "Technical In-Charge",
       name: "Suryesh K K",
       phone: "6302062936",
       year: "3rd Year",
-      photo: "/photos/surya.png",
-      objectPosition: "center 20%",
+      photo: "/photos/surya.webp",
+      objectPosition: "25% 5%",
+      transform: "scale(1.8)",
+      transformOrigin: "25% 10%",
       comingSoon: false,
     },
+    // ── 7. Treasurer ────────────────────────────────────────────
     {
       role: "Treasurer",
       name: "Bhaanu tej",
       phone: "8790258289",
       year: "3rd Year",
-      photo: "/photos/Bhanu.JPG.jpeg",
-      objectPosition: "center 25%",
-      transform: "scale(3.8) translate(12%, -1%)",
-      transformOrigin: "center top",
+      photo: "/photos/Bhanu.webp",
+      objectPosition: "center 20%",
+      transform: "scale(2.2)",
+      transformOrigin: "center 25%",
       comingSoon: false,
+    },
+
+  ],
+
+  // ── Collaborating Clubs ────────────────────────────────────
+  collaborators: [
+    {
+      name: "Trinetra Multimedia",
+      tagline: "where the third eye awakens",
+      description: "Trinetra is the official professional multimedia club, capturing the essence and memories of every grand event with cinematic brilliance.",
+      phone: "+91 91822 63080",
+      logo: "/clubs and their reps/Trinetra.jpeg",
+      repName: "Shreyas Reddy",
+      repPhoto: "/photos/Shreyas reddy.jpeg",
+      instagram: "https://www.instagram.com/trinetra.amrita?igsh=MTNtaDdnbGp2ZjF4MQ==&igsi=MTNtaDdnbGp2ZjF4MQ=="
     },
     {
-      role: "Visual Media In-Charge\n- Trinetra Multimedia",
-      name: "Shreyas Reddy",
-      phone: "9182263080",
-      year: "3rd Year",
-      photo: "/photos/Shreyas reddy.jpeg",
-      objectPosition: "center 20%",
-      comingSoon: false,
+      name: "Dhikrithi",
+      tagline: "A Space to Grow Within",
+      description: "Dhikrithi is a student initiative providing a space to explore meditation, yoga, emotional well-being, and holistic personal growth. Through activities like Vivada, heritage visits, and meaningful discussions, the club aims to create a mindful and supportive campus community.",
+      phone: "+91 89850 59136",
+      logo: "/clubs and their reps/dhikrithi-club.jpg",
+      repName: "Poojitha Kanipakam",
+      repPhoto: "/clubs and their reps/dkrithi rep.jpeg",
+      instagram: "https://www.instagram.com/dhikrithi.amrita?igsh=MWNiaW9nc3BsNGN1cw=="
     },
-  ],
+    {
+      name: "Aurora",
+      tagline: "Rooted in Tradition, Rising with Rhythm.",
+      logo: "/clubs and their reps/AURORA text.jpg (7).jpeg",
+      logoBg: "#000",
+      logoObjectFit: "contain",
+      repName: "Aurora Representative",
+      repPhoto: "/clubs and their reps/2.jpeg",
+      instagram: "https://www.instagram.com/aurora.amrita?igsh=MXI1dHR4NnF6YjNpYw=="
+    },
+    {
+      name: "Amrita Raaga",
+      tagline: "Where Every Note Finds Its Rhythm.",
+      description: "Amrita Raaga is the music club of Amrita Vishwa Vidyapeetham, bringing together students who share a passion for music, performance, and creativity. From soulful melodies to energetic performances, the club provides a platform for students to explore their musical talents, collaborate with fellow musicians, and create memorable experiences through music. With performances, selections, and musical events throughout the year, Amrita Raaga aims to make every note count.",
+      logo: "/clubs and their reps/AmritaRaaga_Black.png",
+      repName: "Adithyan V J",
+      repPhoto: "/clubs and their reps/AMRITA RAGA REP.jpeg",
+      instagram: "https://www.instagram.com/raaga.amrita?utm_source=qr&igsh=MXRxdHU5ZHplMmRkag=="
+    },
+    {
+      name: "Aalekh",
+      tagline: "Where Art Finds Its Voice.",
+      description: "Aalekh Fine Arts Club is a creative community that nurtures artistic talent through visual arts, workshops, competitions, exhibitions, and collaborative initiatives, empowering students to explore, develop, and showcase their artistic potential.",
+      logo: "/clubs and their reps/alayek logo no bg.png",
+      repName: "Sarvaajeth Periyasamy",
+      repPhoto: "/clubs and their reps/Sarvaajeth Periyasamy.jpeg",
+      repPhotoPosition: "35% center",
+      instagram: "https://www.instagram.com/aalekh.amrita?igsh=MTBjdWEzZXE2dDl3dQ==&igsi=MTBjdWEzZXE2dDl3dQ=="
+    }
+  ]
 };
 
 export default CONFIG;

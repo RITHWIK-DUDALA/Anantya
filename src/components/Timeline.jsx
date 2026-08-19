@@ -14,6 +14,22 @@ const blockedEmails = [
 export default function Timeline() {
   const { t } = useTranslation();
   const ref = useRef(null);
+  const [liveEvents, setLiveEvents] = React.useState(null); // null = not loaded yet
+
+  // Fetch live timeline from Firestore (falls back to static if unavailable)
+  React.useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    fetch(`${apiUrl}/api/settings/timeline`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.timeline && Array.isArray(data.timeline) && data.timeline.length > 0) {
+          setLiveEvents(data.timeline);
+        } else {
+          setLiveEvents(TIMELINE_EVENTS); // fallback
+        }
+      })
+      .catch(() => setLiveEvents(TIMELINE_EVENTS)); // fallback on error
+  }, []);
 
   useEffect(() => {
     const els = ref.current?.querySelectorAll('.reveal');
@@ -27,9 +43,11 @@ export default function Timeline() {
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [liveEvents]); // re-observe when events load
 
-  const mappedEvents = TIMELINE_EVENTS.map(event => ({
+  const sourceEvents = liveEvents || TIMELINE_EVENTS;
+
+  const mappedEvents = sourceEvents.map(event => ({
     id: event.id,
     email: t(`timeline.events.${event.id}.name`, event.name),
     time: t(`timeline.events.${event.id}.time`, event.time),

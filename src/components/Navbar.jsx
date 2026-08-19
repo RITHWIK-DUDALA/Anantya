@@ -57,7 +57,9 @@ export default function Navbar() {
     { key: 'nav.about', href: '/#about', id: 'about', label: 'About' },
     { key: 'nav.timeline', href: '/#timeline', id: 'timeline', label: 'Timeline' },
     { key: 'nav.committee', href: '/#committee', id: 'committee', label: 'Committee' },
-    { key: 'nav.memories', href: '/memories', id: 'memories', label: 'Memories' }
+    { key: 'nav.members', href: '/members', id: 'members', label: 'Members' },
+    { key: 'nav.memories', href: '/memories', id: 'memories', label: 'Memories' },
+    { key: 'nav.movies', href: '/movies', id: 'movies', label: 'Movies' }
   ];
 
   const isRegisterPage = location.pathname === '/register';
@@ -74,7 +76,18 @@ export default function Navbar() {
             window.history.pushState(null, '', '/#home');
           }
         }}>
-          <img src="/logo.png" alt="Janmashtami Logo" style={{ height: '45px', width: '45px', borderRadius: '50%', objectFit: 'cover', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
+        <style>{`
+          .navbar-logo-img {
+            height: 50px;
+            width: 50px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+          }
+          .nav-logo:hover .navbar-logo-img {
+            transform: scale(1.15);
+          }
+        `}</style>
+          <img id="navbar-logo-img" src="/assets/logo.png" alt="Anantya Logo" className="navbar-logo-img" />
           <span>Janmashtami 2026</span>
         </a>
 

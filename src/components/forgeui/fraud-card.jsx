@@ -30,7 +30,7 @@ export default function FraudCard({ blockedEmails = [] }) {
       transition: { staggerChildren: 0.08, delayChildren: 0.15, duration: 0.5, ease: "easeInOut" },
     },
     close: {
-      height: "34rem",
+      height: "45rem",
       overflowY: "auto",
       transition: { staggerChildren: 0.075, delayChildren: 0.15, duration: 0.5, ease: "easeInOut" },
     },
@@ -72,11 +72,9 @@ export default function FraudCard({ blockedEmails = [] }) {
       initial="close"
       className="clbeam-container"
       style={{
-        width: '42rem', maxWidth: '100%',
+        width: '100%',
         margin: '0 auto', paddingBottom: '2rem',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid var(--border)',
         position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center',
-        borderRadius: '8px',
         backgroundColor: 'transparent',
         color: 'var(--text)',
         cursor: 'pointer',
@@ -84,15 +82,15 @@ export default function FraudCard({ blockedEmails = [] }) {
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px 16px 0', width: '100%', boxSizing: 'border-box' }}>
-        <h2 style={{ color: 'var(--primary)', fontSize: '14px', fontWeight: 'bold', margin: 0 }}>
+        <h2 style={{ color: 'var(--primary)', fontSize: '1.8rem', fontWeight: 'bold', margin: 0, fontFamily: 'Cinzel, serif' }}>
           Event Schedule Timeline
         </h2>
-        <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>
+        <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>
           Hover to interact with the schedule timeline and view upcoming events.
         </p>
       </div>
       
-      <div style={{ position: 'relative', display: 'flex', height: '100%', width: '100%', maxWidth: '38rem', flexDirection: 'column', flexGrow: 1 }}>
+      <div style={{ position: 'relative', display: 'flex', height: '100%', width: '100%', maxWidth: '1200px', flexDirection: 'column', flexGrow: 1 }}>
         <div style={{ marginTop: '2rem', padding: '0.75rem 0' }}>
           <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyItems: 'center', gap: '8px', borderRadius: '6px', background: 'var(--surface)', padding: '2px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: '12px', borderRadius: '4px', background: 'var(--bg-alt)', padding: '12px' }}>
@@ -100,11 +98,11 @@ export default function FraudCard({ blockedEmails = [] }) {
                 <motion.div variants={circlevariant} style={{ height: '16px', width: '16px', flexShrink: 0 }}>
                   <CircleDashedIcon style={{ width: '100%', height: '100%', color: 'var(--primary)' }} />
                 </motion.div>
-                <p style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text)' }}>
+                <p style={{ fontFamily: 'monospace', fontSize: '1rem', color: 'var(--text)' }}>
                   Anantya Event Timeline
                 </p>
               </div>
-              <p style={{ fontSize: '10px', color: 'var(--text-muted)', margin: 0 }}>
+              <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0 }}>
                 18:00
               </p>
             </div>
@@ -131,23 +129,23 @@ export default function FraudCard({ blockedEmails = [] }) {
           </svg>
         </div>
 
-        <div style={{ position: 'relative', paddingLeft: '3rem', paddingRight: '1rem', marginTop: '1rem', marginBottom: '2rem', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1 }}>
-          <div style={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '36px' }}>
+        <div style={{ position: 'relative', paddingLeft: '3rem', paddingRight: '1rem', marginTop: '2rem', marginBottom: '2rem', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1 }}>
+          <div style={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '48px' }}>
             {blockedEmails.map((item, index) => (
-              <div key={item.email || index} style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
-                <div style={{ position: 'relative', marginTop: '6px', marginRight: '8px', height: '24px', width: '24px', flexShrink: 0 }}>
+              <div key={item.email || index} style={{ display: 'flex', width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <div style={{ position: 'relative', marginRight: '16px', height: '24px', width: '24px', flexShrink: 0 }}>
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'rgba(0,0,0,0.05)' }}>
                     <CircleIcon style={{ height: '10px', width: '10px', color: 'var(--text-muted)' }} />
                   </div>
-                  <motion.div variants={iconvariant} style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'var(--primary)', padding: '4px' }}>
-                    {item.icon ? <span style={{fontSize: '10px', color: '#fff'}}>{item.icon}</span> : <XIcon style={{ height: '14px', width: '14px', color: '#fff' }} />}
+                  <motion.div variants={iconvariant} style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'var(--primary)' }}>
+                    {item.icon ? <span style={{fontSize: '12px', color: '#fff'}}>{item.icon}</span> : <XIcon style={{ height: '14px', width: '14px', color: '#fff' }} />}
                   </motion.div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '4px', padding: '4px' }}>
-                  <motion.h2 variants={emailvariant} style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text)', margin: 0, fontFamily: 'system-ui, sans-serif' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '6px', padding: '4px' }}>
+                  <motion.h2 variants={emailvariant} style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text)', margin: 0, fontFamily: 'system-ui, sans-serif' }}>
                     {item.email}
                   </motion.h2>
-                  <motion.p variants={timevariant} style={{ fontFamily: 'monospace', fontSize: '9px', color: 'var(--text-muted)', margin: 0 }}>
+                  <motion.p variants={timevariant} style={{ fontFamily: 'monospace', fontSize: '0.65rem', color: 'var(--text-muted)', margin: 0 }}>
                     Scheduled {item.time}
                   </motion.p>
                 </div>

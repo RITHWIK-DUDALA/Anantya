@@ -85,7 +85,7 @@ const memoriesData = [
   {
     id: 15,
     type: 'photo',
-    src: '/assets/memo10.jpg',
+    src: '/assets/memo10.webp',
     title: 'Janmashtami Memory',
     description: ''
   },

@@ -68,7 +68,6 @@ export default function VenueVerifyPage() {
     } catch (err) {
       console.error(err);
     }
-    localStorage.removeItem('admin_token');
     setIsAuthenticated(false);
   };
 

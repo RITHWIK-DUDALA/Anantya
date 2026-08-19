@@ -185,7 +185,7 @@ export function DiagonalCarousel({
                   }}
                   transition={{ duration: 0.3 }}
                 >
-                  {t(`games.${item.id}.title`)}
+                  {item.isComingSoon ? "Coming Soon" : t(`games.${item.id}.title`)}
                   {isActive && (
                     <div style={{ fontSize: '0.9rem', fontWeight: 'normal', color: 'var(--primary-dark)', marginTop: '4px' }}>
                       {t('gamePage.clickToView')}

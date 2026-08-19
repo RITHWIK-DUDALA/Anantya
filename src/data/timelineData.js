@@ -1,7 +1,5 @@
 // Timeline event data — edit names, times, descriptions & categories here
 export const TIMELINE_EVENTS = [
-  { id: 1, icon: "🏐", name: "Volleyball Match", time: "29 Aug • 4:00 PM – 7:30 PM", description: "Inter-departmental volleyball matches.", category: "Games" },
-  { id: 2, icon: "🏏", name: "Cricket Match", time: "30 Aug • 4:00 PM – 7:30 PM", description: "Exciting cricket matches to kick off the events.", category: "Games" },
   { id: 3, icon: "🙏", name: "Ganesh Pooja", time: "31 Aug • 4:30 PM – 5:00 PM", description: "Auspicious beginning with Ganesh Pooja.", category: "Spiritual" },
   { id: 4, icon: "💃", name: "Garba Dance", time: "31 Aug • 5:00 PM – 5:30 PM", description: "Traditional Garba dance performance.", category: "Cultural" },
   { id: 5, icon: "🎸", name: "Amrita Ragam Jamming Session", time: "31 Aug • 5:40 PM – 6:20 PM", description: "Musical jamming session with Amrita Ragam.", category: "Cultural" },

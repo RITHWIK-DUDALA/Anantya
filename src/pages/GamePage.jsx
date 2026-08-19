@@ -127,9 +127,11 @@ export default function GamePage() {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
                     {game.coordinators.map((coord, idx) => (
                       <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textAlign: 'center', width: '130px' }}>
-                        <div style={{ width: '90px', height: '90px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--primary)', padding: '3px', background: '#0a0a0a' }}>
-                          <img src={coord.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(coord.name) + '&background=random'} alt={coord.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                        </div>
+                        {!game.isComingSoon && (
+                          <div style={{ width: '90px', height: '90px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--primary)', padding: '3px', background: '#0a0a0a' }}>
+                            <img src={coord.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(coord.name) + '&background=random'} alt={coord.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                          </div>
+                        )}
                         <div>
                           <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1rem', color: '#fff' }}>{coord.name}</p>
                           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--primary)', marginTop: '4px', fontWeight: '500' }}>{coord.role}</p>
@@ -144,7 +146,7 @@ export default function GamePage() {
             {/* Right Column: Details */}
             <div>
               <AsciiGlitchRipple as="h1" delay={200} dur={600} style={{ fontSize: '3.5rem', fontWeight: 'bold', marginBottom: '10px', background: 'linear-gradient(to right, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                {t(`games.${game.id}.title`)}
+                {game.isComingSoon ? "Coming Soon" : t(`games.${game.id}.title`)}
               </AsciiGlitchRipple>
 
               {game.isSpecialEvent && (
@@ -161,35 +163,37 @@ export default function GamePage() {
               )}
 
               <AsciiGlitchRipple as="p" delay={500} dur={600} style={{ fontSize: '1.2rem', color: '#ccc', lineHeight: '1.8', marginBottom: '40px' }}>
-                {t(`games.${game.id}.description`)}
+                {game.isComingSoon ? "Coming Soon" : t(`games.${game.id}.description`)}
               </AsciiGlitchRipple>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                
-                <div style={{ display: 'flex', gap: '15px', padding: '20px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px' }}>
-                  <div style={{ fontSize: '1.5rem' }}>📍</div>
-                  <div>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.venue')}</h3>
-                    <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '500' }}>{game.venue}</p>
+              {!game.isComingSoon && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                  
+                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    <div style={{ fontSize: '1.5rem' }}>📍</div>
+                    <div>
+                      <h3 style={{ margin: '0 0 3px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.venue')}</h3>
+                      <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '500' }}>{game.venue}</p>
+                    </div>
                   </div>
-                </div>
 
-                <div style={{ display: 'flex', gap: '15px', padding: '20px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px' }}>
-                  <div style={{ fontSize: '1.5rem' }}>⏰</div>
-                  <div>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.time')}</h3>
-                    <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '500' }}>{game.time}</p>
+                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    <div style={{ fontSize: '1.5rem' }}>⏰</div>
+                    <div>
+                      <h3 style={{ margin: '0 0 3px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.time')}</h3>
+                      <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '500' }}>{game.time}</p>
+                    </div>
                   </div>
-                </div>
 
-                <div style={{ display: 'flex', gap: '15px', padding: '20px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px' }}>
-                  <div style={{ fontSize: '1.5rem' }}>💰</div>
-                  <div>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.entryFee')}</h3>
-                    <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>{game.price === 0 ? t('gamePage.free') : `₹${game.price}`}</p>
+                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    <div style={{ fontSize: '1.5rem' }}>💰</div>
+                    <div>
+                      <h3 style={{ margin: '0 0 3px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.entryFee')}</h3>
+                      <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>{game.price === 0 ? t('gamePage.free') : `₹${game.price}`}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Uriyadi specific content block */}
               {game.title === 'Uriyadi' && (
@@ -212,7 +216,19 @@ export default function GamePage() {
 
               <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '30px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '20px', fontFamily: '"Isabella", serif' }}>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', fontFamily: '"Isabella", serif' }}>{t('gamePage.registrationInfo')}</h3>
-                {game.price === 0 ? (
+                {game.isComingSoon ? (
+                  <div style={{
+                    background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
+                    border: '1px solid rgba(183,139,39,0.2)',
+                    borderRadius: '16px',
+                    padding: '1.5rem'
+                  }}>
+                    <h4 style={{ margin: '0 0 10px', color: 'var(--primary)', fontSize: '1.2rem' }}>Coming Soon</h4>
+                    <p style={{ color: '#aaa', margin: 0, lineHeight: '1.6' }}>
+                      Registration for this event is currently disabled and will open soon. Stay tuned!
+                    </p>
+                  </div>
+                ) : game.price === 0 ? (
                   <div style={{
                     background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
                     border: '1px solid rgba(183,139,39,0.2)',
