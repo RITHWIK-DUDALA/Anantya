@@ -114,7 +114,7 @@ export default function SplashScreen({ onComplete }) {
         {phase !== 'done' && (
           <motion.img
             key="splash-logo"
-            src="/assets/logo.png"
+            src="/assets/logo.webp"
             alt="Anantya"
             initial={{ opacity: 0, scale: 0.4, top: centerTop, left: centerLeft, width: CW, height: CH }}
             animate={

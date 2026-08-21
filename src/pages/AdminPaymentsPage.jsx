@@ -244,6 +244,7 @@ export default function AdminPaymentsPage() {
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Amount</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Token</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Txn ID / UTR</th>
+                    <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Method</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Status</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600, textAlign: 'right' }}>Actions</th>
                   </tr>
@@ -291,7 +292,18 @@ export default function AdminPaymentsPage() {
                         </span>
                       </td>
                       <td style={{ padding: '20px', color: '#aaa', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-                        {reg.paymentId || reg.transactionId || reg.utrNumber || 'N/A'}
+                        {reg.paymentId || 'N/A'}
+                      </td>
+                      <td style={{ padding: '20px' }}>
+                        {reg.paymentMethod === 'razorpay' && (
+                          <span style={{ fontSize: '0.72rem', fontWeight: 700, background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', padding: '2px 8px', borderRadius: '8px', border: '1px solid rgba(99,102,241,0.3)', letterSpacing: '0.3px' }}>Razorpay</span>
+                        )}
+                        {reg.paymentMethod === 'upi_manual' && (
+                          <span style={{ fontSize: '0.72rem', fontWeight: 700, background: 'rgba(251,191,36,0.12)', color: '#fbbf24', padding: '2px 8px', borderRadius: '8px', border: '1px solid rgba(251,191,36,0.3)', letterSpacing: '0.3px' }}>UPI Manual</span>
+                        )}
+                        {(!reg.paymentMethod || reg.paymentMethod === 'free') && (
+                          <span style={{ fontSize: '0.72rem', color: '#555' }}>Free</span>
+                        )}
                       </td>
                       <td style={{ padding: '20px' }}>
                         <StatusBadge reg={reg} />

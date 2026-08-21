@@ -122,7 +122,7 @@ export default function CinematicGameRegistration({ isOpen, onClose, initialGame
         </button>
 
         {/* Main Content Layout */}
-        <div style={{
+        <div data-lenis-prevent style={{
           position: 'relative',
           zIndex: 5,
           display: 'flex',

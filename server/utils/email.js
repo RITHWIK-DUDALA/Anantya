@@ -11,16 +11,25 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-async function sendConfirmationEmail(email, name, regId, games, amount, paymentId, qrCodeDataUrl, isFree = false) {
-  try {
-    const transporter = nodemailer.createTransport({
+// Re-usable Nodemailer transporter for connection pooling
+let transporter = null;
+function getTransporter() {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      maxConnections: 10,
+      maxMessages: 100,
     });
+  }
+  return transporter;
+}
 
+async function sendConfirmationEmail(email, name, regId, games, amount, paymentId, qrCodeDataUrl, isFree = false) {
+  try {
     const amountText = isFree ? 'Free' : `₹${amount}`;
     const paymentText = isFree ? 'N/A' : paymentId;
 
@@ -48,7 +57,7 @@ async function sendConfirmationEmail(email, name, regId, games, amount, paymentI
       ]
     };
 
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     console.log(`Email sent successfully to ${email}`);
   } catch (error) {
     console.error(`Failed to send email to ${email}:`, error);
@@ -84,7 +93,7 @@ async function sendContactEmail(name, email, message) {
       `
     };
 
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     console.log(`Contact email from ${name} sent successfully`);
   } catch (error) {
     console.error(`Failed to send contact email from ${name}:`, error);

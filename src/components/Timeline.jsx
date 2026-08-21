@@ -2,14 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TIMELINE_EVENTS } from '../data/timelineData';
 import StrokeFill from './StrokeFill';
-import FraudCard from './forgeui/fraud-card';
-
-const blockedEmails = [
-  { email: "bad_actor+1@gamil.com", time: "Aug 9 at 14:09" },
-  { email: "spammer123@mailor.com", time: "Aug 10 at 11:23" },
-  { email: "fake+prmo@tempmail.com", time: "Aug 11 at 09:45" },
-  { email: "bot@disposablemail.org", time: "Aug 12 at 16:02" },
-];
+import RiverTimeline from './forgeui/river-timeline';
 
 export default function Timeline() {
   const { t } = useTranslation();
@@ -56,39 +49,39 @@ export default function Timeline() {
   }));
 
   return (
-    <section id="timeline" className="section timeline-section" ref={ref} style={{ padding: '80px 0', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}>
+    <section id="timeline" className="section timeline-section" ref={ref} style={{ padding: '80px 0', background: '#020617', position: 'relative', overflow: 'hidden' }}>
       
-      {/* Orange Ambient Background Glow */}
+      {/* Deep Blue Ambient Background Glow */}
       <div aria-hidden="true" style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '800px',
-        height: '800px',
-        background: 'radial-gradient(circle, rgba(255, 140, 0, 0.12) 0%, rgba(255, 140, 0, 0) 70%)',
+        width: '1000px',
+        height: '1000px',
+        background: 'radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, rgba(2, 6, 23, 0) 70%)',
         zIndex: 0,
         pointerEvents: 'none',
         borderRadius: '50%',
-        filter: 'blur(60px)'
+        filter: 'blur(80px)'
       }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="section-header reveal" style={{ marginBottom: '40px' }}>
-          <span className="section-eyebrow">{t('timeline.subtitle', 'Schedule')}</span>
+          <span className="section-eyebrow" style={{ background: 'rgba(14, 165, 233, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.2)' }}>{t('timeline.subtitle', 'A DAY FULL OF CELEBRATIONS')}</span>
           <div style={{ marginTop: '-20px' }}>
             <StrokeFill 
-              text={t('timeline.title', 'EVENTS')} 
+              text={t('timeline.title', 'EVENT SCHEDULE')} 
               duration={2.5} 
-              strokeColor="var(--primary)" 
-              fillColor="var(--primary-dark)" 
+              strokeColor="#38bdf8" 
+              fillColor="#0ea5e9" 
               fontSize="120" 
             />
           </div>
         </div>
 
-        <div className="reveal" style={{ marginTop: '40px' }}>
-          <FraudCard blockedEmails={mappedEvents} />
+        <div className="reveal" style={{ marginTop: '60px', minHeight: '800px' }}>
+          <RiverTimeline events={mappedEvents} />
         </div>
       </div>
     </section>

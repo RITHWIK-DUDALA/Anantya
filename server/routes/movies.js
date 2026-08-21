@@ -82,7 +82,6 @@ router.get('/shows/:showtimeId/seats', async (req, res, next) => {
     locksSnapshot.forEach(doc => {
       const lock = doc.data();
       if (lock.expiresAt > now) {
-        delete lock.sessionId;
         activeLocks.push(lock);
       }
     });

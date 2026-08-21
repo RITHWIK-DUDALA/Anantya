@@ -41,6 +41,16 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Legal Links */}
+          <div className="footer-nav">
+            <h4>Legal</h4>
+            <ul>
+              <li><Link to="/terms">Terms & Conditions</Link></li>
+              <li><Link to="/refund-policy">Refund Policy</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
+            </ul>
+          </div>
+
           {/* Social */}
           <div className="footer-social">
             <h4>{t('footer.followUs', 'Follow Us')}</h4>

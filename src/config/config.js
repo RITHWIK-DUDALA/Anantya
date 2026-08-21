@@ -178,7 +178,7 @@ const CONFIG = {
       phone: "+91 89850 59136",
       logo: "/clubs and their reps/dhikrithi-club.jpg",
       repName: "Poojitha Kanipakam",
-      repPhoto: "/clubs and their reps/dkrithi rep.jpeg",
+      repPhoto: "/clubs and their reps/dkrithi rep.webp",
       instagram: "https://www.instagram.com/dhikrithi.amrita?igsh=MWNiaW9nc3BsNGN1cw=="
     },
     {
@@ -197,7 +197,7 @@ const CONFIG = {
       description: "Amrita Raaga is the music club of Amrita Vishwa Vidyapeetham, bringing together students who share a passion for music, performance, and creativity. From soulful melodies to energetic performances, the club provides a platform for students to explore their musical talents, collaborate with fellow musicians, and create memorable experiences through music. With performances, selections, and musical events throughout the year, Amrita Raaga aims to make every note count.",
       logo: "/clubs and their reps/AmritaRaaga_Black.png",
       repName: "Adithyan V J",
-      repPhoto: "/clubs and their reps/AMRITA RAGA REP.jpeg",
+      repPhoto: "/clubs and their reps/AMRITA RAGA REP.webp",
       instagram: "https://www.instagram.com/raaga.amrita?utm_source=qr&igsh=MXRxdHU5ZHplMmRkag=="
     },
     {
@@ -206,7 +206,7 @@ const CONFIG = {
       description: "Aalekh Fine Arts Club is a creative community that nurtures artistic talent through visual arts, workshops, competitions, exhibitions, and collaborative initiatives, empowering students to explore, develop, and showcase their artistic potential.",
       logo: "/clubs and their reps/alayek logo no bg.png",
       repName: "Sarvaajeth Periyasamy",
-      repPhoto: "/clubs and their reps/Sarvaajeth Periyasamy.jpeg",
+      repPhoto: "/clubs and their reps/Sarvaajeth Periyasamy.webp",
       repPhotoPosition: "35% center",
       instagram: "https://www.instagram.com/aalekh.amrita?igsh=MTBjdWEzZXE2dDl3dQ==&igsi=MTBjdWEzZXE2dDl3dQ=="
     }

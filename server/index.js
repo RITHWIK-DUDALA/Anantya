@@ -22,12 +22,12 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      frameSrc: ["'none'"],
+      scriptSrc: ["'self'", "https://checkout.razorpay.com"],
+      frameSrc: ["'self'", "https://api.razorpay.com", "https://checkout.razorpay.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:"],
-      connectSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https://*.razorpay.com"],
+      connectSrc: ["'self'", "https://api.razorpay.com", "https://lumberjack.razorpay.com"],
     },
   },
 }));
@@ -59,10 +59,10 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Specific Rate Limiters
+// Specific Rate Limiters (Tuned for campus NAT burst traffic during event launch)
 const adminLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5,
+  max: 15,
   message: { error: 'Too many login attempts from this IP, please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -70,7 +70,7 @@ const adminLimiter = rateLimit({
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 3,
+  max: 10,
   message: { error: 'Too many messages sent. Please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -78,7 +78,7 @@ const contactLimiter = rateLimit({
 
 const registerLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 10 : 100,
+  max: process.env.NODE_ENV === 'production' ? 150 : 500, // Accommodate shared campus WiFi NAT IP
   message: { error: 'Too many registration attempts, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -86,7 +86,7 @@ const registerLimiter = rateLimit({
 
 const paymentLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,
+  max: process.env.NODE_ENV === 'production' ? 150 : 500, // Accommodate shared campus WiFi NAT IP
   message: { error: 'Too many payment requests, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -101,11 +101,18 @@ const adminRoute = require('./routes/admin');
 const contactRoute = require('./routes/contact');
 const moviesRoute = require('./routes/movies');
 const pricingRoute = require('./routes/pricing'); // H-1: server-side discount validation
+const paymentRoute = require('./routes/payment'); // Razorpay integration
+
+// ── Razorpay webhook MUST receive raw body for HMAC-SHA256 signature verification.
+// Register this BEFORE the global express.json() middleware so the body isn't
+// pre-parsed. Only this specific path gets the raw body parser.
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 app.use('/api/register', registerLimiter, registerRoute);
 app.use('/api/verify', verifyRoute);
 app.use('/api/movies', moviesRoute);
 app.use('/api/pricing', pricingRoute); // H-1: discount code validation endpoint
+app.use('/api/payment', paymentLimiter, paymentRoute); // Razorpay payment flow
 app.use('/api/admin/login', adminLimiter); // Apply strictly to login
 app.use('/api/admin', adminRoute);
 // app.use('/api/admin/events', require('./routes/events'));
@@ -122,6 +129,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+process.on('exit', (code) => {
+  console.log('Process exit event with code: ', code);
+});
+
+server.on('close', () => {
+  console.log('Server closed');
 });

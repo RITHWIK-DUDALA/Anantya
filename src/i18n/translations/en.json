@@ -51,90 +51,55 @@
       "Food": "Food"
     },
     "events": {
-      "3": {
+      "1": {
         "name": "Ganesh Pooja",
+        "time": "31 Aug • 4:00 PM – 4:30 PM",
+        "description": "Inaugural Pooja Arrangements at Amrita Darshanam. Coordinator: Nagasai Sree"
+      },
+      "2": {
+        "name": "Garba Dance",
         "time": "31 Aug • 4:30 PM – 5:00 PM",
-        "description": "Auspicious beginning with Ganesh Pooja."
+        "description": "Garba Arrangements & Coordination at Amrita Darshanam. Coordinator: Srinithi V R"
+      },
+      "3": {
+        "name": "Amrita Ragam Jamming Session",
+        "time": "31 Aug • 5:10 PM – 5:40 PM",
+        "description": "Music Session at Amrita Darshanam. Coordinator: Nagasai Sree"
       },
       "4": {
-        "name": "Garba Dance",
-        "time": "31 Aug • 5:00 PM – 5:30 PM",
-        "description": "Traditional Garba dance performance."
+        "name": "Skit",
+        "time": "31 Aug • 6:00 PM – 7:00 PM",
+        "description": "Skit Performance at Auditorium. Coordinator: Srinithi V R"
       },
       "5": {
-        "name": "Amrita Ragam Jamming Session",
-        "time": "31 Aug • 5:40 PM – 6:20 PM",
-        "description": "Musical jamming session with Amrita Ragam."
-      },
-      "6": {
-        "name": "Story Telling",
-        "time": "31 Aug • 6:30 PM – 7:00 PM",
-        "description": "Captivating mythological storytelling."
+        "name": "Lantern Show",
+        "time": "31 Aug • 8:00 PM – 8:45 PM",
+        "description": "Lantern Show Arrangements at Amrita Darshanam. Coordinator: Jyothsana"
       },
       "7": {
-        "name": "Dinner Break",
-        "time": "31 Aug • 7:00 PM – 8:00 PM",
-        "description": "Break for dinner."
+        "name": "Sri Krishna Pooja",
+        "time": "01 Sep • 8:00 AM – 9:15 AM",
+        "description": "Main Pooja Arrangements Near Statue. Coordinators: Nagasai Sree, Srinithi V R"
       },
       "8": {
-        "name": "Lantern Show",
-        "time": "31 Aug • 8:00 PM – 9:00 PM",
-        "description": "Beautiful night lantern show."
+        "name": "Sri Krishna Rathayatra",
+        "time": "01 Sep • 9:15 AM – 11:00 AM",
+        "description": "Vehicle & Grand Procession with Kolatam and Traditional Band from Ground to Campus. Coordinators: Punith Vuppala, Surya K K"
       },
       "9": {
-        "name": "Sri Krishna Pooja",
-        "time": "01 Sep • 7:00 AM – 7:40 AM",
-        "description": "Morning pooja dedicating the day to Sri Krishna."
+        "name": "Culturals",
+        "time": "01 Sep • 11:00 AM – 12:00 PM",
+        "description": "Cultural Program Arrangements at Auditorium / Stage. Coordinators: Nagasai Sree, Srinithi V R"
       },
       "10": {
-        "name": "Skit",
-        "time": "01 Sep • 8:00 AM – 9:00 AM",
-        "description": "Theatrical skit performance in the auditorium."
+        "name": "Games",
+        "time": "01 Sep • 3:30 PM – 6:00 PM",
+        "description": "All Indoor Games, Uriyadi & Tug of War at Ground. Coordinator: Rithwik Satya D"
       },
       "11": {
-        "name": "Sree Krishna Radhyatra",
-        "time": "01 Sep • 9:00 AM – 11:00 AM",
-        "description": "Grand procession with Kolatam and Traditional Band."
-      },
-      "12": {
-        "name": "The Mayur Walk",
-        "time": "01 Sep • 11:00 AM – 11:50 AM",
-        "description": "A special themed walk."
-      },
-      "13": {
-        "name": "Lunch",
-        "time": "01 Sep • 12:00 PM – 1:30 PM",
-        "description": "Afternoon lunch break."
-      },
-      "14": {
-        "name": "Games",
-        "time": "01 Sep • 2:00 PM – 4:00 PM",
-        "description": "Various fun games and competitions."
-      },
-      "15": {
-        "name": "Uriyadi",
-        "time": "01 Sep • 4:00 PM – 5:00 PM",
-        "description": "Traditional pot breaking event."
-      },
-      "16": {
-        "name": "Tug of War",
-        "time": "01 Sep • 5:00 PM – 6:00 PM",
-        "description": "Test of strength in Tug of War."
-      },
-      "17": {
-        "name": "Culturals",
-        "time": "01 Sep • 6:00 PM – 7:00 PM",
-        "description": "Evening cultural performances."
-      },
-      "18": {
-        "name": "Dinner Break",
-        "time": "01 Sep • 7:00 PM – 8:00 PM",
-        "description": "Break for dinner."
-      },
-      "19": {
-        "name": "Vrindavan Beats",
-        "time": "01 Sep • 8:00 PM – 9:00 PM",
-        "description": "Musical beats to close the celebrations."
+        "name": "Evening Culturals & Vrindavan Beats",
+        "time": "01 Sep • 6:00 PM – 8:45 PM",
+        "description": "Cultural Programs at Auditorium / Stage. Coordinators: Nagasai Sree, Srinithi V R"
       }
     }
   },

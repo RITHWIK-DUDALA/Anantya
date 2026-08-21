@@ -274,6 +274,212 @@ function FreeForm({ t, onSuccess, onError }) {
   );
 }
 
+/* ── Razorpay Payment Step ───────────────────────── */
+function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, onFallback, t }) {
+  const [loading, setLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState('');
+  const [error, setError] = useState('');
+
+  const apiUrl = import.meta.env.VITE_API_URL || '';
+
+  // Load Razorpay checkout.js dynamically if not already loaded
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) { resolve(true); return; }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePay = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      // 1. Load Razorpay SDK
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        setError('Failed to load payment gateway. Please check your internet connection.');
+        return;
+      }
+
+      // 2. Create order on server
+      const orderRes = await fetch(`${apiUrl}/api/payment/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(baseData),
+      });
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) {
+        setError(orderData.error || 'Failed to create payment order');
+        return;
+      }
+
+      // 3. Open Razorpay checkout
+      const rzp = new window.Razorpay({
+        key: orderData.keyId,
+        amount: orderData.amountPaise,
+        currency: orderData.currency,
+        order_id: orderData.orderId,
+        name: 'Anantya — Janmashtami 2025',
+        description: `Games: ${(baseData.games || []).join(', ')}`,
+        image: '/favicon.ico',
+        prefill: {
+          name: baseData.name,
+          email: baseData.email,
+          contact: baseData.phone,
+        },
+        theme: { color: '#B78B27' },
+        handler: async (response) => {
+          // Payment success callback from Razorpay SDK
+          setStatusMsg('Payment received! Confirming your registration...');
+          try {
+            // Verify payment signature on server
+            const verifyRes = await fetch(`${apiUrl}/api/payment/verify`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              }),
+            });
+            const verifyData = await verifyRes.json();
+
+            if (verifyData.status === 'verified') {
+              onSuccess('paid', verifyData.token);
+            } else if (verifyData.status === 'processing') {
+              // Webhook may still be processing — poll a couple of times
+              let attempts = 0;
+              const poll = setInterval(async () => {
+                attempts++;
+                setStatusMsg(`Confirming registration... (${attempts}/5)`);
+                const r = await fetch(`${apiUrl}/api/payment/verify`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    razorpayOrderId: response.razorpay_order_id,
+                    razorpayPaymentId: response.razorpay_payment_id,
+                    razorpaySignature: response.razorpay_signature,
+                  }),
+                });
+                const d = await r.json();
+                if (d.status === 'verified') {
+                  clearInterval(poll);
+                  onSuccess('paid', d.token);
+                } else if (attempts >= 5) {
+                  clearInterval(poll);
+                  // Payment went through — email will arrive. Show success anyway.
+                  onSuccess('paid', null);
+                }
+              }, 3000);
+            } else {
+              setError('Payment received but verification failed. Please contact organizers with your payment ID: ' + response.razorpay_payment_id);
+            }
+          } catch {
+            setError('Payment received but an error occurred. Please contact organizers.');
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            setStatusMsg('');
+          }
+        },
+      });
+
+      rzp.on('payment.failed', (response) => {
+        setError(`Payment failed: ${response.error.description}`);
+        setLoading(false);
+      });
+
+      rzp.open();
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="reg-form card" style={{ textAlign: 'center', padding: '2rem 1.5rem', maxWidth: '480px', margin: '0 auto' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <span style={{
+          display: 'inline-block', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px',
+          color: 'var(--primary)', background: 'rgba(183,139,39,0.12)', padding: '4px 14px',
+          borderRadius: '20px', border: '1px solid rgba(183,139,39,0.3)', marginBottom: '10px'
+        }}>STEP 2 OF 2</span>
+        <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)' }}>
+          Complete Your Payment
+        </h3>
+        <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+          Secure payment powered by Razorpay
+        </p>
+      </div>
+
+      {/* Amount pill */}
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: '10px',
+        padding: '10px 28px', borderRadius: '50px', marginBottom: '2rem',
+        background: 'linear-gradient(135deg, rgba(183,139,39,0.18), rgba(183,139,39,0.06))',
+        border: '1px solid rgba(183,139,39,0.35)',
+      }}>
+        <span style={{ fontSize: '0.8rem', color: '#aaa', fontWeight: 600 }}>AMOUNT</span>
+        <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>₹{amount}</span>
+      </div>
+
+      {/* Games summary */}
+      <div style={{ marginBottom: '2rem', padding: '12px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <p style={{ margin: 0, fontSize: '0.82rem', color: '#aaa' }}>Games: <span style={{ color: '#fff' }}>{(baseData.games || []).join(', ')}</span></p>
+      </div>
+
+      {/* Pay button */}
+      {statusMsg ? (
+        <div style={{ padding: '20px', color: 'var(--primary)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+          <div style={{ width: '18px', height: '18px', border: '2px solid rgba(183,139,39,0.2)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', flexShrink: 0 }} />
+          {statusMsg}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={handlePay}
+          disabled={loading}
+          className="submit-btn pay-btn"
+          style={{ width: '100%', marginBottom: '12px', opacity: loading ? 0.7 : 1 }}
+        >
+          {loading ? 'Opening Payment...' : `🔒 Pay ₹${amount} Securely`}
+        </button>
+      )}
+
+      {error && (
+        <p style={{ color: 'var(--rose)', fontSize: '0.82rem', margin: '10px 0', background: 'rgba(244,63,94,0.08)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(244,63,94,0.2)' }}>
+          ⚠ {error}
+        </p>
+      )}
+
+      <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+        <button type="button" onClick={onBack} style={{
+          flex: 1, padding: '10px', borderRadius: '10px', cursor: 'pointer',
+          background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
+          color: '#888', fontSize: '0.85rem', fontFamily: 'inherit'
+        }}>← Back</button>
+        <button type="button" onClick={onFallback} style={{
+          flex: 1, padding: '10px', borderRadius: '10px', cursor: 'pointer',
+          background: 'transparent', border: '1px solid rgba(244,162,97,0.3)',
+          color: '#f4a261', fontSize: '0.82rem', fontFamily: 'inherit'
+        }}>Pay via UPI instead</button>
+      </div>
+
+      <p style={{ fontSize: '0.72rem', color: '#444', margin: '16px 0 0' }}>
+        🔒 Powered by Razorpay. Supports UPI, cards, netbanking & wallets.
+      </p>
+    </div>
+  );
+}
+
 /* ── UPI Payment Step ────────────────────────────── */
 function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
   const [transactionId, setTransactionId] = useState('');
@@ -477,7 +683,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
     return {};
   });
-  const [step, setStep] = useState('form'); // 'form' | 'payment'
+  const [step, setStep] = useState('form'); // 'form' | 'razorpay' | 'upi'
   const [baseData, setBaseData] = useState(null);
   const [secretCode, setSecretCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -569,7 +775,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
 
     setBaseData(data);
-    setStep('payment');
+    setStep('razorpay'); // Go to Razorpay checkout first
   };
 
   const handleFreeSubmit = async (data) => {
@@ -595,22 +801,37 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
   };
 
-  if (step === 'payment' && baseData) {
+  const resetPayment = () => {
+    formRef.current?.reset();
+    setSelected({});
+    setSecretCode('');
+    setDiscount(0);
+    setStep('form');
+  };
+
+  if (step === 'razorpay' && baseData) {
+    return (
+      <RazorpayPaymentStep
+        t={t}
+        amount={total}
+        baseData={{ ...baseData, secretCode: discount > 0 ? secretCode.trim().toUpperCase() : '' }}
+        onSuccess={(type, token) => { resetPayment(); onSuccess(type, token); }}
+        onError={onError}
+        onBack={() => setStep('form')}
+        onFallback={() => setStep('upi')}
+      />
+    );
+  }
+
+  if (step === 'upi' && baseData) {
     return (
       <UpiPaymentStep
         t={t}
         amount={total}
         baseData={baseData}
-        onSuccess={(type, token) => {
-          formRef.current?.reset();
-          setSelected({});
-          setSecretCode('');
-          setDiscount(0);
-          setStep('form');
-          onSuccess(type, token);
-        }}
+        onSuccess={(type, token) => { resetPayment(); onSuccess(type, token); }}
         onError={onError}
-        onBack={() => setStep('form')}
+        onBack={() => setStep('razorpay')}
       />
     );
   }

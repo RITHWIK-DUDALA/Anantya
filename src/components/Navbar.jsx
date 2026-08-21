@@ -87,7 +87,7 @@ export default function Navbar() {
             transform: scale(1.15);
           }
         `}</style>
-          <img id="navbar-logo-img" src="/assets/logo.png" alt="Anantya Logo" className="navbar-logo-img" />
+          <img id="navbar-logo-img" src="/assets/logo.webp" alt="Anantya Logo" className="navbar-logo-img" />
           <span>Janmashtami 2026</span>
         </a>
 
@@ -142,7 +142,8 @@ export default function Navbar() {
               fontWeight: '600', 
               textDecoration: 'none',
               fontSize: '0.95rem',
-              boxShadow: 'var(--shadow-sm)'
+              boxShadow: 'var(--shadow-sm)',
+              whiteSpace: 'nowrap'
             }}
           >
             {t('nav.register', 'Register Now')}

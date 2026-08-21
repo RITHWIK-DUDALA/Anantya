@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import Lenis from 'lenis';
 import Home from './pages/Home';
 import RegisterPage from './pages/RegisterPage';
 import GamePage from './pages/GamePage';
@@ -9,6 +10,9 @@ import MemoriesPage from './pages/MemoriesPage';
 import MembersPage from './pages/MembersPage';
 import StatusPage from './pages/StatusPage';
 import VenueVerifyPage from './pages/VenueVerifyPage';
+import TermsPage from './pages/TermsPage';
+import RefundPolicyPage from './pages/RefundPolicyPage';
+import ContactUsPage from './pages/ContactUsPage';
 import MusicPlayer from './components/MusicPlayer';
 import SplashScreen from './components/SplashScreen';
 
@@ -37,6 +41,32 @@ export default function App() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    // Initialize Lenis for buttery smooth scrolling
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // standard ease-out-expo
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
   }, []);
 
   const handleSplashComplete = () => {
@@ -71,6 +101,9 @@ export default function App() {
         <Route path="/members" element={<MembersPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
         <Route path="/verify" element={<VerifyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/refund-policy" element={<RefundPolicyPage />} />
+        <Route path="/contact" element={<ContactUsPage />} />
         
         {/* Movie Booking Routes */}
         <Route path="/movies" element={<MoviesSelectionPage />} />

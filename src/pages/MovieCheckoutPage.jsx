@@ -520,7 +520,7 @@ export default function MovieCheckoutPage() {
 
       {/* Full-Screen Terms and Conditions Overlay Page */}
       {showTermsPage && (
-        <div style={{
+        <div data-lenis-prevent style={{
           position: 'fixed',
           top: 0,
           left: 0,

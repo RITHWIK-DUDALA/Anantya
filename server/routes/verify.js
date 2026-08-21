@@ -81,8 +81,8 @@ router.patch('/checkin/:regId', authenticateAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Already checked in' });
     }
 
-    if (data.status === 'pending') {
-      return res.status(400).json({ error: 'Payment not completed' });
+    if (data.status === 'pending_verification') {
+      return res.status(400).json({ error: 'Payment not yet verified' });
     }
 
     await docRef.update({ checkedIn: true });

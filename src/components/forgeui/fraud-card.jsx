@@ -138,15 +138,14 @@ export default function FraudCard({ blockedEmails = [] }) {
                     <CircleIcon style={{ height: '10px', width: '10px', color: 'var(--text-muted)' }} />
                   </div>
                   <motion.div variants={iconvariant} style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'var(--primary)' }}>
-                    {item.icon ? <span style={{fontSize: '12px', color: '#fff'}}>{item.icon}</span> : <XIcon style={{ height: '14px', width: '14px', color: '#fff' }} />}
                   </motion.div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '6px', padding: '4px' }}>
-                  <motion.h2 variants={emailvariant} style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text)', margin: 0, fontFamily: 'system-ui, sans-serif' }}>
+                  <motion.h2 variants={emailvariant} style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text)', margin: 0, fontFamily: 'system-ui, sans-serif' }}>
                     {item.email}
                   </motion.h2>
-                  <motion.p variants={timevariant} style={{ fontFamily: 'monospace', fontSize: '0.65rem', color: 'var(--text-muted)', margin: 0 }}>
-                    Scheduled {item.time}
+                  <motion.p variants={timevariant} style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                    {item.time}
                   </motion.p>
                 </div>
               </div>

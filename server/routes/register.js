@@ -67,15 +67,6 @@ router.post('/free', async (req, res, next) => {
 
     const safeEmail = sanitizeField(email, 150).toLowerCase().trim();
 
-    // H-2: Prevent duplicate email registrations
-    const existingSnapshot = await db.collection('registrations')
-      .where('email', '==', safeEmail)
-      .limit(1)
-      .get();
-    if (!existingSnapshot.empty) {
-      return res.status(409).json({ error: 'This email is already registered. If you have an issue, please contact the organizers.' });
-    }
-
     const regId = `REG-${crypto.randomUUID()}`;
     const token = await generateUniqueToken();
 
@@ -111,10 +102,27 @@ router.post('/free', async (req, res, next) => {
       isAmritaStudent: isAmritaEmail(safeEmail),
     };
 
-    await db.collection('registrations').doc(regId).set(registrationData);
+    // H-2 (fixed): Run email duplicate-check + write atomically inside a Firestore
+    // transaction. The previous non-transactional get() + set() had a TOCTOU race
+    // condition where two simultaneous requests with the same email could both pass.
+    let duplicateEmail = false;
+    await db.runTransaction(async (t) => {
+      const emailQuery = await t.get(
+        db.collection('registrations').where('email', '==', safeEmail)
+      );
+      if (!emailQuery.empty) {
+        duplicateEmail = true;
+        return;
+      }
+      t.set(db.collection('registrations').doc(regId), registrationData);
+    });
 
-    await sendConfirmationEmail(email, name, regId, role, 0, null, qrImageUrl, true);
-    // appendRegistrationToExcel(registrationData); // Removed for high concurrency stability (use Admin Export instead)
+    if (duplicateEmail) {
+      return res.status(409).json({ error: 'This email is already registered. If you have an issue, please contact the organizers.' });
+    }
+
+    // Fire-and-forget confirmation email so SMTP latency doesn't block client HTTP response
+    sendConfirmationEmail(email, name, regId, role, 0, null, qrImageUrl, true).catch(err => console.error('Free reg email error:', err));
 
     res.json({ success: true, regId, token });
   } catch (error) {
@@ -237,8 +245,8 @@ router.post('/paid', async (req, res, next) => {
       });
     }
 
-    await sendConfirmationEmail(email, name, regId, gameTitles.join(', '), finalTotal, cleanTxnId, qrImageUrl, false);
-    // appendRegistrationToExcel(registrationData); // Removed for high concurrency stability (use Admin Export instead)
+    // Fire-and-forget confirmation email so SMTP latency doesn't block client HTTP response
+    sendConfirmationEmail(email, name, regId, gameTitles.join(', '), finalTotal, cleanTxnId, qrImageUrl, false).catch(err => console.error('Paid reg email error:', err));
 
     res.json({ success: true, regId, token, amount: finalTotal });
   } catch (error) {

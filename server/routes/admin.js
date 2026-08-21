@@ -36,12 +36,11 @@ router.get('/payments', authenticateAdmin, async (req, res, next) => {
     const registrations = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
-      // Exclude volunteers — they have their own page
-      if (!VOLUNTEER_ROLES.includes(data.role)) {
+      // Exclude volunteers and abandoned order_created checkouts
+      if (!VOLUNTEER_ROLES.includes(data.role) && data.status !== 'order_created') {
         registrations.push({
           id: doc.id,
           ...data,
-          // Ensure these fields are always present
           studentId: data.studentId || null,
           isAmritaStudent: data.isAmritaStudent || false,
         });
@@ -73,7 +72,7 @@ router.get('/payments/flagged', authenticateAdmin, async (req, res, next) => {
     const txnMap = {};
     snapshot.forEach((doc) => {
       const data = doc.data();
-      if (data.paymentId && !VOLUNTEER_ROLES.includes(data.role)) {
+      if (data.paymentId && !VOLUNTEER_ROLES.includes(data.role) && data.status !== 'order_created') {
         const key = data.paymentId;
         if (!txnMap[key]) txnMap[key] = [];
         txnMap[key].push({ id: doc.id, ...data, studentId: data.studentId || null, isAmritaStudent: data.isAmritaStudent || false });
