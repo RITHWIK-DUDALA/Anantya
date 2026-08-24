@@ -226,16 +226,17 @@ export default function Committee({ variant = 'avatars' }) {
   }, [variant]);
 
   // Hierarchical Data Grouping for Grid
-  const heads = CONFIG.committee.filter(m => m.role.toLowerCase() === 'event head');
-  const viceHeads = CONFIG.committee.filter(m => m.role.toLowerCase() === 'event vice head');
-  const games = CONFIG.committee.filter(m => m.role.toLowerCase().includes('games'));
-  const decor = CONFIG.committee.filter(m => m.role.toLowerCase().includes('decoration'));
-  const tech = CONFIG.committee.filter(m => m.role.toLowerCase().includes('technical'));
+  const validCommittee = CONFIG.committee.filter(m => !m.isCoordinator);
+  const heads = validCommittee.filter(m => m.role.toLowerCase() === 'event head');
+  const viceHeads = validCommittee.filter(m => m.role.toLowerCase() === 'event vice head');
+  const games = validCommittee.filter(m => m.role.toLowerCase().includes('games'));
+  const decor = validCommittee.filter(m => m.role.toLowerCase().includes('decoration'));
+  const tech = validCommittee.filter(m => m.role.toLowerCase().includes('technical'));
   
   const sortedRoles = ['event head', 'event vice head', 'games', 'decoration', 'technical'];
-  const others = CONFIG.committee.filter(m => !sortedRoles.some(r => m.role.toLowerCase().includes(r)));
+  const others = validCommittee.filter(m => !sortedRoles.some(r => m.role.toLowerCase().includes(r)));
 
-  const activeMembers = CONFIG.committee.filter((m) => !m.comingSoon);
+  const activeMembers = validCommittee.filter((m) => !m.comingSoon);
 
   const coreMembers = activeMembers.map((m) => ({
     avatar: m.photo || "",

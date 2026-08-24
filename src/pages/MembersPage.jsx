@@ -275,7 +275,11 @@ export default function MembersPage() {
 
   const activeMembers = CONFIG.committee.filter((m) => !m.comingSoon);
   const faculty = activeMembers.filter(m => m.role.toLowerCase().includes('faculty'));
-  const coreMembers = activeMembers.filter(m => !m.role.toLowerCase().includes('faculty'));
+  const coordinators = activeMembers.filter(m => m.isCoordinator);
+  const decorCoords = coordinators.filter(m => m.role === 'Decorations');
+  const gamesCoords = coordinators.filter(m => m.role === 'Games');
+  const disciCoords = coordinators.filter(m => m.role === 'Disciplinary');
+  const coreMembers = activeMembers.filter(m => !m.role.toLowerCase().includes('faculty') && !m.isCoordinator);
 
   const clubReps = CONFIG.collaborators
     .filter(club => club.repPhoto && club.repName !== "Rep Name")
@@ -496,6 +500,16 @@ export default function MembersPage() {
 
         <CircleSection title="Faculty" members={faculty} showInsta={false} />
         <CircleSection title="Core Members" members={coreMembers} showInsta={false} />
+        
+        <div style={{ textAlign: 'center', margin: '80px 0 30px' }}>
+          <h2 style={{ fontSize: '3rem', fontFamily: 'Cinzel, serif', color: 'var(--primary-light)', borderBottom: '2px solid var(--border)', paddingBottom: '10px', display: 'inline-block' }}>
+            Coordinators
+          </h2>
+        </div>
+        
+        <CircleSection title="Decorations" members={decorCoords} showInsta={false} />
+        <CircleSection title="Games" members={gamesCoords} showInsta={false} />
+        <CircleSection title="Disciplinary" members={disciCoords} showInsta={false} />
       </div>
 
         <CircleSection title="Club Representatives" members={clubReps} showInsta={true} />

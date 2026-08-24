@@ -25,13 +25,9 @@ export default function FraudCard({ blockedEmails = [] }) {
 
   const parentvariant = {
     open: {
-      height: "auto",
-      overflowY: "hidden",
       transition: { staggerChildren: 0.08, delayChildren: 0.15, duration: 0.5, ease: "easeInOut" },
     },
     close: {
-      height: "45rem",
-      overflowY: "auto",
       transition: { staggerChildren: 0.075, delayChildren: 0.15, duration: 0.5, ease: "easeInOut" },
     },
   };
@@ -64,12 +60,11 @@ export default function FraudCard({ blockedEmails = [] }) {
 
   return (
     <motion.div
-      onClick={() => setHovered((prev) => !prev)}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
       variants={parentvariant}
       animate={hovered ? "open" : "close"}
       initial="close"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       className="clbeam-container"
       style={{
         width: '100%',
@@ -77,7 +72,6 @@ export default function FraudCard({ blockedEmails = [] }) {
         position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center',
         backgroundColor: 'transparent',
         color: 'var(--text)',
-        cursor: 'pointer',
         overflowX: 'hidden'
       }}
     >
@@ -110,9 +104,16 @@ export default function FraudCard({ blockedEmails = [] }) {
         </div>
 
         <div style={{ position: 'absolute', inset: 0, height: '100%', width: '100%', zIndex: 0 }}>
-          <svg style={{ height: '100%', width: '100%', stroke: 'var(--border)' }} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg style={{ height: '100%', width: '100%' }} fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="timeline-fade-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--border)" />
+                <stop offset="98%" stopColor="var(--border)" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+            </defs>
             <g strokeWidth="2">
-              <line x1="60" y1="0" x2="60" y2="100%" />
+              <line x1="60" y1="0" x2="60" y2="100%" stroke="url(#timeline-fade-grad)" />
             </g>
             <g mask="url(#clbeam-mask-1)">
               <circle className="clbeam clbeam-line-1" cx="0" cy="0" r="12" fill="url(#clbeam-red-grad)" />
@@ -129,7 +130,7 @@ export default function FraudCard({ blockedEmails = [] }) {
           </svg>
         </div>
 
-        <div style={{ position: 'relative', paddingLeft: '3rem', paddingRight: '1rem', marginTop: '2rem', marginBottom: '2rem', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1 }}>
+        <div style={{ position: 'relative', paddingLeft: '3rem', paddingRight: '1rem', marginTop: '2rem', paddingBottom: '4rem', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1 }}>
           <div style={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '48px' }}>
             {blockedEmails.map((item, index) => (
               <div key={item.email || index} style={{ display: 'flex', width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>

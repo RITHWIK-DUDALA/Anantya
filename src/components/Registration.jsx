@@ -275,7 +275,7 @@ function FreeForm({ t, onSuccess, onError }) {
 }
 
 /* ── Razorpay Payment Step ───────────────────────── */
-function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, onFallback, t }) {
+function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
   const [error, setError] = useState('');
@@ -466,209 +466,10 @@ function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, onF
           background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
           color: '#888', fontSize: '0.85rem', fontFamily: 'inherit'
         }}>← Back</button>
-        <button type="button" onClick={onFallback} style={{
-          flex: 1, padding: '10px', borderRadius: '10px', cursor: 'pointer',
-          background: 'transparent', border: '1px solid rgba(244,162,97,0.3)',
-          color: '#f4a261', fontSize: '0.82rem', fontFamily: 'inherit'
-        }}>Pay via UPI instead</button>
       </div>
 
       <p style={{ fontSize: '0.72rem', color: '#444', margin: '16px 0 0' }}>
         🔒 Powered by Razorpay. Supports UPI, cards, netbanking & wallets.
-      </p>
-    </div>
-  );
-}
-
-/* ── UPI Payment Step ────────────────────────────── */
-function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
-  const [transactionId, setTransactionId] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async () => {
-    if (!transactionId.trim() || transactionId.trim().length < 6) {
-      setError('Please enter a valid UPI transaction ID (minimum 6 characters)');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || '';
-      const response = await fetch(`${apiUrl}/api/register/paid`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...baseData, transactionId: transactionId.trim() })
-      });
-      const result = await response.json();
-      if (!response.ok) {
-        // Surface the duplicate TXN error clearly in the UI instead of generic modal
-        if (response.status === 409) {
-          setError(result.error || 'This Transaction ID has already been used.');
-          return;
-        }
-        throw new Error(result.error || 'Registration failed');
-      }
-      onSuccess('paid', result.token);
-    } catch (err) {
-      onError();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="reg-form card" style={{ textAlign: 'center', padding: '2rem 1.5rem', maxWidth: '480px', margin: '0 auto' }}>
-      {loading && <ProcessingPopup />}
-
-      {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <span style={{
-          display: 'inline-block', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px',
-          color: 'var(--primary)', background: 'rgba(183,139,39,0.12)', padding: '4px 14px',
-          borderRadius: '20px', border: '1px solid rgba(183,139,39,0.3)', marginBottom: '10px'
-        }}>{t('register.step2', 'STEP 2 OF 2')}</span>
-        <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)' }}>
-          Complete Your Payment
-        </h3>
-        <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          Scan the QR code and pay the amount below
-        </p>
-      </div>
-
-      {/* Amount pill */}
-      <div style={{
-        display: 'inline-flex', alignItems: 'center', gap: '10px',
-        padding: '10px 28px', borderRadius: '50px', marginBottom: '1.5rem',
-        background: 'linear-gradient(135deg, rgba(183,139,39,0.18), rgba(183,139,39,0.06))',
-        border: '1px solid rgba(183,139,39,0.35)',
-      }}>
-        <span style={{ fontSize: '0.8rem', color: '#aaa', fontWeight: 600 }}>{t('register.amountLabel', 'AMOUNT')}</span>
-        <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>₹{amount}</span>
-      </div>
-
-      {/* QR Code */}
-      <div style={{
-        position: 'relative', width: '100%', maxWidth: '280px', margin: '0 auto 1rem',
-      }}>
-        {/* Glow ring */}
-        <div style={{
-          position: 'absolute', inset: '-6px', borderRadius: '22px',
-          background: 'linear-gradient(135deg, var(--primary), transparent)',
-          opacity: 0.3, filter: 'blur(8px)',
-        }} />
-        <div style={{
-          position: 'relative', width: '100%', borderRadius: '16px',
-          border: '2px solid rgba(183,139,39,0.5)', overflow: 'hidden',
-          background: '#fff', zIndex: 1,
-          display: 'flex', alignItems: 'center', justifyContent: 'center'
-        }}>
-          <img
-            src="/assets/games payment qr with upi id.jpeg"
-            alt="UPI QR Code"
-            style={{ width: '100%', height: 'auto', display: 'block' }}
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.parentNode.innerHTML = `
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:6px;color:#999;padding:16px;text-align:center">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M14 18h3M18 14v3M18 18h.01"/></svg>
-                  <span style="font-size:0.75rem;color:#aaa">${t('register.uploadUpi', 'Add upi-qr.png<br/>to public/ folder')}</span>
-                </div>`;
-            }}
-          />
-        </div>
-      </div>
-
-      {/* UPI ID */}
-      <div style={{
-        display: 'inline-flex', alignItems: 'center', gap: '8px',
-        padding: '8px 18px', borderRadius: '10px', marginBottom: '1rem',
-        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-      }}>
-        <span style={{ fontSize: '0.82rem', color: '#aaa', fontWeight: 600 }}>UPI ID:</span>
-        <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#5b9bf5', letterSpacing: '0.5px' }}>8790258289@axl</span>
-        <button
-          type="button"
-          onClick={() => { navigator.clipboard.writeText('8790258289@axl'); }}
-          title="Copy UPI ID"
-          style={{
-            background: 'none', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer',
-            padding: '4px', borderRadius: '6px', display: 'flex', alignItems: 'center',
-            transition: 'border-color 0.2s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.borderColor = '#5b9bf5'}
-          onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b9bf5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-        </button>
-      </div>
-
-      <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-        After paying, copy your UPI transaction ID and paste it below
-      </p>
-
-      {/* Transaction ID input */}
-      <div style={{ textAlign: 'left', marginBottom: '1rem' }}>
-        <label style={{
-          display: 'block', marginBottom: '8px', fontSize: '0.8rem',
-          fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase'
-        }}>
-          UPI Transaction ID *
-        </label>
-        <input
-          type="text"
-          value={transactionId}
-          onChange={(e) => { setTransactionId(e.target.value); setError(''); }}
-          placeholder="e.g. 123456789012"
-          style={{
-            width: '100%', boxSizing: 'border-box',
-            background: 'rgba(255,255,255,0.04)',
-            border: error ? '1.5px solid var(--rose)' : '1.5px solid rgba(244,162,97,0.3)',
-            borderRadius: '10px', color: '#f4a261', fontSize: '1rem',
-            padding: '12px 14px', outline: 'none', transition: 'border 0.2s'
-          }}
-          onFocus={e => e.target.style.border = '1.5px solid #f4a261'}
-          onBlur={e => e.target.style.border = error ? '1.5px solid var(--rose)' : '1.5px solid rgba(244,162,97,0.3)'}
-        />
-        {error && (
-          <p style={{ color: 'var(--rose)', fontSize: '0.8rem', marginTop: '6px', textAlign: 'left' }}>
-            ⚠ {error}
-          </p>
-        )}
-      </div>
-
-      {/* Buttons */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-        <button
-          type="button"
-          onClick={onBack}
-          style={{
-            flex: '0 0 auto', padding: '12px 20px', borderRadius: '10px', cursor: 'pointer',
-            background: 'rgba(244,162,97,0.08)', border: '1px solid rgba(244,162,97,0.4)',
-            color: '#f4a261', fontSize: '0.9rem', fontWeight: 600, transition: 'all 0.2s',
-            fontFamily: 'inherit'
-          }}
-          onMouseEnter={e => e.target.style.background = 'rgba(244,162,97,0.18)'}
-          onMouseLeave={e => e.target.style.background = 'rgba(244,162,97,0.08)'}
-        >
-          ← Back
-        </button>
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={loading}
-          className="submit-btn pay-btn"
-          style={{ flex: 1, opacity: loading ? 0.7 : 1 }}
-        >
-          {loading ? 'Submitting...' : '✓  Confirm Registration'}
-        </button>
-      </div>
-
-      <p style={{ fontSize: '0.72rem', color: '#555', margin: 0 }}>
-        🔒 Your payment will be verified by our team within a few hours.
       </p>
     </div>
   );
@@ -683,7 +484,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
     return {};
   });
-  const [step, setStep] = useState('form'); // 'form' | 'razorpay' | 'upi'
+  const [step, setStep] = useState('form'); // 'form' | 'razorpay'
   const [baseData, setBaseData] = useState(null);
   const [secretCode, setSecretCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -818,20 +619,6 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
         onSuccess={(type, token) => { resetPayment(); onSuccess(type, token); }}
         onError={onError}
         onBack={() => setStep('form')}
-        onFallback={() => setStep('upi')}
-      />
-    );
-  }
-
-  if (step === 'upi' && baseData) {
-    return (
-      <UpiPaymentStep
-        t={t}
-        amount={total}
-        baseData={baseData}
-        onSuccess={(type, token) => { resetPayment(); onSuccess(type, token); }}
-        onError={onError}
-        onBack={() => setStep('razorpay')}
       />
     );
   }
