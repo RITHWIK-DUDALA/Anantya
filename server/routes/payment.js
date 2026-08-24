@@ -89,7 +89,7 @@ router.post('/create-order', async (req, res, next) => {
     // ── Check if Razorpay keys are configured ────────────────────────────────
     if (!process.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID.includes('REPLACE_ME')) {
       return res.status(400).json({ 
-        error: 'Razorpay payment gateway keys are not configured in server/.env yet. Please use "Pay via UPI instead" below or add your Razorpay API keys.' 
+        error: 'Razorpay payment gateway keys are not configured in server/.env yet. Please ask the organizers to add their Razorpay API keys.' 
       });
     }
 
