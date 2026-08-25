@@ -1,0 +1,649 @@
+﻿commit a9dd89de9d7b623b0359f1b4578a0eb58087e2a3
+Author: Bot <bot@example.com>
+Date:   Mon Aug 24 11:01:48 2026 +0530
+
+    Remove manual UPI fallback and enforce Razorpay
+
+diff --git a/public/clubs and their reps/1.jpeg b/public/clubs and their reps/1.jpeg
+deleted file mode 100644
+index cdae6c2..0000000
+Binary files a/public/clubs and their reps/1.jpeg and /dev/null differ
+diff --git a/public/clubs and their reps/ARORA REP.webp b/public/clubs and their reps/ARORA REP.webp
+new file mode 100644
+index 0000000..bc5fc10
+Binary files /dev/null and b/public/clubs and their reps/ARORA REP.webp differ
+diff --git a/public/cordinators/B.Aneesh teja.webp b/public/cordinators/B.Aneesh teja.webp
+new file mode 100644
+index 0000000..6011d88
+Binary files /dev/null and b/public/cordinators/B.Aneesh teja.webp differ
+diff --git a/public/cordinators/B.Keerthana.webp b/public/cordinators/B.Keerthana.webp
+new file mode 100644
+index 0000000..3caa94c
+Binary files /dev/null and b/public/cordinators/B.Keerthana.webp differ
+diff --git a/public/cordinators/C.Tharun.webp b/public/cordinators/C.Tharun.webp
+new file mode 100644
+index 0000000..c8fb738
+Binary files /dev/null and b/public/cordinators/C.Tharun.webp differ
+diff --git a/public/cordinators/Chetana Reddy.webp b/public/cordinators/Chetana Reddy.webp
+new file mode 100644
+index 0000000..8476ca3
+Binary files /dev/null and b/public/cordinators/Chetana Reddy.webp differ
+diff --git a/public/cordinators/K.Johaar.webp b/public/cordinators/K.Johaar.webp
+new file mode 100644
+index 0000000..70d46ea
+Binary files /dev/null and b/public/cordinators/K.Johaar.webp differ
+diff --git a/public/cordinators/M. Dharani.webp b/public/cordinators/M. Dharani.webp
+new file mode 100644
+index 0000000..170fc31
+Binary files /dev/null and b/public/cordinators/M. Dharani.webp differ
+diff --git a/public/cordinators/M.Vishnu.webp b/public/cordinators/M.Vishnu.webp
+new file mode 100644
+index 0000000..fddf632
+Binary files /dev/null and b/public/cordinators/M.Vishnu.webp differ
+diff --git a/public/cordinators/Sriyaan.webp b/public/cordinators/Sriyaan.webp
+new file mode 100644
+index 0000000..b25ae67
+Binary files /dev/null and b/public/cordinators/Sriyaan.webp differ
+diff --git a/public/cordinators/V Hansika.webp b/public/cordinators/V Hansika.webp
+new file mode 100644
+index 0000000..edb43bf
+Binary files /dev/null and b/public/cordinators/V Hansika.webp differ
+diff --git a/public/cordinators/c.webp b/public/cordinators/c.webp
+new file mode 100644
+index 0000000..18710f3
+Binary files /dev/null and b/public/cordinators/c.webp differ
+diff --git a/public/cordinators/d yaswanth reddy.webp b/public/cordinators/d yaswanth reddy.webp
+new file mode 100644
+index 0000000..fa57b07
+Binary files /dev/null and b/public/cordinators/d yaswanth reddy.webp differ
+diff --git a/public/cordinators/k harsha vardhan.webp b/public/cordinators/k harsha vardhan.webp
+new file mode 100644
+index 0000000..9f4a478
+Binary files /dev/null and b/public/cordinators/k harsha vardhan.webp differ
+diff --git a/public/photos/Shreyas reddy.webp b/public/photos/Shreyas reddy.webp
+new file mode 100644
+index 0000000..bf21e33
+Binary files /dev/null and b/public/photos/Shreyas reddy.webp differ
+diff --git a/public/photos/Shreyas reddy.jpeg b/public/photos/x.jpeg
+similarity index 100%
+rename from public/photos/Shreyas reddy.jpeg
+rename to public/photos/x.jpeg
+diff --git a/src/components/Committee.jsx b/src/components/Committee.jsx
+index da59336..74c119a 100644
+--- a/src/components/Committee.jsx
++++ b/src/components/Committee.jsx
+@@ -226,16 +226,17 @@ export default function Committee({ variant = 'avatars' }) {
+   }, [variant]);
+ 
+   // Hierarchical Data Grouping for Grid
+-  const heads = CONFIG.committee.filter(m => m.role.toLowerCase() === 'event head');
+-  const viceHeads = CONFIG.committee.filter(m => m.role.toLowerCase() === 'event vice head');
+-  const games = CONFIG.committee.filter(m => m.role.toLowerCase().includes('games'));
+-  const decor = CONFIG.committee.filter(m => m.role.toLowerCase().includes('decoration'));
+-  const tech = CONFIG.committee.filter(m => m.role.toLowerCase().includes('technical'));
++  const validCommittee = CONFIG.committee.filter(m => !m.isCoordinator);
++  const heads = validCommittee.filter(m => m.role.toLowerCase() === 'event head');
++  const viceHeads = validCommittee.filter(m => m.role.toLowerCase() === 'event vice head');
++  const games = validCommittee.filter(m => m.role.toLowerCase().includes('games'));
++  const decor = validCommittee.filter(m => m.role.toLowerCase().includes('decoration'));
++  const tech = validCommittee.filter(m => m.role.toLowerCase().includes('technical'));
+   
+   const sortedRoles = ['event head', 'event vice head', 'games', 'decoration', 'technical'];
+-  const others = CONFIG.committee.filter(m => !sortedRoles.some(r => m.role.toLowerCase().includes(r)));
++  const others = validCommittee.filter(m => !sortedRoles.some(r => m.role.toLowerCase().includes(r)));
+ 
+-  const activeMembers = CONFIG.committee.filter((m) => !m.comingSoon);
++  const activeMembers = validCommittee.filter((m) => !m.comingSoon);
+ 
+   const coreMembers = activeMembers.map((m) => ({
+     avatar: m.photo || "",
+diff --git a/src/components/Registration.jsx b/src/components/Registration.jsx
+index ffe0da3..fa94256 100644
+--- a/src/components/Registration.jsx
++++ b/src/components/Registration.jsx
+@@ -275,7 +275,7 @@ function FreeForm({ t, onSuccess, onError }) {
+ }
+ 
+ /* ΓöÇΓöÇ Razorpay Payment Step ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+-function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, onFallback, t }) {
++function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
+   const [loading, setLoading] = useState(false);
+   const [statusMsg, setStatusMsg] = useState('');
+   const [error, setError] = useState('');
+@@ -466,11 +466,6 @@ function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, onF
+           background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
+           color: '#888', fontSize: '0.85rem', fontFamily: 'inherit'
+         }}>ΓåÉ Back</button>
+-        <button type="button" onClick={onFallback} style={{
+-          flex: 1, padding: '10px', borderRadius: '10px', cursor: 'pointer',
+-          background: 'transparent', border: '1px solid rgba(244,162,97,0.3)',
+-          color: '#f4a261', fontSize: '0.82rem', fontFamily: 'inherit'
+-        }}>Pay via UPI instead</button>
+       </div>
+ 
+       <p style={{ fontSize: '0.72rem', color: '#444', margin: '16px 0 0' }}>
+@@ -480,200 +475,6 @@ function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, onF
+   );
+ }
+ 
+-/* ΓöÇΓöÇ UPI Payment Step ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+-function UpiPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
+-  const [transactionId, setTransactionId] = useState('');
+-  const [loading, setLoading] = useState(false);
+-  const [error, setError] = useState('');
+-
+-  const handleSubmit = async () => {
+-    if (!transactionId.trim() || transactionId.trim().length < 6) {
+-      setError('Please enter a valid UPI transaction ID (minimum 6 characters)');
+-      return;
+-    }
+-    setError('');
+-    setLoading(true);
+-    try {
+-      const apiUrl = import.meta.env.VITE_API_URL || '';
+-      const response = await fetch(`${apiUrl}/api/register/paid`, {
+-        method: 'POST',
+-        headers: { 'Content-Type': 'application/json' },
+-        body: JSON.stringify({ ...baseData, transactionId: transactionId.trim() })
+-      });
+-      const result = await response.json();
+-      if (!response.ok) {
+-        // Surface the duplicate TXN error clearly in the UI instead of generic modal
+-        if (response.status === 409) {
+-          setError(result.error || 'This Transaction ID has already been used.');
+-          return;
+-        }
+-        throw new Error(result.error || 'Registration failed');
+-      }
+-      onSuccess('paid', result.token);
+-    } catch (err) {
+-      onError();
+-    } finally {
+-      setLoading(false);
+-    }
+-  };
+-
+-  return (
+-    <div className="reg-form card" style={{ textAlign: 'center', padding: '2rem 1.5rem', maxWidth: '480px', margin: '0 auto' }}>
+-      {loading && <ProcessingPopup />}
+-
+-      {/* Header */}
+-      <div style={{ marginBottom: '1.5rem' }}>
+-        <span style={{
+-          display: 'inline-block', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px',
+-          color: 'var(--primary)', background: 'rgba(183,139,39,0.12)', padding: '4px 14px',
+-          borderRadius: '20px', border: '1px solid rgba(183,139,39,0.3)', marginBottom: '10px'
+-        }}>{t('register.step2', 'STEP 2 OF 2')}</span>
+-        <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)' }}>
+-          Complete Your Payment
+-        </h3>
+-        <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+-          Scan the QR code and pay the amount below
+-        </p>
+-      </div>
+-
+-      {/* Amount pill */}
+-      <div style={{
+-        display: 'inline-flex', alignItems: 'center', gap: '10px',
+-        padding: '10px 28px', borderRadius: '50px', marginBottom: '1.5rem',
+-        background: 'linear-gradient(135deg, rgba(183,139,39,0.18), rgba(183,139,39,0.06))',
+-        border: '1px solid rgba(183,139,39,0.35)',
+-      }}>
+-        <span style={{ fontSize: '0.8rem', color: '#aaa', fontWeight: 600 }}>{t('register.amountLabel', 'AMOUNT')}</span>
+-        <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>Γé╣{amount}</span>
+-      </div>
+-
+-      {/* QR Code */}
+-      <div style={{
+-        position: 'relative', width: '100%', maxWidth: '280px', margin: '0 auto 1rem',
+-      }}>
+-        {/* Glow ring */}
+-        <div style={{
+-          position: 'absolute', inset: '-6px', borderRadius: '22px',
+-          background: 'linear-gradient(135deg, var(--primary), transparent)',
+-          opacity: 0.3, filter: 'blur(8px)',
+-        }} />
+-        <div style={{
+-          position: 'relative', width: '100%', borderRadius: '16px',
+-          border: '2px solid rgba(183,139,39,0.5)', overflow: 'hidden',
+-          background: '#fff', zIndex: 1,
+-          display: 'flex', alignItems: 'center', justifyContent: 'center'
+-        }}>
+-          <img
+-            src="/assets/games payment qr with upi id.jpeg"
+-            alt="UPI QR Code"
+-            style={{ width: '100%', height: 'auto', display: 'block' }}
+-            onError={(e) => {
+-              e.target.style.display = 'none';
+-              e.target.parentNode.innerHTML = `
+-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:6px;color:#999;padding:16px;text-align:center">
+-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M14 18h3M18 14v3M18 18h.01"/></svg>
+-                  <span style="font-size:0.75rem;color:#aaa">${t('register.uploadUpi', 'Add upi-qr.png<br/>to public/ folder')}</span>
+-                </div>`;
+-            }}
+-          />
+-        </div>
+-      </div>
+-
+-      {/* UPI ID */}
+-      <div style={{
+-        display: 'inline-flex', alignItems: 'center', gap: '8px',
+-        padding: '8px 18px', borderRadius: '10px', marginBottom: '1rem',
+-        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+-      }}>
+-        <span style={{ fontSize: '0.82rem', color: '#aaa', fontWeight: 600 }}>UPI ID:</span>
+-        <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#5b9bf5', letterSpacing: '0.5px' }}>8790258289@axl</span>
+-        <button
+-          type="button"
+-          onClick={() => { navigator.clipboard.writeText('8790258289@axl'); }}
+-          title="Copy UPI ID"
+-          style={{
+-            background: 'none', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer',
+-            padding: '4px', borderRadius: '6px', display: 'flex', alignItems: 'center',
+-            transition: 'border-color 0.2s',
+-          }}
+-          onMouseEnter={e => e.currentTarget.style.borderColor = '#5b9bf5'}
+-          onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'}
+-        >
+-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5b9bf5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+-          </svg>
+-        </button>
+-      </div>
+-
+-      <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+-        After paying, copy your UPI transaction ID and paste it below
+-      </p>
+-
+-      {/* Transaction ID input */}
+-      <div style={{ textAlign: 'left', marginBottom: '1rem' }}>
+-        <label style={{
+-          display: 'block', marginBottom: '8px', fontSize: '0.8rem',
+-          fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase'
+-        }}>
+-          UPI Transaction ID *
+-        </label>
+-        <input
+-          type="text"
+-          value={transactionId}
+-          onChange={(e) => { setTransactionId(e.target.value); setError(''); }}
+-          placeholder="e.g. 123456789012"
+-          style={{
+-            width: '100%', boxSizing: 'border-box',
+-            background: 'rgba(255,255,255,0.04)',
+-            border: error ? '1.5px solid var(--rose)' : '1.5px solid rgba(244,162,97,0.3)',
+-            borderRadius: '10px', color: '#f4a261', fontSize: '1rem',
+-            padding: '12px 14px', outline: 'none', transition: 'border 0.2s'
+-          }}
+-          onFocus={e => e.target.style.border = '1.5px solid #f4a261'}
+-          onBlur={e => e.target.style.border = error ? '1.5px solid var(--rose)' : '1.5px solid rgba(244,162,97,0.3)'}
+-        />
+-        {error && (
+-          <p style={{ color: 'var(--rose)', fontSize: '0.8rem', marginTop: '6px', textAlign: 'left' }}>
+-            ΓÜá {error}
+-          </p>
+-        )}
+-      </div>
+-
+-      {/* Buttons */}
+-      <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
+-        <button
+-          type="button"
+-          onClick={onBack}
+-          style={{
+-            flex: '0 0 auto', padding: '12px 20px', borderRadius: '10px', cursor: 'pointer',
+-            background: 'rgba(244,162,97,0.08)', border: '1px solid rgba(244,162,97,0.4)',
+-            color: '#f4a261', fontSize: '0.9rem', fontWeight: 600, transition: 'all 0.2s',
+-            fontFamily: 'inherit'
+-          }}
+-          onMouseEnter={e => e.target.style.background = 'rgba(244,162,97,0.18)'}
+-          onMouseLeave={e => e.target.style.background = 'rgba(244,162,97,0.08)'}
+-        >
+-          ΓåÉ Back
+-        </button>
+-        <button
+-          type="button"
+-          onClick={handleSubmit}
+-          disabled={loading}
+-          className="submit-btn pay-btn"
+-          style={{ flex: 1, opacity: loading ? 0.7 : 1 }}
+-        >
+-          {loading ? 'Submitting...' : 'Γ£ô  Confirm Registration'}
+-        </button>
+-      </div>
+-
+-      <p style={{ fontSize: '0.72rem', color: '#555', margin: 0 }}>
+-        ≡ƒöÆ Your payment will be verified by our team within a few hours.
+-      </p>
+-    </div>
+-  );
+-}
+-
+ /* ΓöÇΓöÇ Paid Games Form ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
+   const [selected, setSelected] = useState(() => {
+@@ -683,7 +484,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
+     }
+     return {};
+   });
+-  const [step, setStep] = useState('form'); // 'form' | 'razorpay' | 'upi'
++  const [step, setStep] = useState('form'); // 'form' | 'razorpay'
+   const [baseData, setBaseData] = useState(null);
+   const [secretCode, setSecretCode] = useState('');
+   const [discount, setDiscount] = useState(0);
+@@ -818,20 +619,6 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
+         onSuccess={(type, token) => { resetPayment(); onSuccess(type, token); }}
+         onError={onError}
+         onBack={() => setStep('form')}
+-        onFallback={() => setStep('upi')}
+-      />
+-    );
+-  }
+-
+-  if (step === 'upi' && baseData) {
+-    return (
+-      <UpiPaymentStep
+-        t={t}
+-        amount={total}
+-        baseData={baseData}
+-        onSuccess={(type, token) => { resetPayment(); onSuccess(type, token); }}
+-        onError={onError}
+-        onBack={() => setStep('razorpay')}
+       />
+     );
+   }
+diff --git a/src/components/Timeline.jsx b/src/components/Timeline.jsx
+index 770750e..835ab00 100644
+--- a/src/components/Timeline.jsx
++++ b/src/components/Timeline.jsx
+@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { TIMELINE_EVENTS } from '../data/timelineData';
+ import StrokeFill from './StrokeFill';
+-import RiverTimeline from './forgeui/river-timeline';
++import FraudCard from './forgeui/fraud-card';
+ 
+ export default function Timeline() {
+   const { t } = useTranslation();
+@@ -49,39 +49,39 @@ export default function Timeline() {
+   }));
+ 
+   return (
+-    <section id="timeline" className="section timeline-section" ref={ref} style={{ padding: '80px 0', background: '#020617', position: 'relative', overflow: 'hidden' }}>
++    <section id="timeline" className="section timeline-section" ref={ref} style={{ padding: '80px 0', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}>
+       
+-      {/* Deep Blue Ambient Background Glow */}
++      {/* Orange Ambient Background Glow */}
+       <div aria-hidden="true" style={{
+         position: 'absolute',
+         top: '50%',
+         left: '50%',
+         transform: 'translate(-50%, -50%)',
+-        width: '1000px',
+-        height: '1000px',
+-        background: 'radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, rgba(2, 6, 23, 0) 70%)',
++        width: '800px',
++        height: '800px',
++        background: 'radial-gradient(circle, rgba(255, 140, 0, 0.12) 0%, rgba(255, 140, 0, 0) 70%)',
+         zIndex: 0,
+         pointerEvents: 'none',
+         borderRadius: '50%',
+-        filter: 'blur(80px)'
++        filter: 'blur(60px)'
+       }} />
+ 
+       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+         <div className="section-header reveal" style={{ marginBottom: '40px' }}>
+-          <span className="section-eyebrow" style={{ background: 'rgba(14, 165, 233, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.2)' }}>{t('timeline.subtitle', 'A DAY FULL OF CELEBRATIONS')}</span>
++          <span className="section-eyebrow">{t('timeline.subtitle', 'Schedule')}</span>
+           <div style={{ marginTop: '-20px' }}>
+             <StrokeFill 
+-              text={t('timeline.title', 'EVENT SCHEDULE')} 
++              text={t('timeline.title', 'EVENTS')} 
+               duration={2.5} 
+-              strokeColor="#38bdf8" 
+-              fillColor="#0ea5e9" 
++              strokeColor="var(--primary)" 
++              fillColor="var(--primary-dark)" 
+               fontSize="120" 
+             />
+           </div>
+         </div>
+ 
+-        <div className="reveal" style={{ marginTop: '60px', minHeight: '800px' }}>
+-          <RiverTimeline events={mappedEvents} />
++        <div className="reveal" style={{ marginTop: '40px' }}>
++          <FraudCard blockedEmails={mappedEvents} />
+         </div>
+       </div>
+     </section>
+diff --git a/src/components/forgeui/fraud-card.jsx b/src/components/forgeui/fraud-card.jsx
+index 7735cda..d8b36b2 100644
+--- a/src/components/forgeui/fraud-card.jsx
++++ b/src/components/forgeui/fraud-card.jsx
+@@ -25,13 +25,9 @@ export default function FraudCard({ blockedEmails = [] }) {
+ 
+   const parentvariant = {
+     open: {
+-      height: "auto",
+-      overflowY: "hidden",
+       transition: { staggerChildren: 0.08, delayChildren: 0.15, duration: 0.5, ease: "easeInOut" },
+     },
+     close: {
+-      height: "45rem",
+-      overflowY: "auto",
+       transition: { staggerChildren: 0.075, delayChildren: 0.15, duration: 0.5, ease: "easeInOut" },
+     },
+   };
+@@ -64,12 +60,11 @@ export default function FraudCard({ blockedEmails = [] }) {
+ 
+   return (
+     <motion.div
+-      onClick={() => setHovered((prev) => !prev)}
+-      onHoverStart={() => setHovered(true)}
+-      onHoverEnd={() => setHovered(false)}
+       variants={parentvariant}
+       animate={hovered ? "open" : "close"}
+       initial="close"
++      onMouseEnter={() => setHovered(true)}
++      onMouseLeave={() => setHovered(false)}
+       className="clbeam-container"
+       style={{
+         width: '100%',
+@@ -77,7 +72,6 @@ export default function FraudCard({ blockedEmails = [] }) {
+         position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center',
+         backgroundColor: 'transparent',
+         color: 'var(--text)',
+-        cursor: 'pointer',
+         overflowX: 'hidden'
+       }}
+     >
+@@ -110,9 +104,16 @@ export default function FraudCard({ blockedEmails = [] }) {
+         </div>
+ 
+         <div style={{ position: 'absolute', inset: 0, height: '100%', width: '100%', zIndex: 0 }}>
+-          <svg style={{ height: '100%', width: '100%', stroke: 'var(--border)' }} fill="none" xmlns="http://www.w3.org/2000/svg">
++          <svg style={{ height: '100%', width: '100%' }} fill="none" xmlns="http://www.w3.org/2000/svg">
++            <defs>
++              <linearGradient id="timeline-fade-grad" x1="0" y1="0" x2="0" y2="1">
++                <stop offset="0%" stopColor="var(--border)" />
++                <stop offset="98%" stopColor="var(--border)" />
++                <stop offset="100%" stopColor="transparent" />
++              </linearGradient>
++            </defs>
+             <g strokeWidth="2">
+-              <line x1="60" y1="0" x2="60" y2="100%" />
++              <line x1="60" y1="0" x2="60" y2="100%" stroke="url(#timeline-fade-grad)" />
+             </g>
+             <g mask="url(#clbeam-mask-1)">
+               <circle className="clbeam clbeam-line-1" cx="0" cy="0" r="12" fill="url(#clbeam-red-grad)" />
+@@ -129,7 +130,7 @@ export default function FraudCard({ blockedEmails = [] }) {
+           </svg>
+         </div>
+ 
+-        <div style={{ position: 'relative', paddingLeft: '3rem', paddingRight: '1rem', marginTop: '2rem', marginBottom: '2rem', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1 }}>
++        <div style={{ position: 'relative', paddingLeft: '3rem', paddingRight: '1rem', marginTop: '2rem', paddingBottom: '4rem', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1 }}>
+           <div style={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '48px' }}>
+             {blockedEmails.map((item, index) => (
+               <div key={item.email || index} style={{ display: 'flex', width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
+diff --git a/src/config/config.js b/src/config/config.js
+index 06c4e56..b8a75b2 100644
+--- a/src/config/config.js
++++ b/src/config/config.js
+@@ -156,6 +156,97 @@ const CONFIG = {
+       transformOrigin: "center 25%",
+       comingSoon: false,
+     },
++    // ΓöÇΓöÇ 8. Coordinators ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
++    {
++      role: "Decorations",
++      name: "M. Dharani",
++      photo: "/cordinators/M. Dharani.webp",
++      objectPosition: "center 40%",
++      transform: "scale(1.5)",
++      transformOrigin: "center 40%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Decorations",
++      name: "V Hansika",
++      photo: "/cordinators/V Hansika.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Decorations",
++      name: "Chetana Reddy",
++      photo: "/cordinators/Chetana Reddy.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Decorations",
++      name: "B.Keerthana",
++      photo: "/cordinators/B.Keerthana.webp",
++      objectPosition: "center 5%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Games",
++      name: "K.Johaar",
++      photo: "/cordinators/K.Johaar.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Games",
++      name: "M.Vishnu",
++      photo: "/cordinators/M.Vishnu.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Disciplinary",
++      name: "Sriyaan",
++      photo: "/cordinators/Sriyaan.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Disciplinary",
++      name: "B.Aneesh teja",
++      photo: "/cordinators/B.Aneesh teja.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Games",
++      name: "C.Tharun",
++      photo: "/cordinators/C.Tharun.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Disciplinary",
++      name: "d yaswanth reddy",
++      photo: "/cordinators/d yaswanth reddy.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
++    {
++      role: "Disciplinary",
++      name: "k harsha vardhan",
++      photo: "/cordinators/k harsha vardhan.webp",
++      objectPosition: "center 20%",
++      comingSoon: false,
++      isCoordinator: true,
++    },
+ 
+   ],
+ 
+@@ -168,7 +259,7 @@ const CONFIG = {
+       phone: "+91 91822 63080",
+       logo: "/clubs and their reps/Trinetra.jpeg",
+       repName: "Shreyas Reddy",
+-      repPhoto: "/photos/Shreyas reddy.jpeg",
++      repPhoto: "/photos/Shreyas reddy.webp",
+       instagram: "https://www.instagram.com/trinetra.amrita?igsh=MTNtaDdnbGp2ZjF4MQ==&igsi=MTNtaDdnbGp2ZjF4MQ=="
+     },
+     {
+@@ -184,11 +275,12 @@ const CONFIG = {
+     {
+       name: "Aurora",
+       tagline: "Rooted in Tradition, Rising with Rhythm.",
++      description: "Aurora Amrita brings together Classical, Traditional Folk, Western and Freestyle dance, creating a space where passion, creativity and culture come alive. From graceful movements to powerful performances, we celebrate every form of expression through dance. ≡ƒÆ½",
+       logo: "/clubs and their reps/AURORA text.jpg (7).jpeg",
+       logoBg: "#000",
+       logoObjectFit: "contain",
+-      repName: "Aurora Representative",
+-      repPhoto: "/clubs and their reps/2.jpeg",
++      repName: "Nandhini",
++      repPhoto: "/clubs and their reps/ARORA REP.webp",
+       instagram: "https://www.instagram.com/aurora.amrita?igsh=MXI1dHR4NnF6YjNpYw=="
+     },
+     {
+diff --git a/src/pages/MembersPage.jsx b/src/pages/MembersPage.jsx
+index 282e926..8e9b5c1 100644
+--- a/src/pages/MembersPage.jsx
++++ b/src/pages/MembersPage.jsx
+@@ -275,7 +275,11 @@ export default function MembersPage() {
+ 
+   const activeMembers = CONFIG.committee.filter((m) => !m.comingSoon);
+   const faculty = activeMembers.filter(m => m.role.toLowerCase().includes('faculty'));
+-  const coreMembers = activeMembers.filter(m => !m.role.toLowerCase().includes('faculty'));
++  const coordinators = activeMembers.filter(m => m.isCoordinator);
++  const decorCoords = coordinators.filter(m => m.role === 'Decorations');
++  const gamesCoords = coordinators.filter(m => m.role === 'Games');
++  const disciCoords = coordinators.filter(m => m.role === 'Disciplinary');
++  const coreMembers = activeMembers.filter(m => !m.role.toLowerCase().includes('faculty') && !m.isCoordinator);
+ 
+   const clubReps = CONFIG.collaborators
+     .filter(club => club.repPhoto && club.repName !== "Rep Name")
+@@ -496,6 +500,16 @@ export default function MembersPage() {
+ 
+         <CircleSection title="Faculty" members={faculty} showInsta={false} />
+         <CircleSection title="Core Members" members={coreMembers} showInsta={false} />
++        
++        <div style={{ textAlign: 'center', margin: '80px 0 30px' }}>
++          <h2 style={{ fontSize: '3rem', fontFamily: 'Cinzel, serif', color: 'var(--primary-light)', borderBottom: '2px solid var(--border)', paddingBottom: '10px', display: 'inline-block' }}>
++            Coordinators
++          </h2>
++        </div>
++        
++        <CircleSection title="Decorations" members={decorCoords} showInsta={false} />
++        <CircleSection title="Games" members={gamesCoords} showInsta={false} />
++        <CircleSection title="Disciplinary" members={disciCoords} showInsta={false} />
+       </div>
+ 
+         <CircleSection title="Club Representatives" members={clubReps} showInsta={true} />

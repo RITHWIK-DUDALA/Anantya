@@ -115,9 +115,9 @@ app.use('/api/pricing', pricingRoute); // H-1: discount code validation endpoint
 app.use('/api/payment', paymentLimiter, paymentRoute); // Razorpay payment flow
 app.use('/api/admin/login', adminLimiter); // Apply strictly to login
 app.use('/api/admin', adminRoute);
-// app.use('/api/admin/events', require('./routes/events'));
-// app.use('/api/admin/settings', require('./routes/settings')); // Admin settings writes
-// app.use('/api/settings', require('./routes/settings'));       // Public settings reads
+app.use('/api/admin/events', require('./routes/events'));
+app.use('/api/admin/settings', require('./routes/settings')); // Admin settings writes
+app.use('/api/settings', require('./routes/settings'));       // Public settings reads
 app.use('/api/contact', contactLimiter, contactRoute);
 
 // Global Error Handler

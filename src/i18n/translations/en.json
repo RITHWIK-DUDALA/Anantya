@@ -283,6 +283,14 @@
     "20": {
       "title": "Cold Case",
       "description": "Put on your detective hat and solve the ultimate mysterious cold case!"
+    },
+    "21": {
+      "title": "Guess",
+      "description": "Test your guessing skills with your partner and win exciting prizes!"
+    },
+    "22": {
+      "title": "Picture Hunt",
+      "description": "Hunt for pictures across the campus and be the fastest team to win!"
     }
   },
   "contact": {

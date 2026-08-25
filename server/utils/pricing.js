@@ -2,20 +2,19 @@ const gamePrices = {
   'Dahi Handi': 100,
   'Rangoli': 0,
   'Fancy Dress': 0,
-  'Antakshari': 100,
   'Flute Playing': 0,
   'Skit / Drama': 0,
   'Tug of War': 0,
-  'Pot Painting': 100,
-  'Treasure Hunt': 100,
-  'Hackathon / Quiz': 100,
+  'Pot Painting': 90,
+  'Treasure Hunt': 180,
+  'Mahabharatam Quiz': 50,
   'Uriyadi': 0,
-  'Free Fire': 100,
-  'BGMI': 100,
-  'Call of Duty': 100,
-  'Tambola': 50,
-  'Minecraft': 100,
-  'Cold Case': 100
+  'Free Fire': 180,
+  'Tambola': 10,
+  'Minecraft': 80,
+  'Cold Case': 140,
+  'Guess': 80,
+  'Picture Hunt': 180
 };
 
 // H-1: Discount codes are loaded exclusively from environment variables.

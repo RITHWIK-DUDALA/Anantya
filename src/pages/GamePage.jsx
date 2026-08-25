@@ -185,13 +185,45 @@ export default function GamePage() {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                    <div style={{ fontSize: '1.5rem' }}>💰</div>
+                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center', background: 'rgba(255, 215, 0, 0.1)', padding: '15px', borderRadius: '12px', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
+                    <div style={{ fontSize: '2rem' }}>💰</div>
                     <div>
-                      <h3 style={{ margin: '0 0 3px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.entryFee')}</h3>
-                      <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>{game.price === 0 ? t('gamePage.free') : `₹${game.price}`}</p>
+                      <h3 style={{ margin: '0 0 3px 0', fontSize: '1rem', color: '#FFD700', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.entryFee', 'Entry Fee / Payment')}</h3>
+                      <p style={{ margin: 0, fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--primary)', textShadow: '0 0 10px rgba(255,255,255,0.2)' }}>{game.price === 0 ? t('gamePage.free', 'Free') : `₹${game.price}`}</p>
                     </div>
                   </div>
+
+                  {game.prizePool && (
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center', background: 'rgba(50, 205, 50, 0.1)', padding: '15px', borderRadius: '12px', border: '1px solid rgba(50, 205, 50, 0.3)' }}>
+                      <div style={{ fontSize: '2rem' }}>🏆</div>
+                      <div>
+                        <h3 style={{ margin: '0 0 3px 0', fontSize: '1rem', color: '#32CD32', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.prizePool', 'Prize Pool')}</h3>
+                        <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 10px rgba(255,255,255,0.2)', whiteSpace: 'pre-line' }}>{game.prizePool}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {game.participationType && (
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ fontSize: '1.5rem' }}>👥</div>
+                      <div>
+                        <h3 style={{ margin: '0 0 3px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.participationType', 'Participation')}</h3>
+                        <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '500' }}>
+                          {game.participationType} {game.teamSize && `(${game.teamSize})`}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {game.maxParticipants && (
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ fontSize: '1.5rem' }}>🛑</div>
+                      <div>
+                        <h3 style={{ margin: '0 0 3px 0', fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('gamePage.maxParticipants', 'Limit')}</h3>
+                        <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '500' }}>{game.maxParticipants}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -243,7 +275,7 @@ export default function GamePage() {
                 ) : (
                   <>
                     <p style={{ marginBottom: '20px', color: '#aaa' }}>{t('gamePage.signUpQuickly')}</p>
-                    <Link to={`/form?game=${game.id}`} style={{ display: 'inline-block', background: 'var(--primary)', color: 'white', textDecoration: 'none', padding: '12px 24px', borderRadius: '24px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}>
+                    <Link to={`/form?game=${game.id}`} className="game-register-btn" style={{ display: 'inline-block', background: 'var(--primary)', color: 'white', textDecoration: 'none', padding: '12px 24px', borderRadius: '24px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}>
                       {t('gamePage.registerFor')} {t(`games.${game.id}.title`)}
                     </Link>
                   </>

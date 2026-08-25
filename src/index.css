@@ -2239,3 +2239,12 @@ h1,h2,h3,h4,h5,h6 {
   filter: drop-shadow(0 0 24px rgba(255, 140, 50, 0.8)) drop-shadow(0 0 50px rgba(255, 100, 20, 0.5)) !important;
   transform: scale(1.08);
 }
+
+/* Register Button Hover Effect */
+.game-register-btn {
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.game-register-btn:hover {
+  background: var(--primary-dark) !important;
+  transform: translateY(-2px);
+}

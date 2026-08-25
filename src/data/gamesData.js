@@ -14,11 +14,7 @@ const coreTeam = {
 
 export const gameCardsData = [
   { 
-    id: 4, title: 'Antakshari', description: 'A musical battle of songs and wits. Let the best singers win!', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400', src: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Mini Hall 1', time: '02:30 PM', price: 100,
-    coordinators: [rithwik, coreTeam.bhargav, coreTeam.jyothsana]
-  },
-  { 
-    id: 6, title: 'Tambola', description: 'Join the fun with a thrilling game of Tambola! Test your luck and win exciting prizes.', image: '/games/tambola cover photo.webp', src: '/games/tambola cover photo.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Main Stage', time: '04:30 PM', price: 50,
+    id: 6, title: 'Tambola', description: 'Join the fun with a thrilling game of Tambola! Test your luck and win exciting prizes.', image: '/games/tambola cover photo.webp', src: '/games/tambola cover photo.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Main Stage', time: '04:30 PM', price: 10, participationType: 'Solo', prizePool: 'Prize pool based on participation',
     coordinators: [rithwik, coreTeam.surya, coreTeam.dimple]
   },
   { 
@@ -26,15 +22,15 @@ export const gameCardsData = [
     coordinators: [rithwik, coreTeam.punith]
   },
   { 
-    id: 8, title: 'Pot Painting', description: 'Unleash your creativity on traditional earthen pots with vibrant colors.', image: '/assets/potpainting cover photo.jpg', src: '/assets/potpainting cover photo.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Art Studio', time: '11:00 AM', price: 100,
+    id: 8, title: 'Pot Painting', description: 'Unleash your creativity on traditional earthen pots with vibrant colors.', image: '/assets/potpainting cover photo.jpg', src: '/assets/potpainting cover photo.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Art Studio', time: '11:00 AM', price: 90, participationType: 'Solo',
     coordinators: [rithwik, coreTeam.nagasaisree, coreTeam.dimple]
   },
   { 
-    id: 9, title: 'Treasure Hunt', description: 'Follow the clues, solve the puzzles, and find the hidden Janmashtami treasure!', image: '/games/treasure hunt poster.jpeg', src: '/games/treasure hunt poster.jpeg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: '02:00 PM', price: 100, isSpecialEvent: true, allowStaffFaculty: true, isComingSoon: true,
+    id: 9, title: 'Treasure Hunt', description: 'Follow the clues, solve the puzzles, and find the hidden Janmashtami treasure!', image: '/games/treasure hunt poster.jpeg', src: '/games/treasure hunt poster.jpeg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: '02:00 PM', price: 180, isSpecialEvent: true, allowStaffFaculty: true, participationType: 'Team', teamSize: 'Team of 4', maxParticipants: 'Maximum 12 teams', prizePool: '₹800 prize',
     coordinators: [rithwik, coreTeam.shreyas, coreTeam.bhanu]
   },
   { 
-    id: 10, title: 'Hackathon / Quiz', description: 'A futuristic tech puzzle and quiz competition for the brightest minds.', image: '/games/QUIZ (1).webp', src: '/games/QUIZ (1).webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'IT Lab 1', time: '09:00 AM', price: 100,
+    id: 10, title: 'Mahabharatam Quiz', description: 'A futuristic tech puzzle and quiz competition for the brightest minds.', image: '/games/QUIZ (1).webp', src: '/games/QUIZ (1).webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'IT Lab 1', time: '09:00 AM', price: 50, participationType: 'Solo', maxParticipants: 'Maximum 20 participants', prizePool: '1st Prize: ₹300\n2nd Prize: ₹150',
     coordinators: [rithwik, coreTeam.bhargav, coreTeam.srinithi]
   },
   { 
@@ -42,23 +38,23 @@ export const gameCardsData = [
     coordinators: [rithwik, coreTeam.surya, coreTeam.punith]
   },
   { 
-    id: 14, title: 'Free Fire', description: 'Battle it out in intense fast-paced matches to be the last one standing.', image: '/games/fff.webp', src: '/games/ffin.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '10:00 AM', price: 100,
+    id: 14, title: 'Free Fire', description: 'Battle it out in intense fast-paced matches to be the last one standing.', image: '/games/fff.webp', src: '/games/ffin.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '10:00 AM', price: 180, participationType: 'Team', teamSize: 'Team of 4', maxParticipants: '10–15 teams', prizePool: '1st Prize: ₹500\n2nd Prize: ₹400',
     coordinators: [rithwik, coreTeam.surya]
   },
   { 
-    id: 15, title: 'BGMI', description: 'Squad up and fight for the chicken dinner in the ultimate battle royale.', image: '/games/bgmi1.webp', src: '/games/bgmi1.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '12:00 PM', price: 100,
-    coordinators: [rithwik, coreTeam.shreyas, coreTeam.nagasaisree]
-  },
-  { 
-    id: 16, title: 'Call of Duty', description: 'Show off your tactical skills in fast-paced multiplayer combat.', image: '/games/codout.webp', src: '/games/codin.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '02:00 PM', price: 100,
-    coordinators: [rithwik, coreTeam.srinithi]
-  },
-  { 
-    id: 18, title: 'Minecraft', description: 'Survive, build, and conquer in a blocky world of endless possibilities.', image: '/games/mincraft.webp', src: '/games/mincraft.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '11:00 AM', price: 100,
+    id: 18, title: 'Minecraft', description: 'Survive, build, and conquer in a blocky world of endless possibilities.', image: '/games/mincraft.webp', src: '/games/mincraft.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Esports Arena', time: '11:00 AM', price: 80, maxParticipants: 'Maximum 10 teams', prizePool: '₹400 prize',
     coordinators: [rithwik, coreTeam.dimple, coreTeam.jyothsana]
   },
   { 
-    id: 20, title: 'Cold Case', description: 'Put on your detective hat and solve the ultimate mysterious cold case!', image: '/games/cold case poster.webp', src: '/games/cold case poster.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: '11:00 AM', price: 100, isSpecialEvent: true, allowStaffFaculty: true, isComingSoon: true,
+    id: 20, title: 'Cold Case', description: 'Put on your detective hat and solve the ultimate mysterious cold case!', image: '/games/cold case poster.webp', src: '/games/cold case poster.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: '11:00 AM', price: 140, isSpecialEvent: true, allowStaffFaculty: true, participationType: 'Team', teamSize: 'Team of 3', maxParticipants: 'Maximum 20 teams', prizePool: '₹1000 prize',
     coordinators: [rithwik, coreTeam.srinithi, coreTeam.bhanu]
+  },
+  { 
+    id: 21, title: 'Guess', description: 'Test your guessing skills with your partner and win exciting prizes!', image: '/games/treasure-hunt.jpg', src: '/games/treasure-hunt.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'TBD', time: 'TBD', price: 80, participationType: 'Team', teamSize: 'Team of 2', prizePool: '1st Prize: ₹400\n2nd Prize: ₹300',
+    coordinators: [rithwik]
+  },
+  { 
+    id: 22, title: 'Picture Hunt', description: 'Hunt for pictures across the campus and be the fastest team to win!', image: '/games/treasure-hunt.jpg', src: '/games/treasure-hunt.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: 'TBD', price: 180, participationType: 'Team', teamSize: 'Team of 3', maxParticipants: 'Maximum 20–25 teams', prizePool: '1st Prize: ₹500\n2nd Prize: ₹300',
+    coordinators: [rithwik]
   }
 ];
