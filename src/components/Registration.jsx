@@ -254,13 +254,22 @@ function FreeForm({ t, onSuccess, onError }) {
     <form id="free-form" className="reg-form card" onSubmit={handleProceed} ref={formRef}>
       {loading && <ProcessingPopup />}
       
-      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
         <h3 style={{ margin: '0 0 0.5rem', fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary)' }}>
           Volunteer Registration
         </h3>
         <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
           Sign up to volunteer and help make Anantya a grand success!
         </p>
+      </div>
+
+      <div style={{
+        marginBottom: '1.5rem', padding: '12px 16px', background: 'rgba(183, 139, 39, 0.1)',
+        border: '1px solid rgba(183, 139, 39, 0.35)', borderRadius: '10px', textAlign: 'left',
+        fontSize: '0.85rem', color: '#e0e0e0', lineHeight: 1.5
+      }}>
+        <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '2px' }}>📌 First-Come, First-Served Basis:</strong>
+        Volunteer selections are processed on a <strong>first-come, first-served basis</strong> due to role capacity. If your registration is not selected, we sincerely apologize.
       </div>
 
       <BaseFields prefix="free" t={t} />
@@ -431,8 +440,9 @@ function ManualPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) 
         <p style={{ marginTop: '10px', fontSize: '1.2rem', fontWeight: 'bold', color: '#fff' }}>UPI ID: <span style={{ color: '#fff' }}>8790258289-2@ibl</span></p>
       </div>
 
-      <div style={{ textAlign: 'left', marginBottom: '1.5rem', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.8rem', color: '#ccc', lineHeight: '1.5' }}>
+      <div style={{ textAlign: 'left', marginBottom: '1.5rem', padding: '14px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.82rem', color: '#ccc', lineHeight: '1.6' }}>
+          <li><strong>First-Come, First-Served:</strong> Registrations are processed strictly on a first-come, first-served basis. If your registration is not selected, we sincerely apologize for that and your money will be <strong>refunded within 2 days of the event</strong>.</li>
           <li>Ticket is provisional until manually verified by our team.</li>
           <li>Enter the exact Transaction Reference Number (UTR) from your payment app.</li>
           <li>Pay the exact amount shown (₹{amount}). Incorrect amounts will not be approved.</li>
@@ -647,6 +657,16 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
   return (
     <form id="paid-form" className="reg-form card" onSubmit={handleProceedToPayment} ref={formRef}>
       {loading && <ProcessingPopup />}
+      
+      <div style={{
+        marginBottom: '1.5rem', padding: '14px 18px', background: 'rgba(183, 139, 39, 0.1)',
+        border: '1px solid rgba(183, 139, 39, 0.35)', borderRadius: '10px', textAlign: 'left',
+        fontSize: '0.85rem', color: '#e0e0e0', lineHeight: 1.5
+      }}>
+        <strong style={{ color: 'var(--primary)', display: 'block', marginBottom: '4px' }}>📌 First-Come, First-Served Policy:</strong>
+        Registration for all games and events is strictly on a <strong>first-come, first-served basis</strong>. If your registration is not selected, we sincerely apologize for that and your money will be <strong>refunded within 2 days of the event</strong>.
+      </div>
+
       <BaseFields prefix="paid" t={t} showStaffFaculty={hasSpecialEventSelected} />
 
       {/* Game selection */}

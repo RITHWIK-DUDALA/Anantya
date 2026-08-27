@@ -16,14 +16,19 @@ All payments made towards registration are **final and non-refundable**, under a
 - **Payment/transaction errors on your end:** If you enter an incorrect or invalid Transaction ID/UTR, pay an incorrect amount, or your payment fails verification due to details you provided being wrong, no refund will be processed. You are responsible for ensuring accurate submission of payment details.
 - **Disqualification/removal:** If you are removed from the event for violating event rules, code of conduct, or safety guidelines, no refund will be issued.
 
-## 2. Event Cancellation by Organizers
+## 2. Slot Capacity & First-Come, First-Served Policy
+All game and event registrations are processed strictly on a **first-come, first-served basis** due to limited participant slots and venue capacity.
+- If your registration cannot be accommodated or is **not selected** because slots were filled before your submission/verification, we sincerely apologize for that.
+- In this case, your full registration fee will be **refunded within 2 days of the event**.
+
+## 3. Event Cancellation by Organizers
 The organizers reserve the full right to cancel the event due to reasons including but not limited to: insufficient number of participating teams/registrations not meeting the minimum required threshold, technical difficulties, venue/logistical issues, or any other unforeseen circumstance.
-- If the event is **cancelled** (not rescheduled) for any of the above reasons, the registration amount paid will be **refunded within 3–4 business days** to the original payment method/account used, or via a method communicated by the organizers at the time of cancellation.
+- If the event is **cancelled** (not rescheduled) for any of the above reasons, the registration amount paid will be **refunded within 2 days of the event** to the original payment method/account used.
 - Refunds will only be processed for participants whose payments were successfully verified prior to cancellation.
 - The organizers are not liable for any delays in refund caused by banking/UPI processing times beyond their control.
 - If the event is merely **rescheduled** (not cancelled), Section 1 applies and no refund is issued — your registration carries forward to the new date.
 
-## 3. Disqualification
+## 4. Disqualification
 The organizers reserve the full right to disqualify or remove any participant/team from the event for a suitable reason, including but not limited to violation of event rules, code of conduct, unfair practices, or misconduct towards coordinators, volunteers, or other participants. No refund will be issued in case of disqualification (see Section 1).
 
 ## 4. Code of Conduct & Grievance Redressal
@@ -89,16 +94,23 @@ Manual payment verification is done by cross-checking the Transaction ID/UTR you
               <li><strong>Disqualification/removal:</strong> If you are removed from the event for violating event rules, code of conduct, or safety guidelines, no refund will be issued.</li>
             </ul>
 
-            <h3 style={{ color: 'var(--primary)', marginTop: '30px', marginBottom: '15px' }}>2. Event Cancellation by Organizers</h3>
+            <h3 style={{ color: 'var(--primary)', marginTop: '30px', marginBottom: '15px' }}>2. Slot Capacity & First-Come, First-Served Policy</h3>
+            <p style={{ marginBottom: '10px' }}>All game and event registrations are processed strictly on a <strong>first-come, first-served basis</strong> due to limited participant slots and venue capacity.</p>
+            <ul style={{ paddingLeft: '20px', marginBottom: '20px' }}>
+              <li>If your registration cannot be accommodated or is <strong>not selected</strong> because slots were filled before your submission/verification, we sincerely apologize for that.</li>
+              <li>In this case, your full registration fee will be <strong>refunded within 2 days of the event</strong>.</li>
+            </ul>
+
+            <h3 style={{ color: 'var(--primary)', marginTop: '30px', marginBottom: '15px' }}>3. Event Cancellation by Organizers</h3>
             <p style={{ marginBottom: '10px' }}>The organizers reserve the full right to cancel the event due to reasons including but not limited to: insufficient number of participating teams/registrations not meeting the minimum required threshold, technical difficulties, venue/logistical issues, or any other unforeseen circumstance.</p>
             <ul style={{ paddingLeft: '20px', marginBottom: '20px' }}>
-              <li>If the event is <strong>cancelled</strong> (not rescheduled) for any of the above reasons, the registration amount paid will be <strong>refunded within 3–4 business days</strong> to the original payment method/account used, or via a method communicated by the organizers at the time of cancellation.</li>
+              <li>If the event is <strong>cancelled</strong> (not rescheduled) for any of the above reasons, the registration amount paid will be <strong>refunded within 2 days of the event</strong> to the original payment method/account used.</li>
               <li>Refunds will only be processed for participants whose payments were successfully verified prior to cancellation.</li>
               <li>The organizers are not liable for any delays in refund caused by banking/UPI processing times beyond their control.</li>
               <li>If the event is merely <strong>rescheduled</strong> (not cancelled), Section 1 applies and no refund is issued — your registration carries forward to the new date.</li>
             </ul>
 
-            <h3 style={{ color: 'var(--primary)', marginTop: '30px', marginBottom: '15px' }}>3. Disqualification</h3>
+            <h3 style={{ color: 'var(--primary)', marginTop: '30px', marginBottom: '15px' }}>4. Disqualification</h3>
             <p style={{ marginBottom: '20px' }}>
               The organizers reserve the full right to disqualify or remove any participant/team from the event for a suitable reason, including but not limited to violation of event rules, code of conduct, unfair practices, or misconduct towards coordinators, volunteers, or other participants. No refund will be issued in case of disqualification (see Section 1).
             </p>
