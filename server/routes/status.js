@@ -60,23 +60,38 @@ router.post('/check', statusCheckLimiter, statusCheckHourlyLimiter, async (req, 
     }
 
     const safeEmail = email.trim().toLowerCase();
+    const cleanId = regId.trim();
 
-    const docRef = db.collection('registrations').doc(regId);
-    
-    // We increment attempts regardless of success, to prevent regId hammering
-    await docRef.update({
-      statusCheckAttempts: require('firebase-admin/firestore').FieldValue.increment(1)
-    }).catch(() => {}); // ignore if doc doesn't exist
+    let doc = await db.collection('registrations').doc(cleanId).get();
+    let data = doc.exists ? doc.data() : null;
 
-    const doc = await docRef.get();
+    if (!doc.exists) {
+      const byToken = await db.collection('registrations')
+        .where('token', '==', cleanId)
+        .limit(1)
+        .get();
+      if (!byToken.empty) {
+        doc = byToken.docs[0];
+        data = doc.data();
+      } else {
+        const byRegIdField = await db.collection('registrations')
+          .where('regId', '==', cleanId)
+          .limit(1)
+          .get();
+        if (!byRegIdField.empty) {
+          doc = byRegIdField.docs[0];
+          data = doc.data();
+        }
+      }
+    }
 
     // Generic identical response for ANY mismatch
     const genericError = () => res.status(404).json({ message: "No matching registration found." });
 
-    if (!doc.exists) {
+    if (!data) {
       // Log failure
       await db.collection('statusCheckLogs').add({
-        regId,
+        regId: cleanId,
         ip: submissionIp,
         success: false,
         reason: 'not_found',
@@ -85,12 +100,15 @@ router.post('/check', statusCheckLimiter, statusCheckHourlyLimiter, async (req, 
       return genericError();
     }
 
-    const data = doc.data();
+    // Increment attempts on the found document
+    await doc.ref.update({
+      statusCheckAttempts: require('firebase-admin/firestore').FieldValue.increment(1)
+    }).catch(() => {});
 
-    if (data.email !== safeEmail) {
+    if (data.email && data.email.toLowerCase().trim() !== safeEmail) {
       // Log failure
       await db.collection('statusCheckLogs').add({
-        regId,
+        regId: cleanId,
         ip: submissionIp,
         success: false,
         reason: 'email_mismatch',
@@ -114,7 +132,7 @@ router.post('/check', statusCheckLimiter, statusCheckHourlyLimiter, async (req, 
     };
 
     if (data.status === 'verified') {
-      responsePayload.token = data.token;
+      responsePayload.token = data.token || data.regId || cleanId;
       responsePayload.qrCode = data.qrCode;
     }
 
