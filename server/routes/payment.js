@@ -21,11 +21,11 @@ const isValidStudentId = (id) => {
 };
 const isAmritaEmail = (email) => email && email.toLowerCase().endsWith('@ch.students.amrita.edu');
 
-// ── Rate Limiter: Max 5 submissions per IP per 10 minutes
+// ── Rate Limiter: Accommodate shared campus WiFi NAT IP
 const manualPaymentLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 5,
-  message: { error: 'Too many submissions from this IP. Please try again in 10 minutes.' },
+  max: process.env.NODE_ENV === 'production' ? 150 : 500,
+  message: { error: 'Too many submissions from this network. Please try again in 10 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
