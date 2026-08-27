@@ -20,7 +20,7 @@ export const gameCardsData = [
     coordinators: [coreTeam.dimple]
   },
   { 
-    id: 7, title: 'Tug of War', description: 'Test your team\'s raw strength in this classic test of power.', image: '/games/tug of war cover photo.jpg', src: '/games/tug of war cover photo.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Flag Pole', time: '05:30 PM – 06:00 PM', price: 0,
+    id: 7, title: 'Tug of War', description: 'Test your team\'s raw strength in this classic test of power.', image: '/games/tug of war cover photo finall.jpg', src: '/games/tug of war cover photo finall.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Flag Pole', time: '05:30 PM – 06:00 PM', price: 0,
     coordinators: [coreTeam.punith]
   },
   { 
