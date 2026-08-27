@@ -208,9 +208,13 @@ export function DiagonalCarousel({
                   }}
                 >
                   <img
-                    src={item.image}
+                    src={item.image || '/games/if any game dosent have a poster use this.webp'}
                     alt={item.alt ?? item.title}
                     draggable={false}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/games/if any game dosent have a poster use this.webp';
+                    }}
                     className={cn(
                       "h-full w-full select-none rounded-2xl shadow-xl",
                       imageClassName

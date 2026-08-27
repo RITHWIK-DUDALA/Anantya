@@ -12,6 +12,8 @@ const coreTeam = {
   bhanu: { name: 'Bhanu', role: 'Coordinator', photo: '/photos/Bhanu.webp' }
 };
 
+const DEFAULT_POSTER = '/games/if any game dosent have a poster use this.webp';
+
 export const gameCardsData = [
   { 
     id: 6, title: 'Tambola', description: 'Join the fun with a thrilling game of Tambola! Test your luck and win exciting prizes.', image: '/games/tambola cover photo.webp', src: '/games/tambola cover photo.webp', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Main Stage', time: '04:30 PM', price: 10, participationType: 'Solo', prizePool: 'Prize pool based on participation',
@@ -50,11 +52,11 @@ export const gameCardsData = [
     coordinators: [rithwik, coreTeam.srinithi, coreTeam.bhanu]
   },
   { 
-    id: 21, title: 'Guess', description: 'Test your guessing skills with your partner and win exciting prizes!', image: '/games/treasure-hunt.jpg', src: '/games/treasure-hunt.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'TBD', time: 'TBD', price: 80, participationType: 'Team', teamSize: 'Team of 2', prizePool: '1st Prize: ₹400\n2nd Prize: ₹300',
+    id: 21, title: 'Guess', description: 'Test your guessing skills with your partner and win exciting prizes!', image: DEFAULT_POSTER, src: DEFAULT_POSTER, venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'TBD', time: 'TBD', price: 80, participationType: 'Team', teamSize: 'Team of 2', prizePool: '1st Prize: ₹400\n2nd Prize: ₹300',
     coordinators: [rithwik]
   },
   { 
-    id: 22, title: 'Picture Hunt', description: 'Hunt for pictures across the campus and be the fastest team to win!', image: '/games/treasure-hunt.jpg', src: '/games/treasure-hunt.jpg', venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: 'TBD', price: 180, participationType: 'Team', teamSize: 'Team of 3', maxParticipants: 'Maximum 20–25 teams', prizePool: '1st Prize: ₹500\n2nd Prize: ₹300',
+    id: 22, title: 'Picture Hunt', description: 'Hunt for pictures across the campus and be the fastest team to win!', image: DEFAULT_POSTER, src: DEFAULT_POSTER, venueOrganizer: 'TBD', gamesHead: 'TBD', venue: 'Campus Wide', time: 'TBD', price: 180, participationType: 'Team', teamSize: 'Team of 3', maxParticipants: 'Maximum 20–25 teams', prizePool: '1st Prize: ₹500\n2nd Prize: ₹300',
     coordinators: [rithwik]
   }
 ];

@@ -113,8 +113,12 @@ export default function GamePage() {
                   />
 
                   <img 
-                    src={game.src} 
+                    src={game.src || '/games/if any game dosent have a poster use this.webp'} 
                     alt={t(`games.${game.id}.title`)}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/games/if any game dosent have a poster use this.webp';
+                    }}
                     style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', objectFit: 'contain', display: 'block', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
                   />
                 </div>
