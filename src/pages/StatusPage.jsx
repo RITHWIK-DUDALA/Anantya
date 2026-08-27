@@ -1,51 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CircleCheckIcon, ShieldXIcon } from '@animateicons/react/lucide';
+import { useTranslation } from 'react-i18next';
 import { SpotlightNavbar } from '../components/SpotlightNavbar';
+import { Turnstile } from '@marsidev/react-turnstile';
 import Galaxy from '../components/Galaxy';
 import Footer from '../components/Footer';
 
 export default function StatusPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [token, setToken] = useState('');
+  const [regId, setRegId] = useState('');
+  const [captchaToken, setCaptchaToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const [userStatus, setUserStatus] = useState(null);
-  
+
   const apiUrl = import.meta.env.VITE_API_URL || '';
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !regId) {
+      setError('Please enter both Email and Registration ID');
+      return;
+    }
+    if (!captchaToken) {
+      setError('Please complete the CAPTCHA validation');
+      return;
+    }
+
     setLoading(true);
     setError('');
+    setResult(null);
 
     try {
-      const res = await fetch(`${apiUrl}/api/verify/status-login`, {
+      const res = await fetch(`${apiUrl}/api/status/check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, token })
+        body: JSON.stringify({ email: email.trim(), regId: regId.trim(), captchaToken })
       });
+
       const data = await res.json();
-      
-      if (!res.ok) throw new Error(data.error || 'Invalid login details');
-      
-      setUserStatus(data.user);
+
+      if (!res.ok) {
+        setError(data.message || 'No matching registration found.');
+        return;
+      }
+
+      setResult(data);
     } catch (err) {
-      setError(err.message);
+      setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleLogout = () => {
-    setUserStatus(null);
+    setResult(null);
     setEmail('');
-    setToken('');
+    setRegId('');
+  };
+
+  const downloadToken = (token) => {
+    const element = document.createElement("a");
+    const file = new Blob([`Anantya Registration Token: ${token}\nPlease present this token at the event.`], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `Anantya_Token_${token}.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   };
 
   const navItems = [
@@ -68,139 +95,79 @@ export default function StatusPage() {
           }}
         />
       </div>
-
-      <main style={{ minHeight: '100vh', background: '#000000', color: '#ffffff', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        
+      
+      <main style={{ minHeight: '100vh', background: '#000000', color: '#ffffff', position: 'relative', display: 'flex', flexDirection: 'column' }}>
         {/* Galaxy Background Effect */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, opacity: 0.6, pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, opacity: 0.4, pointerEvents: 'none' }}>
           <Galaxy />
         </div>
 
-        {/* Cinematic Gradient Overlay */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '30vh', background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)', zIndex: 1 }} />
-        
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 10, padding: '120px 20px 60px 20px' }}>
           
-          {userStatus ? (
-            <div className="card" style={{ padding: '40px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', width: '100%', maxWidth: '600px', textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
-              <h2 style={{ color: 'var(--primary)', marginBottom: '20px', fontSize: '2rem', letterSpacing: '-0.5px' }}>
-                Welcome, {userStatus.name.split(' ')[0]}!
-              </h2>
+          {result ? (
+            <div className="card" style={{ maxWidth: '600px', width: '100%', padding: '40px 30px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', textAlign: 'center' }}>
+              <h2 style={{ color: 'var(--primary)', marginBottom: '20px', fontSize: '2rem' }}>Status Details</h2>
               
-              <div style={{ padding: '40px 30px', margin: '20px 0', borderRadius: '16px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', boxShadow: 'inset 0 2px 15px rgba(0,0,0,0.5)' }}>
-                <p style={{ margin: '0 0 15px 0', color: '#888', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Verification Status</p>
+              <div style={{ textAlign: 'left', background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '12px', marginBottom: '30px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                <p style={{ margin: '0 0 12px 0', fontSize: '1.05rem', display: 'flex' }}><strong style={{ color: '#ccc', width: '150px', flexShrink: 0 }}>Name:</strong> <span style={{ color: '#fff' }}>{result.name}</span></p>
+                <p style={{ margin: '0 0 12px 0', fontSize: '1.05rem', display: 'flex' }}><strong style={{ color: '#ccc', width: '150px', flexShrink: 0 }}>Games/Events:</strong> <span style={{ color: '#fff' }}>{result.gameId}</span></p>
                 
-                {userStatus.status === 'verified' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <CircleCheckIcon size={72} color="var(--green)" />
-                    <h3 style={{ color: 'var(--green)', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(0, 255, 136, 0.3)' }}>Verified!</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>Your payment is confirmed. We can't wait to see you at Anantya!</p>
-                  </div>
-                )}
-
-                {userStatus.status === 'pending_verification' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <span style={{ fontSize: '72px', display: 'inline-block', opacity: 0.9, filter: 'drop-shadow(0 0 15px rgba(255, 165, 0, 0.3))' }}>⏳</span>
-                    <h3 style={{ color: 'orange', margin: '20px 0 10px 0', fontSize: '2rem' }}>Pending Verification</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>We have received your payment details and are currently verifying it. Please check back soon.</p>
-                  </div>
-                )}
-
-                {userStatus.status === 'rejected' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <ShieldXIcon size={72} color="var(--rose)" />
-                    <h3 style={{ color: 'var(--rose)', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(244, 63, 94, 0.3)' }}>Payment Rejected</h3>
-                    <p style={{ color: '#aaa', margin: '0 0 10px 0', fontSize: '1.1rem', lineHeight: 1.5 }}>We could not verify your transaction. Please contact the organizers for assistance.</p>
-                    {userStatus.rejectionReason && (
-                      <div style={{ background: 'rgba(244, 63, 94, 0.1)', border: '1px solid rgba(244, 63, 94, 0.2)', padding: '15px', borderRadius: '8px', color: '#ff8f9f', marginTop: '15px', fontSize: '0.95rem' }}>
-                        <strong>Reason:</strong> {userStatus.rejectionReason}
-                      </div>
+                <div style={{ margin: '0 0 12px 0', fontSize: '1.05rem', display: 'flex', alignItems: 'center' }}>
+                  <strong style={{ color: '#ccc', width: '150px', flexShrink: 0 }}>Status:</strong>
+                  <span>
+                    {result.status === 'pending_verification' && (
+                      <span style={{ color: 'orange', fontWeight: 'bold' }}>⏳ Pending Verification</span>
                     )}
-                  </div>
-                )}
-
-                {userStatus.status === 'free' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <CircleCheckIcon size={72} color="var(--primary)" />
-                    <h3 style={{ color: 'var(--primary)', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(99, 102, 241, 0.3)' }}>Registered</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>You are fully registered for the free events. See you there!</p>
-                  </div>
-                )}
-
-                {userStatus.status === 'volunteer_pending' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <span style={{ fontSize: '72px', display: 'inline-block', opacity: 0.9, filter: 'drop-shadow(0 0 15px rgba(99, 102, 241, 0.3))' }}>🙋</span>
-                    <h3 style={{ color: 'var(--primary)', margin: '20px 0 10px 0', fontSize: '2rem' }}>Application Under Review</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>Your volunteer application is being reviewed by the organizers. Please check back soon!</p>
-                  </div>
-                )}
-
-                {userStatus.status === 'volunteer_accepted' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <CircleCheckIcon size={72} color="var(--green)" />
-                    <h3 style={{ color: 'var(--green)', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(0, 255, 136, 0.3)' }}>🎉 Congratulations!</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>You have been accepted as a volunteer! The organizers will contact you soon with further details.</p>
-                  </div>
-                )}
-
-                {userStatus.status === 'volunteer_reinstated' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <CircleCheckIcon size={72} color="#5b9bf5" />
-                    <h3 style={{ color: '#5b9bf5', margin: '20px 0 10px 0', fontSize: '2rem', textShadow: '0 0 20px rgba(91, 155, 245, 0.3)' }}>🎉 Re-instated!</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.5 }}>Great news! You have been re-instated as a volunteer. The organizers will contact you soon.</p>
-                  </div>
-                )}
-
-                {userStatus.status === 'volunteer_rejected' && (
-                  <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <svg width="80" height="76" viewBox="0 0 48 46" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', marginBottom: '4px' }}>
-                      <style>{`
-                        @keyframes drawOutline {
-                          0% { stroke-dashoffset: 200; opacity: 0.3; }
-                          50% { opacity: 1; }
-                          100% { stroke-dashoffset: 0; opacity: 1; }
-                        }
-                        @keyframes glowPulse {
-                          0%, 100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.2)); }
-                          50% { filter: drop-shadow(0 0 12px rgba(255,255,255,0.5)); }
-                        }
-                        .anantya-outline {
-                          stroke-dasharray: 200;
-                          stroke-dashoffset: 200;
-                          animation: drawOutline 2s ease-out forwards, glowPulse 3s ease-in-out 2s infinite;
-                        }
-                      `}</style>
-                      <path
-                        className="anantya-outline"
-                        d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z"
-                        stroke="#ffffff"
-                        strokeWidth="1.2"
-                        fill="none"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <h3 style={{ color: 'var(--secondary)', margin: '20px 0 10px 0', fontSize: '2rem' }}>Thank You for Your Interest</h3>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '1.1rem', lineHeight: 1.7 }}>
-                      We truly appreciate your willingness to volunteer for Anantya! At this time, our volunteer slots are full.
-                      <br /><br />
-                      Should any openings come up, we'll be sure to reach out to you. In the meantime, we'd love for you to come and enjoy the festivities — see you at the event!
-                    </p>
-                  </div>
-                )}
+                    {result.status === 'verified' && (
+                      <span style={{ color: 'var(--green)', fontWeight: 'bold' }}>✅ Verified</span>
+                    )}
+                    {result.status === 'rejected' && (
+                      <span style={{ color: 'var(--rose)', fontWeight: 'bold' }}>❌ Rejected</span>
+                    )}
+                  </span>
+                </div>
               </div>
 
-              <div style={{ textAlign: 'left', background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '12px', marginBottom: '35px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                <p style={{ margin: '0 0 12px 0', fontSize: '1.05rem' }}><strong style={{ color: '#ccc', width: '120px', display: 'inline-block' }}>Role:</strong> <span style={{ color: '#fff' }}>{userStatus.role}</span></p>
-                {userStatus.games && userStatus.games.length > 0 && (
-                  <p style={{ margin: '0 0 12px 0', fontSize: '1.05rem' }}><strong style={{ color: '#ccc', width: '120px', display: 'inline-block' }}>Games:</strong> <span style={{ color: '#fff' }}>{userStatus.games.join(', ')}</span></p>
-                )}
-                <p style={{ margin: '0 0 12px 0', fontSize: '1.05rem' }}><strong style={{ color: '#ccc', width: '120px', display: 'inline-block' }}>Amount:</strong> <span style={{ color: '#fff' }}>₹{userStatus.amount}</span></p>
-                <p style={{ margin: '0', fontSize: '1.05rem' }}><strong style={{ color: '#ccc', width: '120px', display: 'inline-block' }}>Reg ID:</strong> <span style={{ fontFamily: 'monospace', color: 'var(--primary)', letterSpacing: '1px' }}>{userStatus.regId}</span></p>
-              </div>
+              {result.status === 'pending_verification' && (
+                <div style={{ background: 'rgba(255,165,0,0.1)', border: '1px solid rgba(255,165,0,0.2)', padding: '15px', borderRadius: '8px', marginBottom: '30px' }}>
+                  <p style={{ margin: 0, color: 'orange', fontSize: '0.9rem' }}>
+                    Your payment is currently being verified by our team. This process can take up to 24-48 hours. Please check back later.
+                  </p>
+                </div>
+              )}
+
+              {result.status === 'rejected' && result.rejectedReason && (
+                <div style={{ background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', padding: '15px', borderRadius: '8px', marginBottom: '30px' }}>
+                  <p style={{ margin: 0, color: 'var(--rose)', fontSize: '0.9rem', fontWeight: 600 }}>Reason for rejection:</p>
+                  <p style={{ margin: '5px 0 0', color: '#fff', fontSize: '0.9rem' }}>{result.rejectedReason}</p>
+                  <p style={{ margin: '15px 0 0', color: '#aaa', fontSize: '0.8rem' }}>Please contact support to resolve this issue.</p>
+                </div>
+              )}
+
+              {result.status === 'verified' && result.token && (
+                <div style={{ textAlign: 'center', background: 'rgba(183,139,39,0.1)', border: '1px solid rgba(183,139,39,0.3)', padding: '20px', borderRadius: '12px', marginBottom: '30px' }}>
+                  <p style={{ margin: '0 0 10px', color: 'var(--primary)', fontWeight: 600 }}>Your Registration Token</p>
+                  <h3 style={{ margin: '0 0 20px', letterSpacing: '2px', fontSize: '2rem', fontFamily: 'monospace' }}>{result.token}</h3>
+                  
+                  {result.qrCode && (
+                    <div style={{ background: '#fff', padding: '10px', display: 'inline-block', borderRadius: '8px', marginBottom: '20px' }}>
+                      <img src={result.qrCode} alt="Entry QR Code" style={{ width: '150px', height: '150px' }} />
+                    </div>
+                  )}
+                  
+                  <button 
+                    onClick={() => downloadToken(result.token)}
+                    className="submit-btn"
+                    style={{ padding: '8px 16px', width: 'auto', fontSize: '0.9rem', margin: '0 auto', display: 'block' }}
+                  >
+                    Download Token
+                  </button>
+                </div>
+              )}
 
               <div style={{ display: 'flex', gap: '15px' }}>
                 <button 
-                  onClick={() => handleLogin({ preventDefault: () => {} })} 
+                  onClick={() => handleSubmit({ preventDefault: () => {} })} 
                   className="submit-btn" 
                   disabled={loading}
                   style={{ flex: 1, background: 'var(--primary)', color: '#000', border: 'none', transition: 'all 0.3s ease', opacity: loading ? 0.7 : 1 }}
@@ -214,7 +181,7 @@ export default function StatusPage() {
                   onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
                   onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                 >
-                  Log Out
+                  Back
                 </button>
               </div>
             </div>
@@ -239,9 +206,9 @@ export default function StatusPage() {
                   Check Status
                 </h1>
               </div>
-              
+
               <form 
-                onSubmit={handleLogin} 
+                onSubmit={handleSubmit} 
                 className="reg-form card" 
                 style={{ 
                   padding: '40px', 
@@ -254,13 +221,12 @@ export default function StatusPage() {
                 }}
               >
                 <p style={{ color: '#888', textAlign: 'center', marginBottom: '30px', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                  Log in using the email you registered with and your 6-digit Registration Token.
+                  Log in using the email you registered with and your Registration ID (REG-...).
                 </p>
-                
+
                 <div className="form-group" style={{ marginBottom: '24px' }}>
-                  <label htmlFor="login-email" style={{ color: '#ccc' }}>Registered Email</label>
+                  <label style={{ color: '#ccc' }}>Registered Email</label>
                   <input 
-                    id="login-email" 
                     type="email" 
                     required 
                     placeholder="e.g. john@gmail.com" 
@@ -276,29 +242,35 @@ export default function StatusPage() {
                     }}
                   />
                 </div>
-                
                 <div className="form-group" style={{ marginBottom: '30px' }}>
-                  <label htmlFor="login-token" style={{ color: '#ccc' }}>Registration Token</label>
+                  <label style={{ color: '#ccc' }}>Registration ID</label>
                   <input 
-                    id="login-token" 
                     type="text" 
                     required 
-                    placeholder="123456" 
-                    value={token}
-                    onChange={e => setToken(e.target.value)}
+                    placeholder="e.g. REG-123456" 
+                    value={regId}
+                    onChange={e => setRegId(e.target.value)}
                     style={{ 
                       background: 'rgba(0,0,0,0.5)', 
                       border: '1px solid rgba(255,255,255,0.1)',
                       color: 'var(--primary)',
                       padding: '14px 16px',
                       fontSize: '1.25rem',
-                      letterSpacing: '8px', 
                       fontFamily: 'monospace', 
                       textAlign: 'center',
                       borderRadius: '12px',
                       fontWeight: 'bold'
                     }}
-                    maxLength={6}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'center' }}>
+                  <Turnstile 
+                    siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} // dummy key for local dev if missing
+                    onSuccess={(token) => setCaptchaToken(token)}
+                    onError={() => setError('CAPTCHA failed. Please refresh and try again.')}
+                    onExpire={() => setCaptchaToken(null)}
+                    options={{ theme: 'dark' }}
                   />
                 </div>
 
@@ -307,7 +279,7 @@ export default function StatusPage() {
                     <p style={{ color: 'var(--rose)', textAlign: 'center', margin: 0, fontSize: '0.9rem' }}>{error}</p>
                   </div>
                 )}
-                
+
                 <button 
                   type="submit" 
                   className="submit-btn" 

@@ -2024,7 +2024,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .clbeam-line-1 {
-  offset-path: path("M 60 0 V 2000");
+  offset-path: path("M 60 0 V 6000");
 }
 
 @keyframes clbeam-animation-path {

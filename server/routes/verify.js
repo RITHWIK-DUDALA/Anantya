@@ -148,10 +148,17 @@ router.post('/venue-token-checkin', authenticateAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Token is required' });
     }
 
-    const snapshot = await db.collection('registrations')
+    let snapshot = await db.collection('registrations')
       .where('token', '==', String(token).trim())
       .limit(1)
       .get();
+
+    if (snapshot.empty) {
+      snapshot = await db.collection('registrations')
+        .where('regId', '==', String(token).trim())
+        .limit(1)
+        .get();
+    }
 
     if (snapshot.empty) {
       return res.status(404).json({ error: 'Invalid Session ID (Token not found)' });
@@ -265,10 +272,17 @@ router.patch('/game-entry', authenticateAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Token and gameName are required' });
     }
 
-    const snapshot = await db.collection('registrations')
+    let snapshot = await db.collection('registrations')
       .where('token', '==', String(token).trim())
       .limit(1)
       .get();
+
+    if (snapshot.empty) {
+      snapshot = await db.collection('registrations')
+        .where('regId', '==', String(token).trim())
+        .limit(1)
+        .get();
+    }
 
     if (snapshot.empty) {
       return res.status(404).json({ error: 'Invalid Session ID' });
@@ -292,12 +306,12 @@ router.patch('/game-entry', authenticateAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Participant did not register for this game' });
     }
 
-    if (!enteredGames.includes(gameName)) {
-      enteredGames.push(gameName);
-      await docRef.update({ enteredGames });
-    }
+    const FieldValue = require('firebase-admin').firestore.FieldValue;
+    await docRef.update({
+      enteredGames: FieldValue.arrayUnion(gameName)
+    });
 
-    res.json({ success: true, enteredGames });
+    res.json({ success: true, enteredGames: enteredGames.includes(gameName) ? enteredGames : [...enteredGames, gameName] });
   } catch (error) {
     console.error('Error in game entry:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -94,46 +94,112 @@ router.get('/payments/flagged', authenticateAdmin, async (req, res, next) => {
   }
 });
 
-// PATCH /api/admin/payments/:regId
-// Update registration status
-router.patch('/payments/:regId', authenticateAdmin, async (req, res, next) => {
+// POST /api/admin/verify-payment
+// Manually verify or reject a pending payment
+router.post('/verify-payment', authenticateAdmin, async (req, res, next) => {
   try {
-    const { regId } = req.params;
-    const { status, rejectionReason } = req.body;
+    const { regId, action, rejectedReason, note } = req.body;
 
-    if (!['verified', 'rejected'].includes(status)) {
-      return res.status(400).json({ error: 'Invalid status' });
+    if (!regId || !action || !['verify', 'reject', 'revoke'].includes(action)) {
+      return res.status(400).json({ error: 'Invalid request payload' });
     }
 
-    const docRef = db.collection('registrations').doc(regId);
-    const doc = await docRef.get();
-
-    if (!doc.exists) {
-      return res.status(404).json({ error: 'Registration not found' });
+    if (action === 'reject' && (!rejectedReason || !rejectedReason.trim())) {
+      return res.status(400).json({ error: 'Rejected reason is required' });
     }
 
     if (!req.admin?.identifier) {
       return res.status(401).json({ error: 'Admin identity could not be verified.' });
     }
 
-    const updateData = { 
-      status,
-      updatedAt: new Date().toISOString(),
-      updatedBy: sanitizeField(req.admin.identifier, 50) // H-4: sanitize before writing to DB
-    };
-    if (status === 'rejected' && rejectionReason) {
-      updateData.rejectionReason = rejectionReason;
-    }
+    const docRef = db.collection('registrations').doc(regId);
+    let finalRegData = null;
 
-    await docRef.update(updateData);
+    await db.runTransaction(async (t) => {
+      const doc = await t.get(docRef);
 
-    if (status === 'verified') {
+      if (!doc.exists) {
+        throw new Error('NOT_FOUND');
+      }
+
+      const data = doc.data();
+
+      if (data.status !== 'pending_verification' && 
+          !(data.status === 'verified' && action === 'revoke') && 
+          !(data.status === 'rejected' && action === 'revoke')) {
+        throw new Error('INVALID_STATUS');
+      }
+
+      const adminId = sanitizeField(req.admin.identifier, 50);
+      const updateData = { 
+        updatedAt: new Date().toISOString()
+      };
+
+      const auditEntry = {
+        action: action === 'verify' ? 'admin_verified' : (action === 'revoke' ? 'admin_revoked' : 'admin_rejected'),
+        actor: adminId,
+        from: data.status,
+        to: action === 'verify' ? 'verified' : (action === 'revoke' ? 'pending_verification' : 'rejected'),
+        timestamp: new Date().toISOString(),
+        note: note ? sanitizeField(note, 200) : null
+      };
+
+      if (action === 'verify') {
+        const QRCode = require('qrcode');
+        const qrData = JSON.stringify({ regId });
+        const qrImageUrl = await QRCode.toDataURL(qrData);
+
+        Object.assign(updateData, {
+          status: 'verified',
+          verifiedBy: adminId,
+          verifiedAt: new Date().toISOString(),
+          qrCode: qrImageUrl,
+          auditLog: require('firebase-admin/firestore').FieldValue.arrayUnion(auditEntry)
+        });
+      } else if (action === 'revoke') {
+        Object.assign(updateData, {
+          status: 'pending_verification',
+          auditLog: require('firebase-admin/firestore').FieldValue.arrayUnion(auditEntry)
+        });
+      } else {
+        Object.assign(updateData, {
+          status: 'rejected',
+          rejectedReason: sanitizeField(rejectedReason, 200),
+          auditLog: require('firebase-admin/firestore').FieldValue.arrayUnion(auditEntry)
+        });
+      }
+
+      t.update(docRef, updateData);
+      finalRegData = { ...data, ...updateData };
+    });
+
+    if (action === 'verify') {
       const { appendRegistrationToExcel } = require('../utils/excel');
-      appendRegistrationToExcel({ ...doc.data(), status: 'verified' });
+      appendRegistrationToExcel(finalRegData);
+      const { sendConfirmationEmail } = require('../utils/email');
+      sendConfirmationEmail(
+        finalRegData.email,
+        finalRegData.name,
+        finalRegData.regId,
+        (finalRegData.games || []).join(', '),
+        finalRegData.amountExpected,
+        finalRegData.utr,
+        finalRegData.qrCode,
+        false
+      ).catch(err => console.error('[Verify Email Error]', err));
+    } else {
+      // Send rejection email (assuming a sendRejectionEmail function exists or placeholder)
+      // sendRejectionEmail(finalRegData.email, finalRegData.name, finalRegData.regId, finalRegData.rejectedReason);
     }
 
-    res.json({ success: true, message: `Payment marked as ${status}` });
+    res.json({ success: true, message: `Payment marked as ${action === 'verify' ? 'verified' : 'rejected'}` });
   } catch (error) {
+    if (error.message === 'NOT_FOUND') {
+      return res.status(404).json({ error: 'Registration not found' });
+    }
+    if (error.message === 'INVALID_STATUS') {
+      return res.status(400).json({ error: 'Only pending_verification registrations can be verified or rejected.' });
+    }
     next(error);
   }
 });

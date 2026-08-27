@@ -22,19 +22,26 @@ const isValidStudentId = (id) => {
   return /^[A-Z]{2,5}\.[A-Z]{2}\.[A-Z0-9]{5,15}$/.test(cleaned) || /^[A-Z0-9]{8,20}$/.test(cleaned);
 };
 
-// Helper: Secure unique token generator
-async function generateUniqueToken() {
-  let isUnique = false;
-  let token = '';
+// Helper: Secure unique 5-char alphanumeric regId generator (Atomic .create retry loop)
+async function generateUniqueRegId() {
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let attempts = 0;
-  while (!isUnique && attempts < 10) {
-    token = crypto.randomInt(100000, 1000000).toString();
-    const snapshot = await db.collection('registrations').where('token', '==', token).get();
-    if (snapshot.empty) isUnique = true;
-    attempts++;
+  while (attempts < 10) {
+    const randomBytes = crypto.randomBytes(5);
+    let regId = '';
+    for (let i = 0; i < 5; i++) {
+      regId += charset[randomBytes[i] % charset.length];
+    }
+    try {
+      // Atomically create the document to reserve the ID
+      await db.collection('registrations').doc(regId).create({ _reserved: true, createdAt: new Date().toISOString() });
+      return regId;
+    } catch (err) {
+      if (err.code === 6) attempts++; // ALREADY_EXISTS
+      else throw err;
+    }
   }
-  if (!isUnique) throw new Error('Failed to generate unique token');
-  return token;
+  throw new Error('Server busy: could not generate unique registration ID. Please try again.');
 }
 
 // Helper: check if email is from Amrita Chennai campus
@@ -68,7 +75,8 @@ router.post('/free', async (req, res, next) => {
     const safeEmail = sanitizeField(email, 150).toLowerCase().trim();
 
     const regId = `REG-${crypto.randomUUID()}`;
-    const token = await generateUniqueToken();
+    // Token will be generated securely inside the transaction to prevent TOCTOU
+    let token = null;
 
     const qrData = JSON.stringify({ regId });
     const qrImageUrl = await QRCode.toDataURL(qrData);
@@ -114,6 +122,19 @@ router.post('/free', async (req, res, next) => {
         duplicateEmail = true;
         return;
       }
+
+      // Securely generate unique token atomically within the transaction
+      let isUnique = false;
+      let attempts = 0;
+      while (!isUnique && attempts < 10) {
+        token = crypto.randomInt(100000, 1000000).toString();
+        const snapshot = await t.get(db.collection('registrations').where('token', '==', token).limit(1));
+        if (snapshot.empty) isUnique = true;
+        attempts++;
+      }
+      if (!isUnique) throw new Error('Server busy: could not generate unique token. Please try again.');
+      registrationData.token = token;
+
       t.set(db.collection('registrations').doc(regId), registrationData);
     });
 
@@ -122,7 +143,7 @@ router.post('/free', async (req, res, next) => {
     }
 
     // Fire-and-forget confirmation email so SMTP latency doesn't block client HTTP response
-    sendConfirmationEmail(email, name, regId, role, 0, null, qrImageUrl, true).catch(err => console.error('Free reg email error:', err));
+    // sendConfirmationEmail(email, name, regId, role, 0, null, qrImageUrl, true).catch(err => console.error('Free reg email error:', err));
 
     res.json({ success: true, regId, token });
   } catch (error) {
@@ -133,6 +154,7 @@ router.post('/free', async (req, res, next) => {
 // POST /api/register/paid
 // UPI manual payment — user submits their UPI transaction ID, admin verifies manually
 router.post('/paid', async (req, res, next) => {
+  let reservedRegId = null;
   try {
     const { name, email, phone, dept, year, role, games, secretCode, transactionId, studentId } = req.body;
 
@@ -173,8 +195,9 @@ router.post('/paid', async (req, res, next) => {
       return res.status(400).json({ error: 'Amount is 0 — use the free registration endpoint' });
     }
 
-    const regId = `REG-${crypto.randomUUID()}`;
-    const token = await generateUniqueToken();
+    reservedRegId = await generateUniqueRegId();
+    const regId = reservedRegId;
+    const token = null; // No 6-digit token for paid registrations
 
     const qrData = JSON.stringify({ regId });
     const qrImageUrl = await QRCode.toDataURL(qrData);
@@ -234,22 +257,29 @@ router.post('/paid', async (req, res, next) => {
     });
 
     if (duplicateReason === 'email') {
+      await db.collection('registrations').doc(regId).delete();
       return res.status(409).json({
         error: 'This email is already registered. If you have an issue, please contact the organizers.'
       });
     }
 
     if (duplicateReason === 'transaction') {
+      await db.collection('registrations').doc(regId).delete();
       return res.status(409).json({
         error: 'This Transaction ID has already been used for another registration. Each UPI payment can only be used once. Please check your UPI app for the correct Transaction ID.'
       });
     }
 
     // Fire-and-forget confirmation email so SMTP latency doesn't block client HTTP response
-    sendConfirmationEmail(email, name, regId, gameTitles.join(', '), finalTotal, cleanTxnId, qrImageUrl, false).catch(err => console.error('Paid reg email error:', err));
+    // sendConfirmationEmail(email, name, regId, gameTitles.join(', '), finalTotal, cleanTxnId, qrImageUrl, false).catch(err => console.error('Paid reg email error:', err));
 
-    res.json({ success: true, regId, token, amount: finalTotal });
+    reservedRegId = null; // Success, don't clean up
+    res.json({ success: true, regId, token: null, amount: finalTotal });
   } catch (error) {
+    if (reservedRegId) {
+      // Catch-all cleanup for any unexpected failure after reservation
+      await db.collection('registrations').doc(reservedRegId).delete().catch(e => console.error('Cleanup error:', e));
+    }
     next(error);
   }
 });

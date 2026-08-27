@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { SendIcon, CreditCardIcon, CircleCheckIcon, ShieldXIcon } from '@animateicons/react/lucide';
+import { Turnstile } from '@marsidev/react-turnstile';
 import CONFIG from '../config/config';
 import { gameCardsData } from '../data/gamesData';
 import Modal from './Modal';
@@ -233,7 +234,13 @@ function FreeForm({ t, onSuccess, onError }) {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Registration failed');
       formRef.current?.reset();
-      onSuccess('free', result.token);
+      onSuccess('free', result.token, {
+        regId: result.token,
+        email: data.email,
+        events: data.role || 'Volunteer',
+        transactionId: 'Free Ticket',
+        status: 'Verified'
+      });
     } catch {
       onError();
     } finally {
@@ -266,6 +273,13 @@ function FreeForm({ t, onSuccess, onError }) {
         </select>
       </div>
 
+      <div className="form-group" style={{ marginTop: '1rem', textAlign: 'left' }}>
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer', fontWeight: 'normal', fontSize: '0.9rem' }}>
+          <input type="checkbox" required style={{ marginTop: '4px', width: 'auto' }} />
+          <span>I have read and agree to the <a href="/terms" target="_blank" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>Terms & Conditions</a> (Mandatory)</span>
+        </label>
+      </div>
+
       <button type="submit" className="submit-btn" style={{ marginTop: '2rem' }}>
         <CircleCheckIcon size={16} color="#fff" style={{ marginRight: '8px', verticalAlign: 'text-bottom' }} /> 
         Submit Application
@@ -274,128 +288,106 @@ function FreeForm({ t, onSuccess, onError }) {
   );
 }
 
-/* ── Razorpay Payment Step ───────────────────────── */
-function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
+// ── Manual Payment Step Component (QR + UTR)
+const downloadTicket = (regId, email, utr, games) => {
+  const gamesList = Array.isArray(games) ? games.join(', ') : games;
+  const ticketContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Anantya Registration Ticket</title>
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .ticket { background: #111; border: 1px solid #333; border-radius: 12px; padding: 40px; width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 5px solid #b78b27; }
+        h1 { color: #b78b27; margin-top: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        .info { margin: 30px 0; text-align: left; background: #1a1a1a; padding: 25px; border-radius: 8px; border: 1px solid #222; }
+        .label { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .value { color: #fff; font-size: 16px; margin-bottom: 20px; font-weight: bold; word-break: break-all; }
+        .code { font-size: 36px; letter-spacing: 6px; color: #b78b27; margin: 10px 0 25px 0; text-align: center; font-family: monospace; font-weight: bold; background: rgba(183,139,39,0.1); padding: 15px; border-radius: 8px; }
+        .footer { color: #666; font-size: 12px; margin-top: 20px; line-height: 1.5; }
+      </style>
+    </head>
+    <body>
+      <div class="ticket">
+        <h1>Anantya 2026</h1>
+        <div class="info">
+          <div class="label">Registration Code</div>
+          <div class="code">${regId}</div>
+          <div class="label">Registered Email</div>
+          <div class="value">${email}</div>
+          <div class="label">Registered Event(s)</div>
+          <div class="value">${gamesList}</div>
+          <div class="label">Transaction ID (UTR)</div>
+          <div class="value">${utr}</div>
+          <div class="label">Session Token</div>
+          <div class="value" style="color: #f59e0b; font-size: 14px; font-style: italic;">(Pending Verification)</div>
+        </div>
+        <div class="footer">Please keep this ticket safe. Your session token will be updated upon verification by the admin team. You can check your status on the website using your Email and Registration Code.</div>
+      </div>
+    </body>
+    </html>
+  `;
+  const blob = new Blob([ticketContent], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Anantya_Ticket_${regId}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+function ManualPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) {
   const [loading, setLoading] = useState(false);
-  const [statusMsg, setStatusMsg] = useState('');
+  const [utr, setUtr] = useState('');
+  const [captchaToken, setCaptchaToken] = useState(null);
   const [error, setError] = useState('');
 
   const apiUrl = import.meta.env.VITE_API_URL || '';
 
-  // Load Razorpay checkout.js dynamically if not already loaded
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) { resolve(true); return; }
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!utr || utr.trim().length < 8) {
+      setError('Please enter a valid Transaction ID (UTR)');
+      return;
+    }
 
-  const handlePay = async () => {
+    if (!captchaToken) {
+      setError('Please complete the CAPTCHA validation');
+      return;
+    }
+
     setLoading(true);
     setError('');
+    
     try {
-      // 1. Load Razorpay SDK
-      const loaded = await loadRazorpayScript();
-      if (!loaded) {
-        setError('Failed to load payment gateway. Please check your internet connection.');
-        return;
-      }
+      const payload = {
+        ...baseData,
+        utr: utr.trim().toUpperCase(),
+        captchaToken
+      };
 
-      // 2. Create order on server
-      const orderRes = await fetch(`${apiUrl}/api/payment/create-order`, {
+      const res = await fetch(`${apiUrl}/api/payment/create-manual-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(baseData),
+        body: JSON.stringify(payload),
       });
-      const orderData = await orderRes.json();
-      if (!orderRes.ok) {
-        setError(orderData.error || 'Failed to create payment order');
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to submit payment details');
         return;
       }
 
-      // 3. Open Razorpay checkout
-      const rzp = new window.Razorpay({
-        key: orderData.keyId,
-        amount: orderData.amountPaise,
-        currency: orderData.currency,
-        order_id: orderData.orderId,
-        name: 'Anantya — Janmashtami 2025',
-        description: `Games: ${(baseData.games || []).join(', ')}`,
-        image: '/favicon.ico',
-        prefill: {
-          name: baseData.name,
-          email: baseData.email,
-          contact: baseData.phone,
-        },
-        theme: { color: '#B78B27' },
-        handler: async (response) => {
-          // Payment success callback from Razorpay SDK
-          setStatusMsg('Payment received! Confirming your registration...');
-          try {
-            // Verify payment signature on server
-            const verifyRes = await fetch(`${apiUrl}/api/payment/verify`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpayOrderId: response.razorpay_order_id,
-                razorpayPaymentId: response.razorpay_payment_id,
-                razorpaySignature: response.razorpay_signature,
-              }),
-            });
-            const verifyData = await verifyRes.json();
-
-            if (verifyData.status === 'verified') {
-              onSuccess('paid', verifyData.token);
-            } else if (verifyData.status === 'processing') {
-              // Webhook may still be processing — poll a couple of times
-              let attempts = 0;
-              const poll = setInterval(async () => {
-                attempts++;
-                setStatusMsg(`Confirming registration... (${attempts}/5)`);
-                const r = await fetch(`${apiUrl}/api/payment/verify`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    razorpayOrderId: response.razorpay_order_id,
-                    razorpayPaymentId: response.razorpay_payment_id,
-                    razorpaySignature: response.razorpay_signature,
-                  }),
-                });
-                const d = await r.json();
-                if (d.status === 'verified') {
-                  clearInterval(poll);
-                  onSuccess('paid', d.token);
-                } else if (attempts >= 5) {
-                  clearInterval(poll);
-                  // Payment went through — email will arrive. Show success anyway.
-                  onSuccess('paid', null);
-                }
-              }, 3000);
-            } else {
-              setError('Payment received but verification failed. Please contact organizers with your payment ID: ' + response.razorpay_payment_id);
-            }
-          } catch {
-            setError('Payment received but an error occurred. Please contact organizers.');
-          }
-        },
-        modal: {
-          ondismiss: () => {
-            setLoading(false);
-            setStatusMsg('');
-          }
-        },
+      onSuccess('manual', data.regId, {
+        regId: data.regId,
+        email: baseData.email,
+        events: Array.isArray(baseData.games) ? baseData.games.join(', ') : baseData.games,
+        transactionId: payload.utr,
+        status: 'Pending Verification'
       });
-
-      rzp.on('payment.failed', (response) => {
-        setError(`Payment failed: ${response.error.description}`);
-        setLoading(false);
-      });
-
-      rzp.open();
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -405,7 +397,6 @@ function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }
 
   return (
     <div className="reg-form card" style={{ textAlign: 'center', padding: '2rem 1.5rem', maxWidth: '480px', margin: '0 auto' }}>
-      {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <span style={{
           display: 'inline-block', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px',
@@ -416,14 +407,13 @@ function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }
           Complete Your Payment
         </h3>
         <p style={{ margin: '6px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          Secure payment powered by Razorpay
+          Scan the QR code below to pay
         </p>
       </div>
 
-      {/* Amount pill */}
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: '10px',
-        padding: '10px 28px', borderRadius: '50px', marginBottom: '2rem',
+        padding: '10px 28px', borderRadius: '50px', marginBottom: '1.5rem',
         background: 'linear-gradient(135deg, rgba(183,139,39,0.18), rgba(183,139,39,0.06))',
         border: '1px solid rgba(183,139,39,0.35)',
       }}>
@@ -431,46 +421,68 @@ function RazorpayPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }
         <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>₹{amount}</span>
       </div>
 
-      {/* Games summary */}
-      <div style={{ marginBottom: '2rem', padding: '12px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-        <p style={{ margin: 0, fontSize: '0.82rem', color: '#aaa' }}>Games: <span style={{ color: '#fff' }}>{(baseData.games || []).join(', ')}</span></p>
+      <div style={{ marginBottom: '1.5rem', padding: '15px', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        {/* Static QR Code from assets */}
+        <img src="/assets/games main regestration scanner.webp" alt="UPI QR Code" style={{ width: '200px', height: 'auto', borderRadius: '10px' }} />
+        
+        <p style={{ marginTop: '10px', fontSize: '1.2rem', fontWeight: 'bold', color: '#fff' }}>UPI ID: <span style={{ color: '#fff' }}>8790258289-2@ibl</span></p>
       </div>
 
-      {/* Pay button */}
-      {statusMsg ? (
-        <div style={{ padding: '20px', color: 'var(--primary)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-          <div style={{ width: '18px', height: '18px', border: '2px solid rgba(183,139,39,0.2)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', flexShrink: 0 }} />
-          {statusMsg}
+      <div style={{ textAlign: 'left', marginBottom: '1.5rem', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.8rem', color: '#ccc', lineHeight: '1.5' }}>
+          <li>Ticket is provisional until manually verified by our team.</li>
+          <li>Enter the exact Transaction Reference Number (UTR) from your payment app.</li>
+          <li>Pay the exact amount shown (₹{amount}). Incorrect amounts will not be approved.</li>
+        </ul>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="form-group" style={{ textAlign: 'left' }}>
+          <label htmlFor="utr">Transaction ID (UTR) *</label>
+          <input 
+            id="utr"
+            type="text" 
+            placeholder="e.g. 123456789012" 
+            value={utr}
+            onChange={(e) => setUtr(e.target.value)}
+            required
+            style={{ textTransform: 'uppercase' }}
+          />
         </div>
-      ) : (
+
+        <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+          <Turnstile 
+            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} // dummy key for local dev if missing
+            onSuccess={(token) => setCaptchaToken(token)}
+            onError={() => setError('CAPTCHA failed. Please refresh and try again.')}
+            onExpire={() => setCaptchaToken(null)}
+            options={{ theme: 'dark' }}
+          />
+        </div>
+
+        {error && (
+          <p style={{ color: 'var(--rose)', fontSize: '0.82rem', margin: '10px 0', background: 'rgba(244,63,94,0.08)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(244,63,94,0.2)' }}>
+            ⚠ {error}
+          </p>
+        )}
+
         <button
-          type="button"
-          onClick={handlePay}
+          type="submit"
           disabled={loading}
           className="submit-btn pay-btn"
-          style={{ width: '100%', marginBottom: '12px', opacity: loading ? 0.7 : 1 }}
+          style={{ width: '100%', marginTop: '10px', opacity: loading ? 0.7 : 1 }}
         >
-          {loading ? 'Opening Payment...' : `🔒 Pay ₹${amount} Securely`}
+          {loading ? 'Submitting...' : 'Submit Payment Details'}
         </button>
-      )}
-
-      {error && (
-        <p style={{ color: 'var(--rose)', fontSize: '0.82rem', margin: '10px 0', background: 'rgba(244,63,94,0.08)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(244,63,94,0.2)' }}>
-          ⚠ {error}
-        </p>
-      )}
+      </form>
 
       <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
-        <button type="button" onClick={onBack} style={{
+        <button type="button" onClick={onBack} disabled={loading} style={{
           flex: 1, padding: '10px', borderRadius: '10px', cursor: 'pointer',
           background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
           color: '#888', fontSize: '0.85rem', fontFamily: 'inherit'
         }}>← Back</button>
       </div>
-
-      <p style={{ fontSize: '0.72rem', color: '#444', margin: '16px 0 0' }}>
-        🔒 Powered by Razorpay. Supports UPI, cards, netbanking & wallets.
-      </p>
     </div>
   );
 }
@@ -484,7 +496,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
     return {};
   });
-  const [step, setStep] = useState('form'); // 'form' | 'razorpay'
+  const [step, setStep] = useState('form'); // 'form' | 'payment'
   const [baseData, setBaseData] = useState(null);
   const [secretCode, setSecretCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -576,7 +588,7 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     }
 
     setBaseData(data);
-    setStep('razorpay'); // Go to Razorpay checkout first
+    setStep('payment'); // Go to manual payment step
   };
 
   const handleFreeSubmit = async (data) => {
@@ -594,7 +606,13 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
       setSelected({});
       setSecretCode('');
       setDiscount(0);
-      onSuccess('free', result.token);
+      onSuccess('free', result.token, {
+        regId: result.token,
+        email: data.email,
+        events: Array.isArray(data.games) ? data.games.join(', ') : data.games,
+        transactionId: 'Free Ticket',
+        status: 'Verified'
+      });
     } catch {
       onError();
     } finally {
@@ -610,13 +628,13 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
     setStep('form');
   };
 
-  if (step === 'razorpay' && baseData) {
+  if (step === 'payment' && baseData) {
     return (
-      <RazorpayPaymentStep
+      <ManualPaymentStep
         t={t}
         amount={total}
         baseData={{ ...baseData, secretCode: discount > 0 ? secretCode.trim().toUpperCase() : '' }}
-        onSuccess={(type, token) => { resetPayment(); onSuccess(type, token); }}
+        onSuccess={(...args) => { resetPayment(); onSuccess(...args); }}
         onError={onError}
         onBack={() => setStep('form')}
       />
@@ -728,6 +746,13 @@ export function PaidForm({ t, onSuccess, onError, initialGameId }) {
         </span>
       </div>
 
+      <div className="form-group" style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer', fontWeight: 'normal', fontSize: '0.9rem' }}>
+          <input type="checkbox" required style={{ marginTop: '4px', width: 'auto' }} />
+          <span>I have read and agree to the <a href="/terms" target="_blank" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>Terms & Conditions</a> (Mandatory)</span>
+        </label>
+      </div>
+
       <button
         type="submit"
         id="paid-submit-btn"
@@ -758,29 +783,83 @@ export default function Registration({ onlyGames = false, hideTabs = false, init
     document.body.removeChild(element);
   };
 
-  const openSuccess = (formType, token) =>
+  const openSuccess = (formType, tokenOrRegId, fullData = null) => {
+    if (tokenOrRegId) {
+      setTimeout(() => {
+        // Automatically download the token TXT
+        downloadToken(tokenOrRegId);
+
+        // Automatically download the invitation image
+        setTimeout(() => {
+          const link = document.createElement('a');
+          link.href = '/assets/invite.jpeg';
+          link.download = 'Anantya_Invitation.jpeg';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }, 500); // staggered download
+      }, 500);
+    }
+
     setModal({
       icon: '🎉',
       title: t('register.success.title'),
       message: (
         <>
-          <p style={{ margin: '0 0 16px 0' }}>{t(`register.success.${formType}`)}</p>
-          {token && (
-            <div style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <p style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#aaa' }}>{t('register.yourToken', 'Your Registration Token')}</p>
-              <h3 style={{ margin: '0 0 16px 0', color: 'var(--primary)', letterSpacing: '2px', fontSize: '1.5rem' }}>{token}</h3>
-              <button 
-                onClick={() => downloadToken(token)}
-                className="submit-btn"
-                style={{ padding: '8px 16px', width: 'auto', fontSize: '0.9rem', margin: '0 auto', display: 'block' }}
-              >
-                Download Token
-              </button>
+          <p style={{ margin: '0 0 16px 0' }}>{t(`register.success.${formType}`, 'Registration details submitted successfully!')}</p>
+          
+          {/* No Ticket rendering. We use simple buttons instead */}
+          
+          {tokenOrRegId && (
+            <div style={{ padding: '20px', background: '#f8f9fa', borderRadius: '12px', textAlign: 'center', border: '1px solid #eaeaea', marginTop: '15px' }}>
+              <p style={{ margin: '0 0 8px 0', fontSize: '0.95rem', color: '#666', fontWeight: '500' }}>Your Session Token</p>
+              <h3 style={{ margin: '0 0 20px 0', color: 'var(--primary)', letterSpacing: '6px', fontSize: '2.5rem', fontFamily: 'monospace' }}>{tokenOrRegId}</h3>
+              <p style={{ margin: '0 0 20px 0', fontSize: '0.85rem', color: '#777' }}>
+                Please keep this 6-digit session token safe. It is required for event check-in and verifying your registration.
+              </p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                  <button
+                    className="submit-btn"
+                    onClick={() => { navigator.clipboard.writeText(tokenOrRegId); alert('Copied to clipboard!'); }}
+                    style={{ padding: '10px 20px', width: 'auto', fontSize: '0.9rem', margin: '0' }}
+                  >
+                    Copy Token
+                  </button>
+                  
+                  <button
+                    className="btn btn-outline"
+                    onClick={() => downloadToken(tokenOrRegId)}
+                    style={{ padding: '10px 20px', width: 'auto', fontSize: '0.9rem', margin: '0', background: 'transparent', color: 'var(--primary)', border: '1px solid var(--primary)', borderRadius: '8px', cursor: 'pointer' }}
+                  >
+                    Download as TXT
+                  </button>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center', marginTop: '10px' }}>
+                  <button
+                    className="submit-btn"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = '/assets/invite.jpeg';
+                      link.download = 'Anantya_Invitation.jpeg';
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                    style={{ padding: '10px 20px', width: 'auto', fontSize: '0.9rem', margin: '0', background: 'rgba(35, 53, 89, 0.8)' }}
+                  >
+                    Download Invitation
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </>
       ),
     });
+  };
 
   const openError = () =>
     setModal({

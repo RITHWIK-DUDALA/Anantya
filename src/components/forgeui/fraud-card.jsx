@@ -133,7 +133,7 @@ export default function FraudCard({ blockedEmails = [] }) {
         <div style={{ position: 'relative', paddingLeft: '3rem', paddingRight: '1rem', marginTop: '2rem', paddingBottom: '4rem', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1 }}>
           <div style={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '48px' }}>
             {blockedEmails.map((item, index) => (
-              <div key={item.email || index} style={{ display: 'flex', width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <div key={item.id || index} style={{ display: 'flex', width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
                 <div style={{ position: 'relative', marginRight: '16px', height: '24px', width: '24px', flexShrink: 0 }}>
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'rgba(0,0,0,0.05)' }}>
                     <CircleIcon style={{ height: '10px', width: '10px', color: 'var(--text-muted)' }} />
@@ -145,9 +145,14 @@ export default function FraudCard({ blockedEmails = [] }) {
                   <motion.h2 variants={emailvariant} style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text)', margin: 0, fontFamily: 'system-ui, sans-serif' }}>
                     {item.email}
                   </motion.h2>
-                  <motion.p variants={timevariant} style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                  <motion.p variants={timevariant} style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--primary)', margin: 0, fontWeight: '500' }}>
                     {item.time}
                   </motion.p>
+                  {item.description && (
+                    <motion.p variants={timevariant} style={{ fontSize: '0.95rem', color: 'var(--text-muted)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+                      {item.description}
+                    </motion.p>
+                  )}
                 </div>
               </div>
             ))}

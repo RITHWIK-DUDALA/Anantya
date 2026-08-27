@@ -47,7 +47,8 @@ app.use(cors({
       }
     }
     
-    if (allowedOrigins.includes(origin)) {
+    // Allow server-to-server requests (like Razorpay Webhooks) which have no origin
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -97,6 +98,7 @@ const paymentLimiter = rateLimit({
 app.use('/api/register/paid', paymentLimiter);
 const registerRoute = require('./routes/register');
 const verifyRoute = require('./routes/verify');
+const statusRoute = require('./routes/status');
 const adminRoute = require('./routes/admin');
 const contactRoute = require('./routes/contact');
 const moviesRoute = require('./routes/movies');
@@ -110,6 +112,7 @@ app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 app.use('/api/register', registerLimiter, registerRoute);
 app.use('/api/verify', verifyRoute);
+app.use('/api/status', statusRoute);
 app.use('/api/movies', moviesRoute);
 app.use('/api/pricing', pricingRoute); // H-1: discount code validation endpoint
 app.use('/api/payment', paymentLimiter, paymentRoute); // Razorpay payment flow

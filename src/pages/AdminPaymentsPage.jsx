@@ -78,25 +78,28 @@ export default function AdminPaymentsPage() {
     }
   }, [isAuthenticated]);
 
-  const updateStatus = async (regId, status) => {
-    let payload = { status };
-    if (status === 'rejected') {
+  const updateStatus = async (regId, action) => {
+    let payload = { action, regId };
+    if (action === 'reject') {
       const reason = window.prompt("Enter reason for rejection (this will be shown to the user):");
       if (reason === null) return; // cancelled
-      payload.rejectionReason = reason;
+      if (!reason.trim()) { alert("Reason is required."); return; }
+      payload.rejectedReason = reason;
     } else {
-      const actionName = status === 'verified' ? 'verify' : status;
-      if (!window.confirm(`Are you sure you want to ${actionName} this registration?`)) return;
+      if (!window.confirm(`Are you sure you want to verify this registration?`)) return;
     }
 
     try {
-      const res = await fetch(`${apiUrl}/api/admin/payments/${regId}`, {
-        method: 'PATCH',
+      const res = await fetch(`${apiUrl}/api/admin/verify-payment`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(payload)
       });
-      if (!res.ok) throw new Error('Update failed');
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error || 'Update failed');
+      }
 
       // Silent refresh — no loading spinner
       fetchPayments(true);
@@ -244,7 +247,6 @@ export default function AdminPaymentsPage() {
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Amount</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Token</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Txn ID / UTR</th>
-                    <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Method</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Status</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600, textAlign: 'right' }}>Actions</th>
                   </tr>
@@ -285,61 +287,64 @@ export default function AdminPaymentsPage() {
                           <div style={{ fontSize: '0.7rem', color: '#888', marginTop: '3px' }}>Amrita Chennai</div>
                         )}
                       </td>
-                      <td style={{ padding: '20px', color: '#fff' }}>₹{reg.amount}</td>
+                      <td style={{ padding: '20px', color: '#fff' }}>₹{reg.amount || reg.amountExpected || 0}</td>
                       <td style={{ padding: '20px' }}>
-                        <span style={{ background: 'rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '6px', fontFamily: 'monospace', letterSpacing: '2px', color: 'var(--secondary)' }}>
-                          {reg.token}
-                        </span>
+                        {reg.token || reg.regId ? (
+                          <span style={{ background: 'rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '6px', fontFamily: 'monospace', letterSpacing: '2px', color: 'var(--secondary)' }}>
+                            {reg.token || reg.regId}
+                          </span>
+                        ) : (
+                          <span style={{ color: '#555' }}>—</span>
+                        )}
                       </td>
                       <td style={{ padding: '20px', color: '#aaa', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-                        {reg.paymentId || 'N/A'}
-                      </td>
-                      <td style={{ padding: '20px' }}>
-                        {reg.paymentMethod === 'razorpay' && (
-                          <span style={{ fontSize: '0.72rem', fontWeight: 700, background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', padding: '2px 8px', borderRadius: '8px', border: '1px solid rgba(99,102,241,0.3)', letterSpacing: '0.3px' }}>Razorpay</span>
-                        )}
-                        {reg.paymentMethod === 'upi_manual' && (
-                          <span style={{ fontSize: '0.72rem', fontWeight: 700, background: 'rgba(251,191,36,0.12)', color: '#fbbf24', padding: '2px 8px', borderRadius: '8px', border: '1px solid rgba(251,191,36,0.3)', letterSpacing: '0.3px' }}>UPI Manual</span>
-                        )}
-                        {(!reg.paymentMethod || reg.paymentMethod === 'free') && (
-                          <span style={{ fontSize: '0.72rem', color: '#555' }}>Free</span>
-                        )}
+                        {reg.utr || reg.paymentId || 'N/A'}
                       </td>
                       <td style={{ padding: '20px' }}>
                         <StatusBadge reg={reg} />
                       </td>
                       <td style={{ padding: '20px', textAlign: 'right' }}>
                         {reg.status === 'pending_verification' && (
-                          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.85rem', color: '#ccc', marginRight: '8px' }}>
+                              Expected: <strong style={{ color: '#fff', fontSize: '1rem' }}>₹{reg.amountExpected || reg.amount}</strong>
+                            </span>
                             <button
-                              onClick={() => updateStatus(reg.id, 'verified')}
+                              onClick={() => updateStatus(reg.id, 'verify')}
                               style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.5)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                             >
                               <CircleCheckIcon size={14} /> Verify
                             </button>
                             <button
-                              onClick={() => updateStatus(reg.id, 'rejected')}
+                              onClick={() => updateStatus(reg.id, 'reject')}
                               style={{ background: 'rgba(244, 63, 94, 0.2)', color: '#f43f5e', border: '1px solid rgba(244, 63, 94, 0.5)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                            >
+                              <ShieldXIcon size={14} /> Reject
+                            </button>
+                          </div>
+                        )}
+                        {reg.status === 'verified' && (
+                          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <button
+                              onClick={() => updateStatus(reg.id, 'revoke')}
+                              style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.5)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                             >
                               <ShieldXIcon size={14} /> Revoke
                             </button>
                           </div>
                         )}
-                        {reg.status === 'verified' && (
-                          <button
-                            onClick={() => updateStatus(reg.id, 'rejected')}
-                            style={{ background: 'rgba(244, 63, 94, 0.1)', color: '#f43f5e', border: '1px solid rgba(244, 63, 94, 0.2)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                          >
-                            <ShieldXIcon size={14} /> Revoke
-                          </button>
-                        )}
                         {reg.status === 'rejected' && (
-                          <button
-                            onClick={() => updateStatus(reg.id, 'verified')}
-                            style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                          >
-                            <CircleCheckIcon size={14} /> Re-instate
-                          </button>
+                          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <button
+                              onClick={() => updateStatus(reg.id, 'revoke')}
+                              style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.5)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                            >
+                              <ShieldXIcon size={14} /> Revoke
+                            </button>
+                          </div>
+                        )}
+                        {reg.status !== 'pending_verification' && reg.status !== 'verified' && reg.status !== 'rejected' && (
+                          <span style={{ fontSize: '0.8rem', color: '#666' }}>Processed</span>
                         )}
                       </td>
                     </tr>

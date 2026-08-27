@@ -42,9 +42,9 @@ export default function Timeline() {
 
   const mappedEvents = sourceEvents.map(event => ({
     id: event.id,
-    email: t(`timeline.events.${event.id}.name`, event.name),
-    time: t(`timeline.events.${event.id}.time`, event.time),
-    description: t(`timeline.events.${event.id}.description`, event.description),
+    email: event.name,
+    time: event.time,
+    description: event.description,
     icon: event.icon
   }));
 

@@ -282,7 +282,7 @@ export default function VenueVerifyPage() {
         <div className="container" style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '600px' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <h1 style={{ margin: 0, fontSize: '2.5rem', color: 'var(--primary)', letterSpacing: '-1px' }}>Venue Check-In</h1>
-            <p style={{ color: '#aaa', marginTop: '10px' }}>Enter the participant's 6-digit Session ID</p>
+            <p style={{ color: '#aaa', marginTop: '10px' }}>Enter the participant's Session Token</p>
           </div>
 
           <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', padding: '40px', width: '100%', textAlign: 'center' }}>
