@@ -54,7 +54,7 @@ function ProcessingPopup() {
             animation: 'spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite' 
           }} />
           <h3 style={{ margin: '0 0 16px', color: 'var(--primary)', fontSize: '1.5rem', fontWeight: 700, letterSpacing: '0.5px' }}>
-            Processing...
+            Generating Session Token...
           </h3>
           
           <div style={{ marginBottom: '20px' }}>
@@ -66,14 +66,16 @@ function ProcessingPopup() {
             </div>
           </div>
 
-          <p style={{ color: '#eee', fontSize: '1rem', lineHeight: '1.6', margin: 0 }}>
-            It might take <strong style={{color: 'var(--primary)'}}>3 to 5 minutes</strong> for a successful registration. 
+          <p style={{ color: '#eee', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
+            Please wait <strong style={{color: 'var(--primary)'}}>3 to 5 minutes</strong> for your Session Token to be generated.
             <br/><br/>
-            <span style={{ color: '#ff4444', fontWeight: 600, background: 'rgba(255,0,0,0.1)', padding: '6px 12px', borderRadius: '8px', display: 'inline-block' }}>
-              ⚠ Do not close or refresh this tab
+            <span style={{ color: '#ff4444', fontWeight: 700, background: 'rgba(255,0,0,0.15)', padding: '8px 14px', borderRadius: '8px', display: 'inline-block', border: '1px solid rgba(255,0,0,0.3)' }}>
+              ⚠ DO NOT CLOSE OR REFRESH THIS WINDOW
             </span>
             <br/><br/>
-            <span style={{ fontSize: '0.85rem', color: '#999' }}>We are not responsible for the registration if the process is interrupted.</span>
+            <span style={{ fontSize: '0.9rem', color: '#ffd700', fontWeight: 600 }}>
+              📥 Please make sure to download your Session Token as soon as it is generated.
+            </span>
           </p>
         </div>
       </div>
@@ -397,6 +399,7 @@ function ManualPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) 
 
   return (
     <div className="reg-form card" style={{ textAlign: 'center', padding: '2rem 1.5rem', maxWidth: '480px', margin: '0 auto' }}>
+      {loading && <ProcessingPopup />}
       <div style={{ marginBottom: '1.5rem' }}>
         <span style={{
           display: 'inline-block', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px',
