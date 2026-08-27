@@ -243,6 +243,7 @@ export default function AdminPaymentsPage() {
                 <thead>
                   <tr style={{ background: 'rgba(0,0,0,0.5)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Participant</th>
+                    <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Submitted At</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Student ID</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Amount</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Token</th>
@@ -274,6 +275,19 @@ export default function AdminPaymentsPage() {
                         </div>
                         <div style={{ fontSize: '0.85rem', color: '#888' }}>{reg.email} • {reg.phone}</div>
                         <div style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>{reg.dept} ({reg.year})</div>
+                        {reg.games && (
+                          <div style={{ fontSize: '0.8rem', color: '#e0a96d', marginTop: '4px' }}>
+                            🎮 {Array.isArray(reg.games) ? reg.games.join(', ') : reg.games}
+                          </div>
+                        )}
+                      </td>
+                      <td style={{ padding: '20px', whiteSpace: 'nowrap' }}>
+                        <div style={{ color: '#fff', fontSize: '0.85rem', fontWeight: 600 }}>
+                          {reg.registeredAt ? new Date(reg.registeredAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                        </div>
+                        <div style={{ color: '#aaa', fontSize: '0.8rem', fontFamily: 'monospace', marginTop: '2px' }}>
+                          {reg.registeredAt ? new Date(reg.registeredAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) : ''}
+                        </div>
                       </td>
                       <td style={{ padding: '20px' }}>
                         {reg.studentId ? (

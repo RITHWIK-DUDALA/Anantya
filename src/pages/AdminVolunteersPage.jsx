@@ -177,6 +177,7 @@ export default function AdminVolunteersPage() {
                 <thead>
                   <tr style={{ background: 'rgba(0,0,0,0.5)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Volunteer</th>
+                    <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Submitted At</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Role</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Department</th>
                     <th style={{ padding: '20px', color: '#ccc', fontWeight: 600 }}>Token</th>
@@ -190,6 +191,14 @@ export default function AdminVolunteersPage() {
                       <td style={{ padding: '20px' }}>
                         <div style={{ fontWeight: 600, color: '#fff', marginBottom: '4px' }}>{vol.name}</div>
                         <div style={{ fontSize: '0.85rem', color: '#888' }}>{vol.email} • {vol.phone}</div>
+                      </td>
+                      <td style={{ padding: '20px', whiteSpace: 'nowrap' }}>
+                        <div style={{ color: '#fff', fontSize: '0.85rem', fontWeight: 600 }}>
+                          {vol.registeredAt ? new Date(vol.registeredAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                        </div>
+                        <div style={{ color: '#aaa', fontSize: '0.8rem', fontFamily: 'monospace', marginTop: '2px' }}>
+                          {vol.registeredAt ? new Date(vol.registeredAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) : ''}
+                        </div>
                       </td>
                       <td style={{ padding: '20px' }}>
                         <span style={{
