@@ -48,7 +48,13 @@ app.use(cors({
     }
     
     // Allow server-to-server requests (like Razorpay Webhooks) which have no origin
-    if (!origin || allowedOrigins.includes(origin)) {
+    const isCloudDomain = origin && (
+      origin.endsWith('.vercel.app') || 
+      origin.endsWith('.web.app') || 
+      origin.endsWith('.onrender.com') ||
+      origin.endsWith('.dpdns.org')
+    );
+    if (!origin || allowedOrigins.includes(origin) || isCloudDomain) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
