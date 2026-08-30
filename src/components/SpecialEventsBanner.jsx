@@ -109,7 +109,7 @@ export default function SpecialEventsBanner() {
             }}>
               <div style={{ flex: '1 1 250px', maxWidth: '320px' }}>
                 <img 
-                  src="/games/treasure hunt poster.jpeg" 
+                  src="/games/TREASURE HUNT.webp" 
                   alt="Treasure Hunt" 
                   style={{
                     width: '100%',
@@ -121,7 +121,7 @@ export default function SpecialEventsBanner() {
               </div>
               <div style={{ flex: '1 1 250px', maxWidth: '320px' }}>
                 <img 
-                  src="/games/cold case poster.webp" 
+                  src="/games/COLD CASE FINAL.webp" 
                   alt="Cold Case" 
                   style={{
                     width: '100%',

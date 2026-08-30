@@ -9,7 +9,7 @@ const gamePrices = {
   'Treasure Hunt': 180,
   'Mahabharatam Quiz': 50,
   'Uriyadi': 0,
-  'Free Fire': 180,
+  'Free Fire': 100,
   'Tambola': 10,
   'Minecraft': 80,
   'Cold Case': 140,
