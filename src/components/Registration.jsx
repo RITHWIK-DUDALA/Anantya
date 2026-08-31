@@ -357,6 +357,37 @@ function ManualPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) 
 
   const apiUrl = import.meta.env.VITE_API_URL || '';
 
+  const selectedGameNames = Array.isArray(baseData?.games)
+    ? baseData.games
+    : (baseData?.games ? [baseData.games] : []);
+
+  const matchedGame = gameCardsData.find((g) => selectedGameNames.includes(g.title));
+  const isAdithyaGame = selectedGameNames.some((name) => {
+    const n = (name || '').toLowerCase();
+    return n.includes('guess') || n.includes('picture hunt');
+  });
+  const isBhavaniGame = selectedGameNames.some((name) => {
+    const n = (name || '').toLowerCase();
+    return n.includes('cold case') || n.includes('minecraft');
+  });
+  const isPunithGame = selectedGameNames.some((name) => {
+    const n = (name || '').toLowerCase();
+    return n.includes('mahabharat') || n.includes('free fire') || n.includes('freefire');
+  });
+  const isSurajGame = selectedGameNames.some((name) => {
+    const n = (name || '').toLowerCase();
+    return n.includes('pot painting') || n.includes('treasure hunt');
+  });
+
+  const qrImage = matchedGame?.paymentQr || 
+    (isAdithyaGame ? '/assets/adithya.jpg' : 
+     isBhavaniGame ? '/assets/bhavani.jpg' : 
+     isPunithGame ? '/assets/punith.jpg' : 
+     isSurajGame ? '/assets/suraj.jpg' : 
+     '/assets/games main regestration scanner.webp');
+  const isCustomQr = qrImage !== '/assets/games main regestration scanner.webp';
+  const upiId = matchedGame?.upiId ?? (isCustomQr ? null : '8790258289-2@ibl');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!utr || utr.trim().length < 8) {
@@ -434,10 +465,12 @@ function ManualPaymentStep({ amount, baseData, onSuccess, onError, onBack, t }) 
       </div>
 
       <div style={{ marginBottom: '1.5rem', padding: '15px', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        {/* Static QR Code from assets */}
-        <img src="/assets/games main regestration scanner.webp" alt="UPI QR Code" style={{ width: '200px', height: 'auto', borderRadius: '10px' }} />
+        {/* Payment QR Code */}
+        <img src={qrImage} alt="UPI QR Code" style={{ width: '200px', height: 'auto', borderRadius: '10px' }} />
         
-        <p style={{ marginTop: '10px', fontSize: '1.2rem', fontWeight: 'bold', color: '#fff' }}>UPI ID: <span style={{ color: '#fff' }}>8790258289-2@ibl</span></p>
+        {upiId && (
+          <p style={{ marginTop: '10px', fontSize: '1.2rem', fontWeight: 'bold', color: '#fff' }}>UPI ID: <span style={{ color: '#fff' }}>{upiId}</span></p>
+        )}
       </div>
 
       <div style={{ textAlign: 'left', marginBottom: '1.5rem', padding: '14px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }}>
