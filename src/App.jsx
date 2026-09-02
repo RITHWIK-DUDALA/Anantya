@@ -15,6 +15,7 @@ import RefundPolicyPage from './pages/RefundPolicyPage';
 import ContactUsPage from './pages/ContactUsPage';
 import MusicPlayer from './components/MusicPlayer';
 import SplashScreen from './components/SplashScreen';
+import EventConcludedScreen from './components/EventConcludedScreen';
 
 const AdminPaymentsPage = lazy(() => import('./pages/AdminPaymentsPage'));
 const AdminVolunteersPage = lazy(() => import('./pages/AdminVolunteersPage'));
@@ -92,6 +93,7 @@ export default function App() {
   return (
     <>
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      <EventConcludedScreen />
       <MusicPlayer />
       <Routes>
         <Route path="/" element={<Home />} />
