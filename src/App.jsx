@@ -75,27 +75,25 @@ export default function App() {
     setShowSplash(false);
   };
 
-  if (isMobile) {
-    return (
-      <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff', textAlign: 'center', padding: '20px', boxSizing: 'border-box' }}>
-        <div style={{ padding: '30px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(183,139,39,0.3)' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '10px' }}>💻</div>
-          <h2 style={{ color: 'var(--primary)', marginBottom: '15px', fontFamily: 'Cinzel, serif', fontSize: '1.8rem' }}>Desktop Only</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: '1.5' }}>
-            The Anantya 2026 experience is strictly designed for desktop devices. <br/><br/>
-            Please open this website on your computer.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <EventConcludedScreen />
-      <MusicPlayer />
-      <Routes>
+      {isMobile ? (
+        <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff', textAlign: 'center', padding: '20px', boxSizing: 'border-box' }}>
+          <div style={{ padding: '30px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(183,139,39,0.3)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>💻</div>
+            <h2 style={{ color: 'var(--primary)', marginBottom: '15px', fontFamily: 'Cinzel, serif', fontSize: '1.8rem' }}>Desktop Only</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: '1.5' }}>
+              The Anantya 2026 experience is strictly designed for desktop devices. <br/><br/>
+              Please open this website on your computer.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+          <MusicPlayer />
+          <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/games/:id" element={<GamePage />} />
@@ -142,6 +140,8 @@ export default function App() {
         <Route path="/status" element={<StatusPage />} />
         <Route path="/venue" element={<VenueVerifyPage />} />
       </Routes>
+        </>
+      )}
     </>
   );
 }

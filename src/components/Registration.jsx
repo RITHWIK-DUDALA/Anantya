@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SendIcon, CreditCardIcon, CircleCheckIcon, ShieldXIcon } from '@animateicons/react/lucide';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -925,57 +926,84 @@ export default function Registration({ onlyGames = false, hideTabs = false, init
     });
 
   return (
-    <section id="register" className={onlyGames ? '' : 'section'}>
-      <div className="container">
+    <section id="register" className={onlyGames ? '' : 'section'} style={{ padding: '40px 20px 80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div className="container" style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {!onlyGames && !hideTabs && (
-          <>
-            <div className="section-header">
-              <span className="section-eyebrow">{t('register.subtitle')}</span>
-              <h2 className="section-title">{t('register.title')}</h2>
-            </div>
-
-            {/* Tabs */}
-            <div className="reg-tabs">
-              <button
-                id="tab-free"
-                className={`reg-tab${activeTab === 'free' ? ' active' : ''}`}
-                onClick={() => setActiveTab('free')}
-              >
-                {t('register.tabs.free')}
-              </button>
-              <button
-                id="tab-paid"
-                className={`reg-tab${activeTab === 'paid' ? ' active' : ''}`}
-                onClick={() => setActiveTab('paid')}
-              >
-                {t('register.tabs.paid')}
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* Forms */}
-        {!onlyGames && (
-          <div className={`reg-form-wrap${activeTab === 'free' ? ' visible' : ''}`} style={{ display: activeTab === 'free' ? 'block' : 'none' }}>
-            <FreeForm t={t} onSuccess={openSuccess} onError={openError} />
+        {/* Exact Banner Style */}
+        <div style={{
+          width: '100%',
+          maxWidth: '680px',
+          padding: '24px 32px',
+          background: 'rgba(255, 255, 255, 0.04)',
+          border: '1px solid rgba(255, 255, 255, 0.22)',
+          borderRadius: '24px',
+          textAlign: 'center',
+          backdropFilter: 'blur(14px)',
+          boxShadow: '0 15px 40px rgba(0, 0, 0, 0.5)',
+          margin: '20px 0 35px 0'
+        }}>
+          <div style={{
+            fontSize: '0.9rem',
+            color: '#ffb703',
+            textTransform: 'uppercase',
+            letterSpacing: '2.5px',
+            fontWeight: 800,
+            marginBottom: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            <span>⚡</span> REGISTRATIONS CLOSED
           </div>
-        )}
-        
-        <div className={`reg-form-wrap${activeTab === 'paid' ? ' visible' : ''}`} style={{ display: activeTab === 'paid' ? 'block' : 'none' }}>
-          <PaidForm t={t} onSuccess={openSuccess} onError={openError} initialGameId={initialGameId} />
+          <div style={{
+            fontSize: 'clamp(1.2rem, 2.5vw, 1.65rem)',
+            color: '#ffffff',
+            fontWeight: 700,
+            textShadow: '0 0 20px rgba(255, 255, 255, 0.7)',
+            letterSpacing: '0.5px'
+          }}>
+            Register for next year, we will be waiting! ✨
+          </div>
         </div>
-      </div>
 
-      {/* Success / Error Modal */}
-      {modal && (
-        <Modal
-          icon={modal.icon === '🎉' ? <CircleCheckIcon size={52} color="var(--green)" /> : <ShieldXIcon size={52} color="var(--rose)" />}
-          title={modal.title}
-          message={modal.message}
-          onClose={() => setModal(null)}
-        />
-      )}
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link
+            to="/register"
+            style={{
+              display: 'inline-block',
+              padding: '12px 30px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              color: '#ffffff',
+              borderRadius: '30px',
+              textDecoration: 'none',
+              fontWeight: 600,
+              fontSize: '1rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            Explore Games
+          </Link>
+          <Link
+            to="/"
+            style={{
+              display: 'inline-block',
+              padding: '12px 32px',
+              background: 'var(--primary)',
+              color: '#ffffff',
+              borderRadius: '30px',
+              textDecoration: 'none',
+              fontWeight: 700,
+              fontSize: '1rem',
+              boxShadow: '0 4px 20px rgba(183, 139, 39, 0.4)'
+            }}
+          >
+            Back to Home
+          </Link>
+        </div>
+
+      </div>
     </section>
   );
 }

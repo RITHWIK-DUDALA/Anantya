@@ -489,15 +489,15 @@ export default function MembersPage() {
           style={{ textAlign: 'center', marginBottom: '60px' }}
         >
           <h1 style={{ fontSize: '3.5rem', fontFamily: 'Cinzel, serif', color: 'var(--primary-light)', marginBottom: '15px' }}>
-            Our Team
+            OG Core Team of 2025 & 2026
           </h1>
           <p style={{ fontSize: '1.2rem', color: '#aaa', maxWidth: '600px', margin: '0 auto' }}>
-            The dedicated individuals and clubs working tirelessly behind the scenes to make Anantya 2026 a grand success.
+            The dedicated OG core team and clubs working tirelessly behind the scenes for Anantya 2025 & 2026.
           </p>
         </motion.div>
 
         <CircleSection title="Faculty" members={faculty} showInsta={false} />
-        <CircleSection title="Core Members" members={coreMembers} showInsta={false} />
+        <CircleSection title="OG Core Team of 2025 & 2026" members={coreMembers} showInsta={false} />
         
         <div style={{ textAlign: 'center', margin: '80px 0 30px' }}>
           <h2 style={{ fontSize: '3rem', fontFamily: 'Cinzel, serif', color: 'var(--primary-light)', borderBottom: '2px solid var(--border)', paddingBottom: '10px', display: 'inline-block' }}>
@@ -506,9 +506,283 @@ export default function MembersPage() {
         </div>
         
         <CircleSection title="Decorations" members={decorCoords} showInsta={false} />
-      </div>
-
         <CircleSection title="Club Representatives" members={clubReps} showInsta={true} />
+
+        {/* History of Conducting Janmashtami in AVV Chennai */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          style={{
+            marginTop: '100px',
+            marginBottom: '40px',
+            background: 'transparent',
+            border: 'none',
+            padding: '20px 10px',
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '45px' }}>
+            <span
+              style={{
+                display: 'inline-block',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                letterSpacing: '2.5px',
+                color: 'var(--primary-light, #ffd700)',
+                background: 'transparent',
+                border: '1px solid rgba(183, 139, 39, 0.4)',
+                padding: '5px 16px',
+                borderRadius: '50px',
+                marginBottom: '18px',
+                textTransform: 'uppercase',
+              }}
+            >
+              Legacy & Milestones
+            </span>
+            <h2
+              style={{
+                fontSize: 'clamp(2.2rem, 4.5vw, 3.4rem)',
+                fontFamily: 'Cinzel, serif',
+                color: '#ffffff',
+                margin: '0 0 16px 0',
+                textShadow: '0 0 25px rgba(255, 255, 255, 0.7), 0 0 50px rgba(183, 139, 39, 0.3)',
+                letterSpacing: '1px',
+              }}
+            >
+              History of Conducting Janmashtami in AVV Chennai
+            </h2>
+            <p style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '1.05rem', maxWidth: '720px', margin: '0 auto', lineHeight: 1.7, fontWeight: 300 }}>
+              A chronicle of visionary milestones, unforgettable firsts, and the journey of how Janmashtami transformed into the grand festival of Anantya.
+            </p>
+          </div>
+
+          {/* Timeline (2025 & 2026) - Seamless Background Blend */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '40px',
+              maxWidth: '900px',
+              margin: '0 auto 60px auto',
+              textAlign: 'left',
+              padding: '0 10px',
+            }}
+          >
+            <div style={{ padding: '10px 0' }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  letterSpacing: '2px',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  textTransform: 'uppercase',
+                  marginBottom: '8px',
+                }}
+              >
+                2025 Edition • 1 Day
+              </span>
+              <h4 style={{ margin: '0 0 10px 0', fontSize: '1.6rem', color: '#ffffff', fontFamily: 'Cinzel, serif', fontWeight: 700 }}>
+                27th August 2025
+              </h4>
+              <p style={{ margin: 0, fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: 1.7, fontWeight: 300 }}>
+                The foundational celebration alone that set the stage and ignited the cultural spirit for the future of Janmashtami on campus.
+              </p>
+            </div>
+
+            <div
+              style={{
+                padding: '10px 0 10px 24px',
+                borderLeft: '1px solid rgba(183, 139, 39, 0.35)',
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  letterSpacing: '2px',
+                  color: 'var(--primary-light, #ffd700)',
+                  textTransform: 'uppercase',
+                  marginBottom: '8px',
+                  textShadow: '0 0 10px rgba(255, 215, 0, 0.4)',
+                }}
+              >
+                2026 Edition • Multi-Day
+              </span>
+              <h4 style={{ margin: '0 0 10px 0', fontSize: '1.6rem', color: '#ffffff', fontFamily: 'Cinzel, serif', fontWeight: 700, textShadow: '0 0 20px rgba(255, 215, 0, 0.5)' }}>
+                31st Aug (4 PM) – 1st Sep (Full Day)
+              </h4>
+              <p style={{ margin: 0, fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.85)', lineHeight: 1.7, fontWeight: 300 }}>
+                The monumental multi-day celebration packed with unprecedented cultural shows, gaming leagues, flash mobs, and grand spectacles.
+              </p>
+            </div>
+          </div>
+
+          {/* Grid of Firsts - Seamless Background Blend (No Boxes) */}
+          <div style={{ maxWidth: '980px', margin: '0 auto' }}>
+            <h3
+              style={{
+                fontSize: '1.4rem',
+                fontFamily: 'Cinzel, serif',
+                color: '#ffffff',
+                textAlign: 'center',
+                marginBottom: '36px',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+                textShadow: '0 0 15px rgba(255, 255, 255, 0.6)',
+              }}
+            >
+              Historic Firsts & Landmarks
+            </h3>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '36px 30px',
+                textAlign: 'left',
+              }}
+            >
+              {/* 1. Rebranded */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  Rebranded as "Anantya"
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  First time the Janmashtami celebrations were officially rechristened to the iconic festival identity <strong>Anantya</strong> in AVV Chennai.
+                </p>
+              </div>
+
+              {/* 2. Multi-Day */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <circle cx="8" cy="14" r="1"/>
+                    <circle cx="12" cy="14" r="1"/>
+                    <circle cx="16" cy="14" r="1"/>
+                    <circle cx="8" cy="18" r="1"/>
+                    <circle cx="12" cy="18" r="1"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  First Multi-Day Event
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  First time in campus history that Janmashtami evolved from a single-day program into an expansive multi-day festival.
+                </p>
+              </div>
+
+              {/* 3. Flash Mob */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  First-Ever Flash Mob
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  The first-ever surprise high-energy flash mob organized exclusively for Janmashtami on the AVV Chennai campus grounds.
+                </p>
+              </div>
+
+              {/* 4. Banner Drop */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                    <line x1="4" y1="22" x2="4" y2="15"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  First-Ever Banner Drop
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  First ceremonial mega banner drop unveiled in campus festival history to herald the dawn of Anantya.
+                </p>
+              </div>
+
+              {/* 5. 48-Minute Skit */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 10s3-3 10-3 10 3 10 3-3 7-10 7-10-7-10-7z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M12 17v5M8 22h8"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  48-Minute Krishna Skit
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  First time in AVV Chennai that a massive 48-minute theatrical drama portraying a poignant chapter of Lord Krishna's divine life was staged.
+                </p>
+              </div>
+
+              {/* 6. Lantern Show */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 2h6M12 2v3M8 5h8l2 6-2 7H8l-2-7 2-6zM12 18v4M9 22h6"/>
+                    <circle cx="12" cy="11" r="2"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  First-Ever Lantern Show
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  First-ever nighttime lantern show and lighting ceremony dedicated to the Janmashtami celebrations.
+                </p>
+              </div>
+
+              {/* 7. DJ Night */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  First-Ever DJ Night
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  First-ever dedicated campus DJ musical night organized to celebrate the joy of Janmashtami with the student community.
+                </p>
+              </div>
+
+              {/* 8. Web Platform */}
+              <div style={{ background: 'transparent', border: 'none', padding: 0 }}>
+                <div style={{ color: 'var(--primary-light, #ffd700)', marginBottom: '10px' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
+                </div>
+                <h5 style={{ margin: '0 0 6px 0', color: '#ffffff', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                  First Cultural Website
+                </h5>
+                <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.92rem', lineHeight: 1.65, fontWeight: 300 }}>
+                  First time in AVV Chennai that an interactive full-featured digital portal was engineered for an institutional cultural festival.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
 
       <footer style={{ background: '#050505', padding: '40px 0', textAlign: 'center', borderTop: '1px solid #222' }}>
         <p style={{ color: '#aaa', fontSize: '0.9rem' }}>

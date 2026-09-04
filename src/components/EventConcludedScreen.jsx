@@ -65,15 +65,16 @@ export default function EventConcludedScreen() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
         overflowX: 'hidden',
-        padding: '40px 24px',
+        padding: '36px 16px 50px',
         boxSizing: 'border-box',
       }}
     >
       {/* Background Ambient Galaxy */}
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.65, pointerEvents: 'none', zIndex: 0 }}>
+      <div style={{ position: 'fixed', inset: 0, opacity: 0.65, pointerEvents: 'none', zIndex: 0 }}>
         <Galaxy
           mouseRepulsion
           mouseInteraction
@@ -91,11 +92,12 @@ export default function EventConcludedScreen() {
       {/* Subtle White Ambient Center Glow */}
       <div
         style={{
-          position: 'absolute',
+          position: 'fixed',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '800px',
+          maxWidth: '100vw',
           height: '550px',
           background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 45%, transparent 70%)',
           filter: 'blur(70px)',
@@ -111,12 +113,12 @@ export default function EventConcludedScreen() {
           zIndex: 2,
           maxWidth: '850px',
           width: '100%',
-          margin: 'auto',
+          margin: 'auto 0',
           textAlign: 'center',
           background: 'transparent',
           border: 'none',
           boxShadow: 'none',
-          padding: '20px 10px',
+          padding: '10px',
         }}
       >
         <AnimatePresence mode="wait">
@@ -134,14 +136,14 @@ export default function EventConcludedScreen() {
               {/* Glowing White Title */}
               <h1
                 style={{
-                  fontSize: 'clamp(2.5rem, 6vw, 4.2rem)',
+                  fontSize: 'clamp(2rem, 7vw, 4.2rem)',
                   fontFamily: 'Cinzel, Georgia, serif',
                   fontWeight: 900,
-                  margin: '0 0 24px 0',
+                  margin: '0 0 20px 0',
                   color: '#ffffff',
                   textShadow:
                     '0 0 25px rgba(255, 255, 255, 0.95), 0 0 50px rgba(255, 255, 255, 0.5), 0 0 90px rgba(255, 255, 255, 0.25)',
-                  letterSpacing: '3px',
+                  letterSpacing: '2px',
                   lineHeight: 1.15,
                   textTransform: 'uppercase',
                 }}
@@ -196,7 +198,7 @@ export default function EventConcludedScreen() {
                   color: '#ffffff',
                   lineHeight: 1.85,
                   maxWidth: '750px',
-                  margin: '0 auto 36px auto',
+                  margin: '0 auto 30px auto',
                   fontWeight: 300,
                   opacity: 0.95,
                 }}
@@ -205,7 +207,7 @@ export default function EventConcludedScreen() {
               </p>
 
               {/* Signature */}
-              <div style={{ marginTop: '30px' }}>
+              <div style={{ marginTop: '36px' }}>
                 <span
                   style={{
                     fontSize: '1rem',

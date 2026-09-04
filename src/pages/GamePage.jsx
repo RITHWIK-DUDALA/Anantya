@@ -250,40 +250,40 @@ export default function GamePage() {
                 </div>
               )}
 
-              <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '30px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '20px', fontFamily: '"Isabella", serif' }}>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', fontFamily: '"Isabella", serif' }}>{t('gamePage.registrationInfo')}</h3>
-                {game.isComingSoon ? (
-                  <div style={{
-                    background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
-                    border: '1px solid rgba(183,139,39,0.2)',
-                    borderRadius: '16px',
-                    padding: '1.5rem'
-                  }}>
-                    <h4 style={{ margin: '0 0 10px', color: 'var(--primary)', fontSize: '1.2rem' }}>Coming Soon</h4>
-                    <p style={{ color: '#aaa', margin: 0, lineHeight: '1.6' }}>
-                      Registration for this event is currently disabled and will open soon. Stay tuned!
-                    </p>
-                  </div>
-                ) : game.price === 0 ? (
-                  <div style={{
-                    background: 'linear-gradient(135deg, rgba(183,139,39,0.08), rgba(183,139,39,0.02))',
-                    border: '1px solid rgba(183,139,39,0.2)',
-                    borderRadius: '16px',
-                    padding: '1.5rem'
-                  }}>
-                    <h4 style={{ margin: '0 0 10px', color: 'var(--primary)', fontSize: '1.2rem' }}>No Web Registration Required!</h4>
-                    <p style={{ color: '#aaa', margin: 0, lineHeight: '1.6' }}>
-                      Since this is a free event, there is no need to register online. We warmly welcome you to join us! On-spot registrations might be taken directly at the venue.
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <p style={{ marginBottom: '20px', color: '#aaa' }}>{t('gamePage.signUpQuickly')}</p>
-                    <Link to={`/form?game=${game.id}`} className="game-register-btn" style={{ display: 'inline-block', background: 'var(--primary)', color: 'white', textDecoration: 'none', padding: '12px 24px', borderRadius: '24px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}>
-                      {t('gamePage.registerFor')} {t(`games.${game.id}.title`)}
-                    </Link>
-                  </>
-                )}
+              {/* Registrations Closed Banner */}
+              <div style={{
+                marginTop: '30px',
+                padding: '26px 28px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                borderRadius: '24px',
+                textAlign: 'center',
+                backdropFilter: 'blur(14px)',
+                boxShadow: '0 15px 40px rgba(0, 0, 0, 0.5)'
+              }}>
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: '#ffb703',
+                  textTransform: 'uppercase',
+                  letterSpacing: '2.5px',
+                  fontWeight: 800,
+                  marginBottom: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}>
+                  <span>⚡</span> REGISTRATIONS CLOSED
+                </div>
+                <div style={{
+                  fontSize: 'clamp(1.15rem, 2.2vw, 1.45rem)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  textShadow: '0 0 20px rgba(255, 255, 255, 0.7)',
+                  letterSpacing: '0.5px'
+                }}>
+                  Register for next year, we will be waiting! ✨
+                </div>
               </div>
 
             </div>
@@ -291,9 +291,6 @@ export default function GamePage() {
         </div>
       </main>
       <Footer />
-
-      {/* Floating Sticker in bottom-left */}
-      <FloatingSticker gameId={game.id} />
     </>
   );
 }

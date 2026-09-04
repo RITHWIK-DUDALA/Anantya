@@ -49,6 +49,7 @@ const isAmritaEmail = (email) => email && email.toLowerCase().endsWith('@ch.stud
 
 // POST /api/register/free
 router.post('/free', async (req, res, next) => {
+  return res.status(403).json({ error: 'Registrations are closed. Register for next year, we will be waiting!' });
   try {
     const { name, email, phone, dept, year, role, games, secretCode, discountAmount, studentId } = req.body;
 
@@ -154,6 +155,7 @@ router.post('/free', async (req, res, next) => {
 // POST /api/register/paid
 // UPI manual payment — user submits their UPI transaction ID, admin verifies manually
 router.post('/paid', async (req, res, next) => {
+  return res.status(403).json({ error: 'Registrations are closed. Register for next year, we will be waiting!' });
   let reservedRegId = null;
   try {
     const { name, email, phone, dept, year, role, games, secretCode, transactionId, studentId } = req.body;

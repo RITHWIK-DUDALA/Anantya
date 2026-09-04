@@ -63,11 +63,11 @@ export default function ContactSection() {
           </span>
 
           <h2 style={{ fontSize: 'clamp(32px, 5vw, 52px)', color: '#FFFFFF', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: '24px', fontFamily: 'Cinzel, serif' }}>
-            Contact The Core Team
+            Contact The OG Core Team (2025 & 2026)
           </h2>
 
           <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '40px' }}>
-            Have questions about Anantya 2026? Click on any core committee member below to view their contact number.
+            Have questions about Anantya? Click on any OG core committee member below to view their contact number.
           </p>
 
           {/* Core Members Dock */}

@@ -57,8 +57,8 @@ export default function RegisterPage() {
           />
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', zIndex: 5 }}>
             <FlipFadeText 
-              words={["REGISTER NOW", "COMPETE", "CELEBRATE"]}
-              subtext="Secure your spot for the grand Janmashtami celebrations and competitions."
+              words={["EXPLORE GAMES", "COMPETE", "CELEBRATE"]}
+              subtext="Discover all events, games, and competitions for the grand Janmashtami celebrations."
               textStyle={{ fontSize: '3.5rem' }}
             />
           </div>

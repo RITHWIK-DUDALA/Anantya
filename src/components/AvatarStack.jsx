@@ -86,7 +86,7 @@ const AvatarStack = ({ items, onItemClick }) => {
           );
         })}
       </div>
-      <h2 className="trusted-heading">{t('committee.directory', 'CORE TEAM DIRECTORY (CLICK TO VIEW)')}</h2>
+      <h2 className="trusted-heading">{t('committee.directory', 'OG CORE TEAM OF 2025 & 2026 (CLICK TO VIEW)')}</h2>
     </div>
   );
 };
